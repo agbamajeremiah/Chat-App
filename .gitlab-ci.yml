@@ -24,7 +24,7 @@ before_script:
   - wget --output-document=flutter-sdk.tar.xz $FLUTTER_VERSION
   - tar -xf flutter-sdk.tar.xz
   - export PATH=$PATH:$PWD/flutter/bin
-  - echo flutter.sdk=$PWD/flutter > mobile/android/local.properties
+  - echo flutter.sdk=$PWD/flutter > MSG/android/local.properties
 
 stages:
   - test
@@ -33,24 +33,21 @@ stages:
 .test:flutter:
   stage: test
   script:
-    - cd mobile
     - flutter test
 
 build:apk:
   stage: build
   script:
-    - cd mobile
     - flutter build apk
   artifacts:
     paths:
-      - mobile/build/app/outputs/apk
+      - MSG/build/app/outputs/apk
 
 build:bundle:
   stage: build
   when: manual
   script:
-    - cd mobile
     - flutter build appbundle
   artifacts:
     paths:
-      - mobile/build/app/outputs/bundle
+      - MSG/build/app/outputs/bundle
