@@ -37,11 +37,16 @@ stages:
 
 build:apk:
   stage: build
+  before_script:
+    - flutter packages get
+    - flutter clean
   script:
     - flutter build apk
   artifacts:
     paths:
-      - build/app/outputs/apk
+      - build/app/outputs/apk/release/app-release.apk
+  tags:
+    - flutter
 
 build:bundle:
   stage: build
