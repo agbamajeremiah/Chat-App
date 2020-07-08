@@ -45,8 +45,6 @@ build:apk:
   artifacts:
     paths:
       - build/app/outputs/apk/release/app-release.apk
-  tags:
-    - flutter
 
 build:bundle:
   stage: build
