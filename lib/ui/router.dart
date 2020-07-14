@@ -1,3 +1,4 @@
+import 'package:MSG/ui/views/message_view.dart';
 import 'package:MSG/ui/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:MSG/constant/route_names.dart';
@@ -8,6 +9,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SplashView(),
+      );
+    case MessageViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: MessagesView(),
       );
 
     default:
