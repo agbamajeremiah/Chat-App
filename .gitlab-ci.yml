@@ -5,7 +5,7 @@ variables:
   ANDROID_BUILD_TOOLS: "28.0.2"
   ANDROID_SDK_TOOLS: "4333796"
 
-  FLUTTER_VERSION: "https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.17.5+hotfix.7-stable.tar.xz"
+  FLUTTER_VERSION: "https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.17.4+hotfix.7-stable.tar.xz"
   # FLUTTER_VERSION: "https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.12.13+hotfix.7-stable.tar.xz"
 
 before_script:
