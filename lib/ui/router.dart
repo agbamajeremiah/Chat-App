@@ -1,3 +1,4 @@
+import 'package:MSG/ui/views/chat_view.dart';
 import 'package:MSG/ui/views/message_view.dart';
 import 'package:MSG/ui/views/splash_view.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: MessagesView(),
+      );
+    case ChatViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: ChatView(),
       );
 
     default:
