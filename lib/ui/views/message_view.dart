@@ -31,96 +31,97 @@ class _MessagesViewState extends State<MessagesView> {
       ),
       body: SafeArea(
         child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: ListView(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, ChatViewRoute);
-                  },
-                  child: MessageContainer(
-                    name: "Elisha",
-                    message: "You Know I love you ba",
-                    isRead: true,
-                  ),
-                ),
-                MessageContainer(
-                  name: "Prince",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Tg",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Cy",
-                  message: "You Know I love you ba",
-                ),
-                MessageContainer(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, ChatViewRoute);
+                },
+                child: MessageContainer(
                   name: "Elisha",
                   message: "You Know I love you ba",
                   isRead: true,
                 ),
-                MessageContainer(
-                  name: "Prince",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Tg",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Cy",
-                  message: "You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Elisha",
-                  message: "You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Prince",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Tg",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Cy",
-                  message: "You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Elisha",
-                  message: "You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Prince",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                ),
-                MessageContainer(
-                  name: "Tg",
-                  message:
-                      "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                  isRead: true,
-                ),
-                MessageContainer(
-                  name: "Cy",
-                  message: "You Know I love you ba",
-                ),
-              ],
-            )),
+              ),
+              MessageContainer(
+                name: "Prince",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Tg",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Cy",
+                message: "You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Elisha",
+                message: "You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Prince",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Tg",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Cy",
+                message: "You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Elisha",
+                message: "You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Prince",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Tg",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Cy",
+                message: "You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Elisha",
+                message: "You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Prince",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+              ),
+              MessageContainer(
+                name: "Tg",
+                message:
+                    "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
+                isRead: true,
+              ),
+              MessageContainer(
+                name: "Cy",
+                message: "You Know I love you ba",
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

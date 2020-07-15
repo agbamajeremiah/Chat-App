@@ -3,8 +3,9 @@ import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatefulWidget {
-  final title;
-  CustomAppBar({@required this.title});
+  final String title;
+  final bool back;
+  CustomAppBar({@required this.title, this.back = false});
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 }
@@ -15,6 +16,15 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
+      leading: widget.back
+          ? IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.textColor,
+              ),
+              onPressed: () => Navigator.pop(context),
+            )
+          : null,
       title: Text(
         "${widget.title}",
         style: textStyle.copyWith(fontSize: 20, color: AppColors.textColor),

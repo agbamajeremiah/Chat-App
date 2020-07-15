@@ -28,7 +28,7 @@ class MessageContainer extends StatelessWidget {
     Random random = new Random();
     int index = random.nextInt(colors.length);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
+      padding: const EdgeInsets.only(bottom: 25.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

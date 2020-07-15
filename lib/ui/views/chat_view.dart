@@ -12,6 +12,7 @@ class ChatView extends StatelessWidget {
         preferredSize: Size.fromHeight(60),
         child: CustomAppBar(
           title: "Elisha",
+          back: true,
         ),
       ),
       body: SafeArea(
