@@ -1,3 +1,4 @@
+import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
@@ -98,7 +99,10 @@ class _OtpViewState extends State<OtpView> {
                     Container(
                       constraints: const BoxConstraints(maxWidth: 500),
                       child: BusyButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(
+                              context, MessageViewRoute);
+                        },
                         color: Colors.blue,
                         title: "Confirm",
                       ),
