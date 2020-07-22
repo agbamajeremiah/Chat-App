@@ -1,3 +1,4 @@
+import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
@@ -65,7 +66,12 @@ class _LoginViewState extends State<LoginView> {
                 ),
               ),
               verticalSpace(20),
-              BusyButton(title: "Continue", onPressed: null, color: Colors.blue)
+              BusyButton(
+                  title: "Continue",
+                  onPressed: () {
+                    Navigator.pushNamed(context, OtpViewRoute);
+                  },
+                  color: Colors.blue)
             ],
           ),
         ),
