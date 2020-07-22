@@ -17,6 +17,8 @@ dependencies:
   google_fonts: ^0.3.2
   http: ^0.12.0+2
   intl: ^0.16.1
+  flutter_socket_io: ^0.6.0
+  country_code_picker: ^1.4.0
 
   cupertino_icons: ^0.1.3
 

@@ -14,12 +14,8 @@ BoxDecoration disabledFieldDecortaion = BoxDecoration(
     color: Colors.transparent,
     border: Border.all(color: AppColors.textColor, width: 2));
 
-BoxDecoration buttonDecoration = BoxDecoration(
-    border: Border.all(
-      // color: AppColors().background,
-      width: 2,
-    ),
-    borderRadius: BorderRadius.circular(26));
+BoxDecoration buttonDecoration =
+    BoxDecoration(borderRadius: BorderRadius.circular(26));
 // Field Variables
 
 const double fieldHeight = 55;
@@ -31,20 +27,20 @@ const EdgeInsets largeFieldPadding =
     const EdgeInsets.symmetric(horizontal: 15, vertical: 15);
 
 // Text Variables
-final TextStyle buttonTitleTextStyle = GoogleFonts.montserrat(
+final TextStyle buttonTitleTextStyle = GoogleFonts.poppins(
     textStyle: TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 21,
-  color: AppColors.textColor,
+  color: Colors.white,
 ));
-final TextStyle buttonTitleTextStyleBlack = GoogleFonts.montserrat(
+final TextStyle buttonTitleTextStyleBlack = GoogleFonts.poppins(
     textStyle: TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: 20,
   color: AppColors.textColor,
 ));
 
-final TextStyle textStyle = GoogleFonts.montserrat(
+final TextStyle textStyle = GoogleFonts.poppins(
   textStyle: TextStyle(
     fontSize: 11,
     color: Colors.white,
