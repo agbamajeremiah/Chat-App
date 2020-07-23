@@ -22,6 +22,7 @@ class InputField extends StatefulWidget {
   final Function(String) onChanged;
   final TextInputFormatter formatter;
   final IconData icon;
+  final bool decorate;
 
   InputField({
     @required this.controller,
@@ -39,6 +40,7 @@ class InputField extends StatefulWidget {
     this.isReadOnly = false,
     this.smallVersion = false,
     this.icon,
+    this.decorate = false,
   });
 
   @override
@@ -64,8 +66,9 @@ class _InputFieldState extends State<InputField> {
           height: widget.smallVersion ? 40 : fieldHeight,
           alignment: Alignment.centerLeft,
           padding: fieldPadding,
-          decoration:
-              widget.isReadOnly ? disabledFieldDecortaion : fieldDecortaion,
+          decoration: widget.decorate
+              ? widget.isReadOnly ? disabledFieldDecortaion : fieldDecortaion
+              : null,
           child: Row(
             children: <Widget>[
               GestureDetector(
@@ -86,7 +89,7 @@ class _InputFieldState extends State<InputField> {
                       )
                     : Container(
                         width: 24,
-                        height: 24,
+                         height: 24,
                         alignment: Alignment.center,
                         child: widget != null
                             ? Icon(
@@ -127,7 +130,7 @@ class _InputFieldState extends State<InputField> {
                   readOnly: widget.isReadOnly,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
                     hintText: widget.placeholder,
                     hintStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(

@@ -39,7 +39,7 @@ class _HomeContainerState extends State<HomeContainer> {
       bottomNavigationBar: FABBottomAppBar(
         //centerItemText: 'A',
         color: AppColors.textColor,
-        selectedColor: AppColors.contraBlue,
+        selectedColor: AppColors.primaryColor,
         //Color(0xff800000),
         notchedShape: CircularNotchedRectangle(),
         onTabSelected: _onItemTapped,

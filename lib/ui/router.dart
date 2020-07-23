@@ -1,3 +1,8 @@
+import 'package:MSG/ui/views/chat_view.dart';
+import 'package:MSG/ui/views/contacts.dart';
+import 'package:MSG/ui/views/login_view.dart';
+import 'package:MSG/ui/views/message_view.dart';
+import 'package:MSG/ui/views/otp.dart';
 import 'package:MSG/ui/views/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:MSG/constant/route_names.dart';
@@ -8,6 +13,31 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SplashView(),
+      );
+    case MessageViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: MessagesView(),
+      );
+    case ChatViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: ChatView(),
+      );
+    case LoginViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: LoginView(),
+      );
+    case OtpViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: OtpView(),
+      );
+    case ContactViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: AllContacts(),
       );
 
     default:
