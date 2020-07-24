@@ -15,7 +15,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      elevation: 0,
+      elevation: 0.0,
       leading: widget.back
           ? IconButton(
               icon: Icon(
@@ -30,16 +30,19 @@ class _CustomAppBarState extends State<CustomAppBar> {
         style: textStyle.copyWith(fontSize: 20, color: AppColors.textColor),
       ),
       actions: [
-        IconButton(
-          onPressed: null,
-          icon: Icon(Icons.search),
-          color: AppColors.textColor,
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.search),
+            color: AppColors.textColor,
+          ),
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 20),
+          padding: const EdgeInsets.only(right: 10),
           child: PopupMenuButton<String>(
             onSelected: (value) {
-              setState(() {});
+              print(value);
             },
             child: Center(
                 child: Icon(
