@@ -1,6 +1,7 @@
 import 'package:MSG/models/user.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
+import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/ui/widgets/single_search_contact.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,6 @@ class _AllContactsState extends State<AllContacts> {
                 .toLowerCase()
                 .contains(_searchQuery.toLowerCase()))
             .toList();
-    //p.mobileNumber.contains(_searchQuery) ||
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: (_isSearching)
@@ -59,7 +59,6 @@ class _AllContactsState extends State<AllContacts> {
                     },
                     icon: Icon(Icons.arrow_back)),
                 title: Container(
-                  //margin: EdgeInsets.all(10),
                   child: Theme(
                     data: Theme.of(context).copyWith(
                       // override textfield's icon color when selected
@@ -122,14 +121,10 @@ class _AllContactsState extends State<AllContacts> {
                     },
                     icon: Icon(Icons.search),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.more_vert),
-                  ),
+                  MyPopupMenu(),
                 ],
               ),
         body: Container(
-          //margin: EdgeInsets.symmetric(vertical: 10.0),
           child: _searchQuery.isNotEmpty
               ? Container(
                   //searchResultList

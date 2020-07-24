@@ -30,8 +30,6 @@ class SingleContact extends StatelessWidget {
             ),
             horizontalSpaceSmall,
             Expanded(
-                child: Container(
-              //padding: EdgeInsets.symmetric(vertical: 5.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -51,7 +49,7 @@ class SingleContact extends StatelessWidget {
                   ),
                 ],
               ),
-            ))
+            )
           ],
         ),
       ),

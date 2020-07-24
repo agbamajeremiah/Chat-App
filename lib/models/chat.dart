@@ -1,4 +1,6 @@
 class Chat {
   final String chatId;
-  Chat(this.chatId);
+  final String senderNo;
+  final String receipientNo;
+  Chat({this.chatId, this.senderNo, this.receipientNo});
 }

@@ -5,6 +5,7 @@ class Message {
   final String receiptTime;
   final String senderId;
   final String receiverId;
+  final bool isread;
 
   Message(
       {this.messageId,
@@ -12,5 +13,6 @@ class Message {
       this.sentTime,
       this.receiptTime,
       this.senderId,
-      this.receiverId});
+      this.receiverId,
+      this.isread});
 }

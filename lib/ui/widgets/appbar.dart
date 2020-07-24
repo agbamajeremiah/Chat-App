@@ -42,7 +42,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           padding: const EdgeInsets.only(right: 10),
           child: PopupMenuButton<String>(
             onSelected: (value) {
-              setState(() {});
+              print(value);
             },
             child: Center(
                 child: Icon(

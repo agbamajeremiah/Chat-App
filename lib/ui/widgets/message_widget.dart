@@ -29,7 +29,7 @@ class MessageContainer extends StatelessWidget {
     Random random = new Random();
     int index = random.nextInt(colors.length);
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 5),
+      padding: EdgeInsets.only(left: 10, right: 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,25 +62,22 @@ class MessageContainer extends StatelessWidget {
                         fontSize: 20,
                         fontWeight: FontWeight.w500),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Text(
-                      "$message",
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: true,
-                      maxLines: 1,
-                      style: textStyle.copyWith(
-                          color: AppColors.textColor2,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  )
+                  Text(
+                    "$message",
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: 1,
+                    style: textStyle.copyWith(
+                        color: AppColors.textColor2,
+                        fontWeight: FontWeight.normal),
+                  ),
                 ],
               ),
             ),
           ),
           Container(
             padding: EdgeInsets.only(top: 5.0),
-            height: 43,
+            height: 45,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
