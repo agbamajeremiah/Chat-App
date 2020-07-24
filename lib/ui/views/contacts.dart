@@ -40,7 +40,7 @@ class _AllContactsState extends State<AllContacts> {
         : regContacts
             .where((p) => p.displayName
                 .toLowerCase()
-                .contains(_searchQuery.toLowerCase()))
+                .startsWith(_searchQuery.toLowerCase()))
             .toList();
     return Scaffold(
         backgroundColor: Colors.white,

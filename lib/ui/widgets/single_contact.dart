@@ -37,7 +37,7 @@ class SingleContact extends StatelessWidget {
                     name,
                     style: textStyle.copyWith(
                         color: AppColors.textColor,
-                        fontSize: 17,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
