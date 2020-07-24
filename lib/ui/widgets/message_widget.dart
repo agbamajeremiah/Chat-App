@@ -49,7 +49,7 @@ class MessageContainer extends StatelessWidget {
           horizontalSpaceSmall,
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(top: 5),
+              //padding: EdgeInsets.only(top: 5),
               // height: isRead ? 40 : 70,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -4,10 +4,17 @@ import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
-class SingleContact extends StatelessWidget {
+// ignore: must_be_immutable
+class SearchContact extends StatelessWidget {
+  final String contactName;
   final String number;
-  final String name;
-  const SingleContact({this.number, this.name});
+  final String matchString;
+  SearchContact({this.contactName, this.number, this.matchString});
+  String firstPos = "";
+  String middlePos = "";
+  String finalPos = "";
+  //final startBoldIndex = contactName.indexOf();
+  //final endBoldIndex = str.indexOf(end, startIndex + start.length);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,7 @@ class SingleContact extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    name,
+                    contactName,
                     style: textStyle.copyWith(
                         color: AppColors.textColor,
                         fontSize: 17,
