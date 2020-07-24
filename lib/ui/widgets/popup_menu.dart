@@ -1,14 +1,37 @@
+import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:flutter/material.dart';
 
-class MyPopupMenu extends StatelessWidget {
+class MyPopupMenu extends StatefulWidget {
+  @override
+  _MyPopupMenuState createState() => _MyPopupMenuState();
+}
+
+class _MyPopupMenuState extends State<MyPopupMenu> {
+  void _switchMenuScreen(String option, BuildContext cxt) {
+    switch (option) {
+      case "profile":
+        print("Switch to Profile");
+        break;
+      case "settings":
+        print("Switch to Settings");
+        Navigator.pushNamed(context, SettingsViewRoute);
+        break;
+      case "help":
+        print("Switch to Help Screen");
+        break;
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
         //padding: EdgeInsets.symmetric(horizontal: 5),
-        icon: Icon(Icons.more_vert),
+        icon: Icon(Icons.more_vert, color: AppColors.textColor),
         onSelected: (option) {
-          print(option);
+          _switchMenuScreen(option, context);
         },
         itemBuilder: (BuildContext context) {
           return <PopupMenuEntry<String>>[

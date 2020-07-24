@@ -137,6 +137,7 @@ class _AllContactsState extends State<AllContacts> {
                           ),
                         )
                       : ListView.builder(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
                           itemCount: searchResultList.length,
                           itemBuilder: (context, index) {
                             final item = searchResultList[index];
@@ -150,6 +151,7 @@ class _AllContactsState extends State<AllContacts> {
                 )
               : Container(
                   child: ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
                     itemCount: regContacts.length,
                     itemBuilder: (context, index) {
                       final item = regContacts[index];

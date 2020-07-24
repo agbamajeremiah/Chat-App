@@ -96,21 +96,14 @@ class _MessagesViewState extends State<MessagesView> {
               ),
             )
           : AppBar(
-              iconTheme: IconThemeData(
-                color: AppColors.textColor,
-              ),
               elevation: 2,
               backgroundColor: Colors.white,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    "Select Contact",
-                    style: textStyle.copyWith(
-                        color: AppColors.textColor, fontSize: 20),
-                  ),
-                ],
+              title: Text(
+                "Messenges",
+                style: textStyle.copyWith(
+                    color: AppColors.textColor, fontSize: 22),
               ),
+              centerTitle: true,
               actions: <Widget>[
                 IconButton(
                   onPressed: () {
@@ -119,14 +112,16 @@ class _MessagesViewState extends State<MessagesView> {
                     });
                   },
                   icon: Icon(Icons.search),
+                  color: AppColors.textColor,
                 ),
                 MyPopupMenu(),
               ],
             ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 0.0),
           child: ListView(
+            padding: EdgeInsets.symmetric(vertical: 20.0),
             children: [
               InkWell(
                 onTap: () {

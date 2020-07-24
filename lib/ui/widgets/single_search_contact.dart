@@ -39,7 +39,7 @@ class SearchContact extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       style: textStyle.copyWith(
-                          fontSize: 15, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold),
                       children: <TextSpan>[
                         TextSpan(
                             text: contactName.substring(0, matchString.length),
