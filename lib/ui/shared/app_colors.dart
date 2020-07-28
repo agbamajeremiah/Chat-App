@@ -5,4 +5,5 @@ class AppColors {
   static Color secondaryColor = Color(0xffED215E);
   static Color textColor = Color(0xff18191F);
   static Color textColor2 = Color(0xff474A57);
+  static Color unreadText = Color(0xffE59C26);
 }

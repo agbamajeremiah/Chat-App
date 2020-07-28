@@ -11,7 +11,6 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Timer(Duration(seconds: 3),
         () => Navigator.pushReplacementNamed(context, LoginViewRoute));

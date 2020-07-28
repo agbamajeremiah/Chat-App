@@ -46,6 +46,12 @@ final TextStyle textStyle = GoogleFonts.poppins(
     color: Colors.white,
   ),
 );
+final TextStyle menuTextStyle = GoogleFonts.poppins(
+  textStyle: TextStyle(
+    fontSize: 13,
+    color: AppColors.textColor,
+  ),
+);
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
   hintText: 'Type your message here...',
