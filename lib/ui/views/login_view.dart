@@ -81,9 +81,10 @@ class _LoginViewState extends State<LoginView> {
                     BusyButton(
                         title: "Continue",
                         busy: model.busy,
-                        onPressed: () {
+                        onPressed: () async {
                           // print(prefix + phoneNumber.text);
-                          model.login(phoneNumber: prefix + phoneNumber.text);
+                          await model.login(
+                              phoneNumber: prefix + phoneNumber.text);
                         },
                         color: Colors.blue)
                   ],

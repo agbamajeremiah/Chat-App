@@ -21,7 +21,6 @@ Future postResquest({
       ),
     ),
   );
-  print(body);
   Response response = await dio.post(
     route,
     data: body,
