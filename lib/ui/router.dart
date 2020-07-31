@@ -5,6 +5,7 @@ import 'package:MSG/ui/views/message_view.dart';
 import 'package:MSG/ui/views/otp.dart';
 import 'package:MSG/ui/views/settings.dart';
 import 'package:MSG/ui/views/splash_view.dart';
+import 'package:MSG/ui/views/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:MSG/constant/route_names.dart';
 
@@ -44,6 +45,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SettingScreen(),
+      );
+    case UpdateProfileRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: UpdateProfileView(),
       );
     default:
       return MaterialPageRoute(

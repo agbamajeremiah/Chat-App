@@ -5,3 +5,4 @@ const String LoginViewRoute = "LoginView";
 const String OtpViewRoute = "OtpView";
 const String ContactViewRoute = "ContactView";
 const String SettingsViewRoute = "SettingsView";
+const String UpdateProfileRoute = "UpdateProfileView";
