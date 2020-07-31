@@ -30,7 +30,8 @@ class ChatView extends StatelessWidget {
                   ),
                   MessageBubble(
                     sender: "ssjsjj",
-                    text: "ssjsjjsjs",
+                    text:
+                        "ssjsjjsjs djdj d  djdjd djd ddnj djdj d dj ddjd djd cjd cjd ",
                     isMe: false,
                   ),
                 ],
