@@ -4,10 +4,16 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationSerivice {
-  Future<String> getToken() async {
+  String _token;
+  String get token => _token;
+  Future<bool> isUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("token");
-    return token;
+    String data = prefs.getString("token");
+
+    if (token != null) {
+      _token = data;
+    }
+    return data != null;
   }
 
   Future register({
@@ -53,9 +59,12 @@ class AuthenticationSerivice {
         body: body,
       );
       if (response.statusCode == 200) {
+        print(response.data);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         // var res = jsonDecode(response);
-        prefs.setString("token", response.data["data"]["token"]);
+        _token = response.data["token"];
+        print(_token);
+        prefs.setString("token", response.data["token"]);
       }
       // return jsonDecode(response);
       return response;
@@ -73,41 +82,36 @@ class AuthenticationSerivice {
 
   // login
 
-  // Future<Response> login({
-  //   @required String username,
-  //   @required String password,
-  // }) async {
-  //   try {
-  //     Map<String, String> body = {
-  //       "username": username,
-  //       "password": password,
-  //     };
-  //     Map<String, String> headers = {
-  //       "Content-Type": "application/json",
-  //       "Accept": "application/json",
-  //     };
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     var response = await postResquest(
-  //       url: "/auth/login",
-  //       body: body,
-  //       headers: headers,
-  //     );
+  Future<Response> updateProfile({
+    @required String name,
+  }) async {
+    try {
+      Map<String, String> body = {
+        "name": name,
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_token",
+      };
 
-  //     if (response.statusCode == 200) {
-  //       var res = jsonDecode(response);
-  //       prefs.setString("token", res["data"]["access_token"]);
-  //     }
-  //     // return jsonDecode(response);
-  //     return response;
-  //   } catch (e) {
-  //     if (e is DioError) {
-  //       debugPrint(
-  //         e.response.data,
-  //       );
-  //     }
-  //     print(e.runtimeType);
-  //     print(e.toString());
-  //     throw e;
-  //   }
-  // }
+      var response = await patchResquest(
+        url: "/updateUser",
+        body: body,
+        headers: headers,
+      );
+
+      // if (response.statusCode == 200) {}
+      // return jsonDecode(response);
+      return response;
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.data,
+        );
+      }
+      print(e.runtimeType);
+      print(e.toString());
+      throw e;
+    }
+  }
 }

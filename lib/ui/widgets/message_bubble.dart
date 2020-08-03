@@ -1,3 +1,4 @@
+import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -14,31 +15,32 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(fontSize: 12, color: Colors.black54),
-          ),
+          // Text(
+          //   sender,
+          //   style: TextStyle(fontSize: 12, color: Colors.black54),
+          // ),
           Material(
-            elevation: 5,
+            elevation: 2,
             borderRadius: isMe
                 ? BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
+                    topLeft: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
                   )
                 : BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                    topRight: Radius.circular(20),
                   ),
             color: isMe ? Colors.lightBlueAccent : Colors.white,
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20),
               child: Text(
                 text,
                 style: TextStyle(
-                    fontSize: 15, color: isMe ? Colors.white : Colors.black54),
+                    fontSize: 16,
+                    color: isMe ? Colors.white : AppColors.textColor),
               ),
             ),
           ),
