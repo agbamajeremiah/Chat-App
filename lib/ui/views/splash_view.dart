@@ -14,8 +14,6 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3),
-        () => Navigator.pushNamed(context, ContactViewRoute));
   }
 
   @override
