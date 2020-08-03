@@ -3,6 +3,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 class ContactServices {
+  final ContactServices _contactService = locator<ContactServices>();
+
   Future<List<MyContact>> getAllContacts() async {
     List<MyContact> contactsAll;
     final PermissionStatus permissionStatus = await _getPermission();
@@ -41,5 +43,42 @@ class ContactServices {
     } else {
       return permission;
     }
+  }
+}
+
+//Sync User contacts from server
+Future syncAllContact(List uploadContacts) async {
+  print(uploadContacts);
+  sendContacts(uploadContacts);
+}
+
+Future sendContacts(List allContacts) async {
+  final _userToken = _authService.token;
+  print("userToken: ");
+  print(_userToken);
+  try {
+    Map<String, dynamic> body = {
+      "contacts": allContacts,
+    };
+    Map<String, String> headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "authorization": "Bearer $_userToken",
+    };
+    var response = await postResquest(
+      url: "/register",
+      body: body,
+      headers: headers,
+    );
+    print(response);
+    return response;
+  } catch (e) {
+    if (e is DioError) {
+      debugPrint(
+        e.response.data,
+      );
+    }
+    print(e.runtimeType);
+    print(e.toString());
+    throw e;
   }
 }
