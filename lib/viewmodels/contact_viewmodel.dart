@@ -13,7 +13,7 @@ class ContactViewModel extends BaseModel {
     List<MyContact> allContacts = await _contactService.getAllContacts();
     allContacts.forEach((con) {
       uploadContacts.add(con.number);
-      //DatabaseService.db.insertContact(con);
+      DatabaseService.db.insertContact(con);
     });
     return allContacts;
   }
