@@ -31,3 +31,30 @@ Future postResquest({
   );
   return response;
 }
+
+Future patchResquest({
+  @required String url,
+  Map headers,
+  @required dynamic body,
+  Map queryParam,
+}) async {
+  final dio = Dio();
+  String route = BasedUrl + url;
+  dio.interceptors.add(
+    RetryOnConnectionChangeInterceptor(
+      requestRetrier: DioConnectivityRequestRetrier(
+        dio: Dio(),
+        connectivity: Connectivity(),
+      ),
+    ),
+  );
+  Response response = await dio.patch(
+    route,
+    data: body,
+    queryParameters: queryParam,
+    options: Options(
+      headers: headers,
+    ),
+  );
+  return response;
+}
