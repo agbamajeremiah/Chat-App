@@ -13,7 +13,7 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3),
-        () => Navigator.pushReplacementNamed(context, LoginViewRoute));
+        () => Navigator.pushNamed(context, ContactViewRoute));
   }
 
   @override

@@ -68,6 +68,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
     );
   }
 
+/*
   Widget _buildMiddleTabItem() {
     return Expanded(
       child: SizedBox(
@@ -86,7 +87,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
       ),
     );
   }
-
+*/
   Widget _buildTabItem({
     FABBottomAppBarItem item,
     int index,
