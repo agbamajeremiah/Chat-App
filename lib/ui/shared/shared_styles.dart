@@ -63,3 +63,10 @@ const kMessageContainerDecoration = BoxDecoration(
     top: BorderSide(color: Colors.lightBlueAccent, width: 2.0),
   ),
 );
+final TextStyle welcomeText = GoogleFonts.meieScript(
+  textStyle: TextStyle(
+    fontSize: 63,
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+  ),
+);
