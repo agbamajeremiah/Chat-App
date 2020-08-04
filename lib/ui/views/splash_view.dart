@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/viewmodels/startup_view_model.dart';
 import 'package:flutter/material.dart';

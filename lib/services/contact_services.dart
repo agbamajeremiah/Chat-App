@@ -1,9 +1,14 @@
+import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
+import 'package:MSG/services/authentication_service.dart';
+import 'package:MSG/utils/api.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 class ContactServices {
-  final ContactServices _contactService = locator<ContactServices>();
+  final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
 
   Future<List<MyContact>> getAllContacts() async {
     List<MyContact> contactsAll;
@@ -44,41 +49,41 @@ class ContactServices {
       return permission;
     }
   }
-}
 
 //Sync User contacts from server
-Future syncAllContact(List uploadContacts) async {
-  print(uploadContacts);
-  sendContacts(uploadContacts);
-}
+  Future syncAllContact(List uploadContacts) async {
+    print(uploadContacts);
+    sendContacts(uploadContacts);
+  }
 
-Future sendContacts(List allContacts) async {
-  final _userToken = _authService.token;
-  print("userToken: ");
-  print(_userToken);
-  try {
-    Map<String, dynamic> body = {
-      "contacts": allContacts,
-    };
-    Map<String, String> headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "authorization": "Bearer $_userToken",
-    };
-    var response = await postResquest(
-      url: "/register",
-      body: body,
-      headers: headers,
-    );
-    print(response);
-    return response;
-  } catch (e) {
-    if (e is DioError) {
-      debugPrint(
-        e.response.data,
+  Future sendContacts(List allContacts) async {
+    final _userToken = _authService.token;
+    print("userToken: ");
+    print(_userToken);
+    try {
+      Map<String, dynamic> body = {
+        "contacts": allContacts,
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_userToken",
+      };
+      var response = await postResquest(
+        url: "/register",
+        body: body,
+        headers: headers,
       );
+      print(response);
+      return response;
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.data,
+        );
+      }
+      print(e.runtimeType);
+      print(e.toString());
+      throw e;
     }
-    print(e.runtimeType);
-    print(e.toString());
-    throw e;
   }
 }
