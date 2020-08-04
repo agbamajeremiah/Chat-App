@@ -17,7 +17,7 @@ class UpdateProvfileViewModel extends BaseModel {
       setBusy(true);
       var resposnse = await _authenticationSerivice.updateProfile(name: name);
       print(resposnse);
-      _navigationService.navigateTo(MessageViewRoute);
+      _navigationService.navigateTo(WelcomeViewRoute);
       setBusy(false);
     } catch (e) {
       print(e.message);
