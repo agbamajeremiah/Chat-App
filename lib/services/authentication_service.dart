@@ -10,7 +10,7 @@ class AuthenticationSerivice {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString("token");
 
-    if (token != null) {
+    if (data != null) {
       _token = data;
     }
     return data != null;
@@ -99,9 +99,6 @@ class AuthenticationSerivice {
         body: body,
         headers: headers,
       );
-
-      // if (response.statusCode == 200) {}
-      // return jsonDecode(response);
       return response;
     } catch (e) {
       if (e is DioError) {
