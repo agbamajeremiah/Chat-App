@@ -76,7 +76,6 @@ class ContactServices {
       if (response.statusCode == 200) {
         return response;
       }
-      return response;
     } catch (e) {
       if (e is DioError) {
         debugPrint(
