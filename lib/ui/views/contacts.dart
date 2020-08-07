@@ -159,7 +159,7 @@ class _AllContactsState extends State<AllContacts> {
                                         final item = searchResultList[index];
                                         return SearchContact(
                                           contactName: item.fullName.toString(),
-                                          number: item.number,
+                                          number: item.phoneNumber,
                                           matchString: _searchQuery,
                                         );
                                       },
@@ -173,7 +173,7 @@ class _AllContactsState extends State<AllContacts> {
                                   final item = regContacts[index];
                                   return SingleContact(
                                       name: item.fullName.toString(),
-                                      number: item.number.toString());
+                                      number: item.phoneNumber.toString());
                                 },
                               ),
                             ),

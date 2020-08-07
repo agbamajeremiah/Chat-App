@@ -3,7 +3,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
-  static const String TABLE_CONTACT = "contacts";
+  //RegisteredContacts table fields
+  static const String TABLE_CONTACT = "reg_contacts";
   static const String COLUMN_ID = "id";
   static const String COLUMN_NAME = "display_name";
   static const String COLUMN_NUMBER = "phone_number";

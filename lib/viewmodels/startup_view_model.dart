@@ -26,13 +26,13 @@ class StartUpViewModel extends BaseModel {
   Future getAllContactsFromDevice() async {
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await _contactService.getAllContacts();
+    print(allContacts);
     allContacts.forEach((con) {
-      String fullcontacts = "+234" + con.number.substring(1, con.number.length);
-      uploadContacts.add(fullcontacts);
+      uploadContacts.add(con.phoneNumber);
       //DatabaseService.db.insertContact(con);
     });
-    uploadContacts.add("+2349076621891");
-    _contactService.syncAllContact(uploadContacts);
-    return true;
+    //print(uploadContacts);
+    await _contactService.getRegisteredContact(uploadContacts);
+    //print(syncContacts);
   }
 }

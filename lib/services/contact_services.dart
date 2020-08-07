@@ -23,7 +23,7 @@ class ContactServices {
             return MyContact(
               contactId: con.identifier,
               fullName: con.displayName ?? "",
-              number: con.phones.toList()[0].value ?? "",
+              phoneNumber: con.phones.toList()[0].value ?? "",
             );
           }).toList();
         }
@@ -51,9 +51,19 @@ class ContactServices {
   }
 
 //Sync User contacts from server
-  Future syncAllContact(List uploadContacts) async {
+  Future<List<MyContact>> getRegisteredContact(List uploadContacts) async {
+    List<MyContact> regContacts = [];
     dynamic response = await sendContacts(uploadContacts);
-    print(response);
+    //print(response);
+    List<dynamic> contactsData = response.data['contacts'];
+    //print(contactsData);
+    print(contactsData.length);
+    contactsData.forEach((element) {
+      regContacts.add(MyContact.fromSyncMap(element));
+    });
+    print(regContacts);
+    return regContacts;
+    //return MyContact.fromJson(response.data);
   }
 
   Future sendContacts(contacts) async {
