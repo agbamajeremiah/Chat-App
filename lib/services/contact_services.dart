@@ -58,8 +58,6 @@ class ContactServices {
 
   Future sendContacts(contacts) async {
     final _userToken = _authService.token;
-    //print(_userToken);
-    //print(contacts);
     try {
       Map<String, List> body = {
         "contacts": contacts,
