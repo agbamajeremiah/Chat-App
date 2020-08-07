@@ -23,7 +23,8 @@ class MyContact {
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       DatabaseService.COLUMN_NAME: fullName,
-      DatabaseService.COLUMN_NUMBER: phoneNumber
+      DatabaseService.COLUMN_NUMBER: phoneNumber,
+      DatabaseService.COLUMN_REG_STATUS: false
     };
     if (contactId != null) {
       map[DatabaseService.COLUMN_ID] = contactId;

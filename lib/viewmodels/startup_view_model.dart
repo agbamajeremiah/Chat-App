@@ -3,6 +3,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/contact_services.dart';
+import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'base_model.dart';
 
@@ -26,13 +27,16 @@ class StartUpViewModel extends BaseModel {
   Future getAllContactsFromDevice() async {
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await _contactService.getAllContacts();
-    print(allContacts);
+    //print(allContacts);
     allContacts.forEach((con) {
       uploadContacts.add(con.phoneNumber);
-      //DatabaseService.db.insertContact(con);
+      DatabaseService.db.insertContact(con);
     });
     //print(uploadContacts);
-    await _contactService.getRegisteredContact(uploadContacts);
-    //print(syncContacts);
+    /*List<MyContact> regContacts =
+        await _contactService.getRegisteredContact(uploadContacts);
+    regContacts.forEach((cont) {
+
+    });*/
   }
 }

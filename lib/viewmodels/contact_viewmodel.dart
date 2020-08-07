@@ -5,7 +5,8 @@ import 'package:MSG/viewmodels/base_model.dart';
 class ContactViewModel extends BaseModel {
   //Fetch all registered contacts from database
   Future<List<MyContact>> getContactsFromDb() async {
-    List<MyContact> allContacts = await DatabaseService.db.getContactsFromDb();
+    List<MyContact> allContacts =
+        await DatabaseService.db.getRegContactsFromDb();
     return allContacts;
   }
 }

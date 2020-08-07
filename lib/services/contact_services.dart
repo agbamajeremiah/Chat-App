@@ -58,12 +58,10 @@ class ContactServices {
     List<dynamic> contactsData = response.data['contacts'];
     //print(contactsData);
     print(contactsData.length);
-    contactsData.forEach((element) {
-      regContacts.add(MyContact.fromSyncMap(element));
+    contactsData.forEach((contact) {
+      regContacts.add(MyContact.fromSyncMap(contact));
     });
-    print(regContacts);
     return regContacts;
-    //return MyContact.fromJson(response.data);
   }
 
   Future sendContacts(contacts) async {
