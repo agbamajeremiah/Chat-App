@@ -44,13 +44,19 @@ class DatabaseService {
 
   Future<List<MyContact>> getRegContactsFromDb() async {
     final db = await database;
-    var contacts = await db
-        .query(TABLE_CONTACT, columns: [COLUMN_ID, COLUMN_NAME, COLUMN_NUMBER]);
     List<MyContact> allContacts = List<MyContact>();
-
+    var contacts = await db.query(TABLE_CONTACT,
+        columns: [COLUMN_ID, COLUMN_NAME, COLUMN_NUMBER, COLUMN_REG_STATUS],
+        where: "$COLUMN_REG_STATUS = ?",
+        whereArgs: [1]);
     contacts.forEach((cont) {
       MyContact contact = MyContact.fromMap(cont);
       allContacts.add(contact);
+    });
+    allContacts.forEach((element) {
+      //print(element.contactId);
+      //print(element.regStatus);
+      //print(element.fullName);
     });
     return allContacts;
   }
@@ -66,7 +72,10 @@ class DatabaseService {
 
   Future<void> updateRegContact(String phoneNumber) async {
     final db = await database;
-    await db.rawUpdate(
-        'UPDATE $COLUMN_NAME SET $COLUMN_REG_STATUS = true WHERE phoneNumber = $phoneNumber');
+    await db.rawUpdate('''
+      UPDATE $TABLE_CONTACT 
+      SET $COLUMN_REG_STATUS = ?
+      WHERE $COLUMN_NUMBER = ?
+    ''', [1, phoneNumber]);
   }
 }

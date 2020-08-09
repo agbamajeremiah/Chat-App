@@ -27,16 +27,19 @@ class StartUpViewModel extends BaseModel {
   Future getAllContactsFromDevice() async {
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await _contactService.getAllContacts();
-    //print(allContacts);
+    print(allContacts);
     allContacts.forEach((con) {
       uploadContacts.add(con.phoneNumber);
       DatabaseService.db.insertContact(con);
     });
-    //print(uploadContacts);
-    /*List<MyContact> regContacts =
+    print(uploadContacts);
+    List<MyContact> regContacts =
         await _contactService.getRegisteredContact(uploadContacts);
-    regContacts.forEach((cont) {
-
-    });*/
+    regContacts.forEach((cont) async {
+      String phoneNumber =
+          cont.phoneNumber.substring(4, cont.phoneNumber.length);
+      print(phoneNumber);
+      await DatabaseService.db.updateRegContact(phoneNumber);
+    });
   }
 }

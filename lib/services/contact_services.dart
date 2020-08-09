@@ -21,10 +21,10 @@ class ContactServices {
         List<MyContact> _allContacts(Iterable<Contact> contacts) {
           return contacts.map((con) {
             return MyContact(
-              contactId: con.identifier,
-              fullName: con.displayName ?? "",
-              phoneNumber: con.phones.toList()[0].value ?? "",
-            );
+                contactId: con.identifier,
+                fullName: con.displayName ?? "",
+                phoneNumber: con.phones.toList()[0].value ?? "",
+                regStatus: 0);
           }).toList();
         }
 
@@ -56,7 +56,7 @@ class ContactServices {
     dynamic response = await sendContacts(uploadContacts);
     //print(response);
     List<dynamic> contactsData = response.data['contacts'];
-    //print(contactsData);
+    print(contactsData);
     print(contactsData.length);
     contactsData.forEach((contact) {
       regContacts.add(MyContact.fromSyncMap(contact));
