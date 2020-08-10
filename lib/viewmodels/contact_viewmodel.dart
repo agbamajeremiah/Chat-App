@@ -9,12 +9,3 @@ class ContactViewModel extends BaseModel {
     return allContacts;
   }
 }
-/*Future getAllContactsFromDevice() async {
-    List<String> uploadContacts = List<String>();
-    List<MyContact> allContacts = await _contactService.getAllContacts();
-    allContacts.forEach((con) {
-      uploadContacts.add(con.number);
-      DatabaseService.db.insertContact(con);
-    });
-  }
-  */

@@ -52,29 +52,30 @@ class ContactServices {
 
 //Sync User contacts from server
   Future syncAllContact(List uploadContacts) async {
-    print(uploadContacts);
-    sendContacts(uploadContacts);
+    dynamic response = await sendContacts(uploadContacts);
+    print(response);
   }
 
-  Future sendContacts(List allContacts) async {
+  Future sendContacts(contacts) async {
     final _userToken = _authService.token;
-    print("userToken: ");
-    print(_userToken);
+    //print(_userToken);
+    //print(contacts);
     try {
-      Map<String, dynamic> body = {
-        "contacts": allContacts,
+      Map<String, List> body = {
+        "contacts": contacts,
       };
       Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "authorization": "Bearer $_userToken",
       };
       var response = await postResquest(
-        url: "/register",
-        body: body,
+        url: "/registercontact",
         headers: headers,
+        body: body,
       );
-      print(response);
-      return response;
+      if (response.statusCode == 200) {
+        return response;
+      }
     } catch (e) {
       if (e is DioError) {
         debugPrint(
