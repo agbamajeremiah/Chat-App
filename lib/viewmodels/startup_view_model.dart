@@ -1,9 +1,7 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/locator.dart';
-import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/contact_services.dart';
-import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'base_model.dart';
 
@@ -17,29 +15,10 @@ class StartUpViewModel extends BaseModel {
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
 
     if (hasLoggedInUser) {
-      getAllContactsFromDevice().then((value) =>
+      _contactService.syncContacts().then((value) =>
           _navigationService.clearLastAndNavigateTo(MessageViewRoute));
     } else {
-      _navigationService.clearLastAndNavigateTo(LoginViewRoute);
+      _navigationService.clearLastAndNavigateTo(LoginViewRoute); //08132368804
     }
-  }
-
-  Future getAllContactsFromDevice() async {
-    List<String> uploadContacts = List<String>();
-    List<MyContact> allContacts = await _contactService.getAllContacts();
-    print(allContacts);
-    allContacts.forEach((con) {
-      uploadContacts.add(con.phoneNumber);
-      DatabaseService.db.insertContact(con);
-    });
-    print(uploadContacts);
-    List<MyContact> regContacts =
-        await _contactService.getRegisteredContact(uploadContacts);
-    regContacts.forEach((cont) async {
-      String phoneNumber =
-          cont.phoneNumber.substring(4, cont.phoneNumber.length);
-      print(phoneNumber);
-      await DatabaseService.db.updateRegContact(phoneNumber);
-    });
   }
 }

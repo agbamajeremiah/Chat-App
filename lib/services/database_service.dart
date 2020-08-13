@@ -54,9 +54,38 @@ class DatabaseService {
       allContacts.add(contact);
     });
     allContacts.forEach((element) {
-      //print(element.contactId);
-      //print(element.regStatus);
-      //print(element.fullName);
+      print(element.contactId);
+      print(element.regStatus);
+      print(element.fullName);
+    });
+    return allContacts;
+  }
+
+  Future<List<MyContact>> getSingleContactFromDb(String number) async {
+    final db = await database;
+    List<MyContact> singleContact = List<MyContact>();
+    var contacts = await db.query(TABLE_CONTACT,
+        columns: [COLUMN_ID, COLUMN_NAME, COLUMN_NUMBER, COLUMN_REG_STATUS],
+        where: "$COLUMN_NUMBER = ?",
+        whereArgs: [number]);
+
+    contacts.forEach((cont) {
+      MyContact contact = MyContact.fromMap(cont);
+      singleContact.add(contact);
+    });
+    return singleContact;
+  }
+
+  Future<List<MyContact>> getUnRegContactsFromDb() async {
+    final db = await database;
+    List<MyContact> allContacts = List<MyContact>();
+    var contacts = await db.query(TABLE_CONTACT,
+        columns: [COLUMN_NUMBER, COLUMN_REG_STATUS],
+        where: "$COLUMN_REG_STATUS = ?",
+        whereArgs: [0]);
+    contacts.forEach((cont) {
+      MyContact contact = MyContact.fromMap(cont);
+      allContacts.add(contact);
     });
     return allContacts;
   }
@@ -75,7 +104,7 @@ class DatabaseService {
     await db.rawUpdate('''
       UPDATE $TABLE_CONTACT 
       SET $COLUMN_REG_STATUS = ?
-      WHERE $COLUMN_NUMBER = ?
-    ''', [1, phoneNumber]);
+      WHERE $COLUMN_NUMBER Like '%$phoneNumber'
+    ''', [1]);
   }
 }

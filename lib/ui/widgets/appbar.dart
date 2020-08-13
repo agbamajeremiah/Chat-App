@@ -15,11 +15,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      elevation: 0.0,
+      elevation: 2.0,
       leading: widget.back
           ? IconButton(
               icon: Icon(
-                Icons.arrow_back_ios,
+                Icons.arrow_back,
                 color: AppColors.textColor,
               ),
               onPressed: () => Navigator.pop(context),
@@ -67,7 +67,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
         )
       ],
-      centerTitle: true,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
@@ -16,7 +17,8 @@ class SearchContact extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, ChatViewRoute);
+          Navigator.pushNamed(context, ChatViewRoute,
+              arguments: MyContact(fullName: contactName, phoneNumber: number));
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

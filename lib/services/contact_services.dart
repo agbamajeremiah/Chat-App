@@ -1,6 +1,7 @@
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/authentication_service.dart';
+import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -9,8 +10,35 @@ import 'package:contacts_service/contacts_service.dart';
 
 class ContactServices {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  //Start of contact synchronization
+  Future syncContacts() async {
+    List<String> uploadContacts = List<String>();
+    List<MyContact> allContacts = await getAllContactsFromDevice();
+    //print(allContacts);
+    allContacts.forEach((con) async {
+      //uploadContacts.add(con.phoneNumber);
+      await DatabaseService.db.insertContact(con);
+    });
+    print("upload contacts:");
+    print(uploadContacts);
+    List<MyContact> unSyncContacts =
+        await DatabaseService.db.getUnRegContactsFromDb();
+    print(unSyncContacts);
+    unSyncContacts.forEach((contact) {
+      uploadContacts.add(contact.phoneNumber);
+    });
+    print(uploadContacts);
+    List<MyContact> regContacts = await getRegisteredContact(uploadContacts);
+    regContacts.forEach((cont) async {
+      String phoneNumber =
+          cont.phoneNumber.substring(5, cont.phoneNumber.length);
+      print(phoneNumber);
+      await DatabaseService.db.updateRegContact(phoneNumber);
+    });
+  }
 
-  Future<List<MyContact>> getAllContacts() async {
+  //get contacts from device
+  Future<List<MyContact>> getAllContactsFromDevice() async {
     List<MyContact> contactsAll;
     final PermissionStatus permissionStatus = await _getPermission();
     if (permissionStatus == PermissionStatus.granted) {
@@ -50,7 +78,7 @@ class ContactServices {
     }
   }
 
-//Sync User contacts from server
+  //Sync User contacts from server
   Future<List<MyContact>> getRegisteredContact(List uploadContacts) async {
     List<MyContact> regContacts = [];
     dynamic response = await sendContacts(uploadContacts);
@@ -64,10 +92,11 @@ class ContactServices {
     return regContacts;
   }
 
+  //send contact list to server
   Future sendContacts(contacts) async {
     final _userToken = _authService.token;
-    //print(_userToken);
-    //print(contacts);
+    print(_userToken);
+    print(contacts);
     try {
       Map<String, List> body = {
         "contacts": contacts,
@@ -81,9 +110,7 @@ class ContactServices {
         headers: headers,
         body: body,
       );
-      if (response.statusCode == 200) {
-        return response;
-      }
+      return response;
     } catch (e) {
       if (e is DioError) {
         debugPrint(

@@ -58,3 +58,28 @@ Future patchResquest({
   );
   return response;
 }
+
+Future getResquest({
+  @required String url,
+  Map headers,
+  Map queryParam,
+}) async {
+  final dio = Dio();
+  String route = BasedUrl + url;
+  dio.interceptors.add(
+    RetryOnConnectionChangeInterceptor(
+      requestRetrier: DioConnectivityRequestRetrier(
+        dio: Dio(),
+        connectivity: Connectivity(),
+      ),
+    ),
+  );
+  Response response = await dio.get(
+    route,
+    queryParameters: queryParam,
+    options: Options(
+      headers: headers,
+    ),
+  );
+  return response;
+}
