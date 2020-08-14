@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 
-class MessageMessage {
+class Message {
   final bool isQuote;
-  final DateTime createdAt;
+  //final DateTime createdAt;
   final String id;
   final String sender;
   final String content;
   final String status;
   final String threadId;
 
-  MessageMessage({
+  Message({
     @required this.isQuote,
-    @required this.createdAt,
+    //@required this.createdAt,
     @required this.id,
     @required this.sender,
     @required this.content,
@@ -19,9 +19,9 @@ class MessageMessage {
     @required this.threadId,
   });
 
-  factory MessageMessage.fromMap(Map<String, dynamic> json) => MessageMessage(
+  factory Message.fromMap(Map<String, dynamic> json) => Message(
         isQuote: json["isQuote"],
-        createdAt: DateTime.parse(json["createdAt"]),
+        //createdAt: DateTime.parse(json["createdAt"]),
         id: json["_id"],
         sender: json["sender"],
         content: json["content"],
@@ -31,7 +31,7 @@ class MessageMessage {
 
   Map<String, dynamic> toMap() => {
         "isQuote": isQuote,
-        "createdAt": createdAt.toIso8601String(),
+        //"createdAt": createdAt.toIso8601String(),
         "_id": id,
         "sender": sender,
         "content": content,

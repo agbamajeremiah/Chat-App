@@ -1,4 +1,5 @@
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/models/thread.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 //import 'package:MSG/ui/widgets/appbar.dart';
@@ -43,191 +44,135 @@ class _MessagesViewState extends State<MessagesView> {
     return ViewModelProvider<MessageViewModel>.withConsumer(
         viewModelBuilder: () => MessageViewModel(),
         builder: (context, model, snapshot) {
-          var threads = model.getAllChats();
-          return Scaffold(
-            backgroundColor: Colors.white,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, ContactViewRoute);
-              },
-              child: Icon(
-                Icons.message,
-                color: Colors.white,
-              ),
-            ),
-            appBar: (_isSearching)
-                ? AppBar(
-                    iconTheme: IconThemeData(
-                      color: AppColors.textColor,
+          var getChats = model.getAllChats();
+          return FutureBuilder(
+            future: getChats,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Container(
+                  color: Colors.white,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    strokeWidth: 3.0,
+                    valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+                  )),
+                );
+              } else {
+                List<Thread> allChats = snapshot.data;
+                final chatCount = allChats.length;
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, ContactViewRoute);
+                    },
+                    child: Icon(
+                      Icons.message,
+                      color: Colors.white,
                     ),
-                    backgroundColor: Colors.white,
-                    leading: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isSearching = false;
-                            _searchQuery = "";
-                          });
-                        },
-                        icon: Icon(Icons.arrow_back)),
-                    title: Container(
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          // override textfield's icon color when selected
-                          primaryColor: AppColors.textColor,
-                        ),
-                        child: TextField(
-                          autofocus: true,
-                          controller: _searchTextCon,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.black,
+                  ),
+                  appBar: (_isSearching)
+                      ? AppBar(
+                          iconTheme: IconThemeData(
+                            color: AppColors.textColor,
                           ),
-                          decoration: InputDecoration(
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 15.0),
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintText: "Search...",
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear),
+                          backgroundColor: Colors.white,
+                          leading: IconButton(
                               onPressed: () {
-                                _searchTextCon.clear();
+                                setState(() {
+                                  _isSearching = false;
+                                  _searchQuery = "";
+                                });
                               },
+                              icon: Icon(Icons.arrow_back)),
+                          title: Container(
+                            child: Theme(
+                              data: Theme.of(context).copyWith(
+                                // override textfield's icon color when selected
+                                primaryColor: AppColors.textColor,
+                              ),
+                              child: TextField(
+                                autofocus: true,
+                                controller: _searchTextCon,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  color: Colors.black,
+                                ),
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 15.0),
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  hintText: "Search...",
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.clear),
+                                    onPressed: () {
+                                      _searchTextCon.clear();
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
+                        )
+                      : AppBar(
+                          elevation: 2,
+                          backgroundColor: Colors.white,
+                          title: Text(
+                            "Messenges",
+                            style: textStyle.copyWith(
+                                color: AppColors.textColor, fontSize: 22),
+                          ),
+                          centerTitle: true,
+                          actions: <Widget>[
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isSearching = true;
+                                });
+                              },
+                              icon: Icon(Icons.search),
+                              color: AppColors.textColor,
+                            ),
+                            MyPopupMenu(),
+                          ],
                         ),
-                      ),
-                    ),
-                  )
-                : AppBar(
-                    elevation: 2,
-                    backgroundColor: Colors.white,
-                    title: Text(
-                      "Messenges",
-                      style: textStyle.copyWith(
-                          color: AppColors.textColor, fontSize: 22),
-                    ),
-                    centerTitle: true,
-                    actions: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isSearching = true;
-                          });
+                  body: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0),
+                      child: ListView.separated(
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        itemCount: chatCount,
+                        itemBuilder: (context, index) {
+                          final item = allChats[index];
+                          print("member:");
+                          print(item.members);
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, ChatViewRoute,
+                                  arguments: item.members);
+                            },
+                            child: MessageContainer(
+                              name: "Elisha",
+                              message: "You Know I love you ba",
+                              isRead: true,
+                            ),
+                          );
                         },
-                        icon: Icon(Icons.search),
-                        color: AppColors.textColor,
+                        separatorBuilder: (BuildContext context, int index) {
+                          return Divider(
+                            color: Colors.grey,
+                          );
+                        },
                       ),
-                      MyPopupMenu(),
-                    ],
+                    ),
                   ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0.0),
-                child: ListView(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, ChatViewRoute);
-                      },
-                      child: MessageContainer(
-                        name: "Elisha",
-                        message: "You Know I love you ba",
-                        isRead: true,
-                      ),
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Prince",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Tg",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                      isRead: true,
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Cy",
-                      message: "You Know I love you ba",
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Elisha",
-                      message: "You Know I love you ba",
-                      isRead: true,
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Prince",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Tg",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                      isRead: true,
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Cy",
-                      message: "You Know I love you ba",
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Elisha",
-                      message: "You Know I love you ba",
-                      isRead: true,
-                    ),
-                    Divider(),
-                    MessageContainer(
-                      name: "Prince",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                    ),
-                    MessageContainer(
-                      name: "Tg",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                      isRead: true,
-                    ),
-                    MessageContainer(
-                      name: "Cy",
-                      message: "You Know I love you ba",
-                    ),
-                    MessageContainer(
-                      name: "Elisha",
-                      message: "You Know I love you ba",
-                      isRead: true,
-                    ),
-                    MessageContainer(
-                      name: "Prince",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                    ),
-                    MessageContainer(
-                      name: "Tg",
-                      message:
-                          "You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba You Know I love you ba",
-                      isRead: true,
-                    ),
-                    MessageContainer(
-                      name: "Cy",
-                      message: "You Know I love you ba",
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                );
+              }
+            },
           );
         });
   }
