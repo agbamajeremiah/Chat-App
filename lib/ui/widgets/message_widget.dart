@@ -1,20 +1,28 @@
 import 'dart:math';
-
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageContainer extends StatelessWidget {
-  final String name, message;
+  final String name;
   final bool isRead;
+  final String lastMessage;
   static int unreadMessages = 1;
+  final String msgTime;
 
   const MessageContainer({
+    @required this.lastMessage,
     @required this.name,
-    @required this.message,
+    @required this.msgTime,
     this.isRead = false,
   });
+  String convertToTime(String stringTime) {
+    DateTime dTime = DateTime.parse(stringTime);
+    print(dTime);
+    return DateFormat.jm().format(DateTime.parse(stringTime));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +35,7 @@ class MessageContainer extends StatelessWidget {
       Colors.purple
     ];
     Random random = new Random();
+    var time = convertToTime(msgTime);
     int index = random.nextInt(colors.length);
     return Container(
       padding: EdgeInsets.only(left: 10, right: 7),
@@ -63,7 +72,7 @@ class MessageContainer extends StatelessWidget {
                         fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    "$message",
+                    "$lastMessage",
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,
                     maxLines: 1,
@@ -98,7 +107,7 @@ class MessageContainer extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    "8:39 AM",
+                    convertToTime(msgTime),
                     style: textStyle.copyWith(color: AppColors.textColor2),
                   ),
                 ),

@@ -1,4 +1,6 @@
+import 'package:MSG/models/chat.dart';
 import 'package:MSG/models/contacts.dart';
+import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,6 +24,7 @@ class DatabaseService {
   static const String COLUMN_CONTENT = "content";
   static const String COLUMN_MSG_THREAD_ID = "thread_id";
   static const String COLUMN_STATUS = "status";
+  static const String COLUMN_SENDER = "sender";
   static const String COLUMN_CREATED_AT = "created_id";
   static const String COLUMN_QUOTE = "quote";
 
@@ -38,10 +41,16 @@ class DatabaseService {
     return _database;
   }
 
+  Future deleteDb() async {
+    var databasesPath = await getDatabasesPath();
+    var path = join(databasesPath, "msg_new_db.db");
+    await deleteDatabase(path);
+  }
+
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
     return await openDatabase(
-      join(dbPath, 'msgDB.db'),
+      join(dbPath, 'msg_new_db.db'),
       version: 1,
       onCreate: (Database database, int version) async {
         print("creating contact db");
@@ -64,6 +73,7 @@ class DatabaseService {
           "$COLUMN_MESSAGE_ID TEXT PRIMARY KEY, "
           "$COLUMN_CONTENT TEXT, "
           "$COLUMN_MSG_THREAD_ID TEXT, "
+          "$COLUMN_SENDER TEXT, "
           "$COLUMN_STATUS TEXT, "
           "$COLUMN_CREATED_AT TEXT, "
           "$COLUMN_QUOTE TEXT "
@@ -90,6 +100,19 @@ class DatabaseService {
       print(element.fullName);
     });
     return allContacts;
+  }
+
+  Future<String> getContactThread(String number) async {
+    final db = await database;
+    var trd = await db.query(TABLE_THREAD,
+        columns: [COLUMN_THREAD_ID],
+        where: "$COLUMN_MEMBER = ?",
+        whereArgs: [number]);
+    if (trd.length > 0) {
+      return trd[0]['id'];
+    } else {
+      return null;
+    }
   }
 
   Future<List<MyContact>> getSingleContactFromDb(String number) async {
@@ -121,17 +144,39 @@ class DatabaseService {
     return allContacts;
   }
 
-  Future<List<Thread>> getAllChatsFromDb() async {
+  Future<List<Chat>> getAllChatsFromDb() async {
     final db = await database;
-    List<Thread> allChats = List<Thread>();
-    var chats = await db.query(
-      TABLE_THREAD,
-      columns: [COLUMN_THREAD_ID, COLUMN_MEMBER],
-    );
+    List<Chat> allChats = [];
+    List chats = await db.rawQuery(
+        '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_id as lastMsgTime
+         FROM threads 
+        LEFT JOIN (
+          SELECT id, thread_id, content, 
+          status, created_id 
+           FROM messages ORDER BY id DESC LIMIT 1
+        ) AS msg
+        ON threads.id = msg.thread_id
+        LEFT JOIN contacts ON threads.members = contacts.phoneNumber
+         ORDER BY threads.id DESC''');
+    print(chats);
     chats.forEach((chat) {
-      allChats.add(Thread.fromDBMap(chat));
+      allChats.add(Chat.fromMap(chat));
     });
+    //print(allChats);
     return allChats;
+  }
+
+  Future<List<Message>> getSingleChatMessageFromDb(String threadId) async {
+    final db = await database;
+    List<Message> messages = List<Message>();
+    var chats = await db.query(TABLE_MESSAGE,
+        where: "$COLUMN_MSG_THREAD_ID = ?", whereArgs: [threadId]);
+    print(chats);
+    chats.forEach((message) {
+      messages.add(Message.fromDBMap(message));
+    });
+    print(messages);
+    return messages;
   }
 
   Future<void> insertContact(MyContact contact) async {
@@ -139,7 +184,7 @@ class DatabaseService {
     await db.insert(
       TABLE_CONTACT,
       contact.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 
@@ -148,7 +193,16 @@ class DatabaseService {
     await db.insert(
       TABLE_THREAD,
       thread.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> insertNewMessage(Message message) async {
+    final db = await database;
+    await db.insert(
+      TABLE_MESSAGE,
+      message.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 

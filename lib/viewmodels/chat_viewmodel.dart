@@ -1,5 +1,7 @@
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
+import 'package:MSG/models/messages.dart';
+import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/api.dart';
@@ -8,15 +10,31 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatViewModel extends BaseModel {
+  String threadId;
+  String phoneNumber;
+  ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
-  //Fetch all registered contacts from database
-  Future<MyContact> getContactInfo(String number) async {
-    var contactsData = await DatabaseService.db.getSingleContactFromDb(number);
-    String contactName = contactsData[0].fullName != null
-        ? contactsData[0].fullName
-        : contactsData[0].phoneNumber;
-    return MyContact(
-        fullName: contactName, phoneNumber: contactsData[0].phoneNumber);
+
+  //Fetch contact's from database
+  Future get thread async {
+    print("Thread getter called");
+    if (threadId == null) {
+      print(phoneNumber);
+      String result = await DatabaseService.db.getContactThread(phoneNumber);
+      if (result != null) {
+        threadId = result;
+      }
+    }
+  }
+
+  Future<List<Message>> getChatMessages() async {
+    await thread;
+    print(threadId);
+    List<Message> messages =
+        await DatabaseService.db.getSingleChatMessageFromDb(threadId);
+    print("chats called:");
+    print(messages);
+    return messages;
   }
 
   //send new new nessage
@@ -24,9 +42,16 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
-    List contacts = ["080000000", "090000000"];
+    await thread;
     var response = await sendMsg(receiver, message, isQuote, "");
     print(response);
+    print(response.data);
+    if (response.statusCode == 200) {
+      if (threadId == null) {
+        Map thread = {"id": response.data['thread'], "members": phoneNumber};
+        var res = await DatabaseService.db.insertThread(Thread.fromMap(thread));
+      }
+    }
   }
 
   Future sendMsg(
@@ -34,12 +59,23 @@ class ChatViewModel extends BaseModel {
     final _userToken = _authService.token;
     print(_userToken);
     try {
-      Map<String, dynamic> body = {
-        "receiver": receiver,
-        "content": message,
-        "isQuote": isQuote,
-        "msgRepliedTo": replyTo,
-      };
+      Map<String, dynamic> body;
+      if (threadId == null) {
+        body = {
+          "receiver": receiver,
+          "content": message,
+          "isQuote": isQuote,
+          "msgRepliedTo": replyTo,
+        };
+      } else {
+        body = {
+          "content": message,
+          "threadID": threadId,
+          "isQuote": isQuote,
+          "msgRepliedTo": replyTo,
+        };
+      }
+
       Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "authorization": "Bearer $_userToken",

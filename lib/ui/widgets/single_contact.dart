@@ -1,4 +1,5 @@
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/models/chat.dart';
 
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
@@ -16,7 +17,9 @@ class SingleContact extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, ChatViewRoute, arguments: number);
+          Navigator.pushNamed(context, ChatViewRoute,
+              arguments:
+                  Chat(id: null, displayName: name, memberPhone: number));
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,4 +1,5 @@
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/models/chat.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
@@ -44,9 +45,8 @@ class _MessagesViewState extends State<MessagesView> {
     return ViewModelProvider<MessageViewModel>.withConsumer(
         viewModelBuilder: () => MessageViewModel(),
         builder: (context, model, snapshot) {
-          var getChats = model.getAllChats();
           return FutureBuilder(
-            future: getChats,
+            future: model.getAllChats(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
@@ -58,7 +58,7 @@ class _MessagesViewState extends State<MessagesView> {
                   )),
                 );
               } else {
-                List<Thread> allChats = snapshot.data;
+                List<Chat> allChats = snapshot.data;
                 final chatCount = allChats.length;
                 return Scaffold(
                   backgroundColor: Colors.white,
@@ -122,7 +122,7 @@ class _MessagesViewState extends State<MessagesView> {
                           elevation: 2,
                           backgroundColor: Colors.white,
                           title: Text(
-                            "Messenges",
+                            "Messeges",
                             style: textStyle.copyWith(
                                 color: AppColors.textColor, fontSize: 22),
                           ),
@@ -147,17 +147,20 @@ class _MessagesViewState extends State<MessagesView> {
                         padding: EdgeInsets.symmetric(vertical: 10.0),
                         itemCount: chatCount,
                         itemBuilder: (context, index) {
-                          final item = allChats[index];
+                          final chat = allChats[index];
                           print("member:");
-                          print(item.members);
                           return InkWell(
                             onTap: () {
                               Navigator.pushNamed(context, ChatViewRoute,
-                                  arguments: item.members);
+                                  arguments: Chat(
+                                      id: chat.id,
+                                      displayName: chat.displayName,
+                                      memberPhone: chat.memberPhone));
                             },
                             child: MessageContainer(
-                              name: "Elisha",
-                              message: "You Know I love you ba",
+                              name: chat.displayName ?? chat.memberPhone,
+                              lastMessage: chat.lastMessage,
+                              msgTime: chat.lastMsgTime,
                               isRead: true,
                             ),
                           );

@@ -12,6 +12,7 @@ class ContactServices {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   //Start of contact synchronization
   Future syncContacts() async {
+    //DatabaseService.db.deleteDb();
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await getAllContactsFromDevice();
     //print(allContacts);
@@ -39,26 +40,21 @@ class ContactServices {
 
   //get contacts from device
   Future<List<MyContact>> getAllContactsFromDevice() async {
-    List<MyContact> contactsAll;
+    List<MyContact> contactsAll = [];
+
     final PermissionStatus permissionStatus = await _getPermission();
     if (permissionStatus == PermissionStatus.granted) {
       //We can now access our contacts here
       Iterable<Contact> contacts =
           await ContactsService.getContacts(withThumbnails: false);
       if (contacts.length > 0) {
-        List<MyContact> _allContacts(Iterable<Contact> contacts) {
-          return contacts.map((con) {
-            return MyContact(
-                contactId: con.identifier,
-                fullName: con.displayName ?? "",
-                phoneNumber: con.phones.toList()[0].value ?? "",
-                regStatus: 0);
-          }).toList();
-        }
-
-        contactsAll = _allContacts(contacts);
-      } else {
-        contactsAll = null;
+        contacts.forEach((con) {
+          contactsAll.add(MyContact(
+              contactId: con.identifier,
+              fullName: con.displayName ?? "",
+              phoneNumber: con.phones.toList()[0].value ?? "",
+              regStatus: 0));
+        });
       }
     }
     return contactsAll;
