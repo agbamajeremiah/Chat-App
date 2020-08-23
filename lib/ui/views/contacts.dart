@@ -2,7 +2,6 @@ import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
-import 'package:MSG/ui/widgets/single_search_contact.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -157,9 +156,10 @@ class _AllContactsState extends State<AllContacts> {
                                       itemCount: searchResultList.length,
                                       itemBuilder: (context, index) {
                                         final item = searchResultList[index];
-                                        return SearchContact(
-                                          contactName: item.fullName.toString(),
+                                        return SingleContact(
+                                          name: item.fullName.toString(),
                                           number: item.phoneNumber,
+                                          searching: true,
                                           matchString: _searchQuery,
                                         );
                                       },
@@ -173,7 +173,8 @@ class _AllContactsState extends State<AllContacts> {
                                   final item = regContacts[index];
                                   return SingleContact(
                                       name: item.fullName.toString(),
-                                      number: item.phoneNumber.toString());
+                                      number: item.phoneNumber.toString(),
+                                      searching: false);
                                 },
                               ),
                             ),

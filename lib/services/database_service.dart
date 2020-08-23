@@ -170,7 +170,9 @@ class DatabaseService {
     final db = await database;
     List<Message> messages = List<Message>();
     var chats = await db.query(TABLE_MESSAGE,
-        where: "$COLUMN_MSG_THREAD_ID = ?", whereArgs: [threadId]);
+        where: "$COLUMN_MSG_THREAD_ID = ?",
+        orderBy: "$COLUMN_MESSAGE_ID DESC",
+        whereArgs: [threadId]);
     print(chats);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));

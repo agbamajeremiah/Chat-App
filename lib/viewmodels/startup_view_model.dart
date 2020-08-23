@@ -15,8 +15,12 @@ class StartUpViewModel extends BaseModel {
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
 
     if (hasLoggedInUser) {
-      _contactService.syncContacts().then((value) =>
-          _navigationService.clearLastAndNavigateTo(MessageViewRoute));
+      try {
+        await _contactService.syncContacts();
+      } catch (e) {
+        print(e.toString());
+      }
+      _navigationService.clearLastAndNavigateTo(MessageViewRoute);
     } else {
       _navigationService.clearLastAndNavigateTo(LoginViewRoute); //08132368804
     }

@@ -1,12 +1,10 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/chat.dart';
-import 'package:MSG/models/thread.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 //import 'package:MSG/ui/widgets/appbar.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
-import 'package:MSG/viewmodels/chat_viewmodel.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

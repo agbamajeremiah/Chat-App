@@ -43,13 +43,18 @@ class ChatViewModel extends BaseModel {
       @required String receiver,
       @required bool isQuote}) async {
     await thread;
+
     var response = await sendMsg(receiver, message, isQuote, "");
-    print(response);
+    print(response.statusCode);
     print(response.data);
     if (response.statusCode == 200) {
       if (threadId == null) {
         Map thread = {"id": response.data['thread'], "members": phoneNumber};
         var res = await DatabaseService.db.insertThread(Thread.fromMap(thread));
+      } else {
+        //Map newMessage = {"id": response.data['thread'], "members": phoneNumber};
+        //await DatabaseService.db.insertNewMessage(Message.fromMap(message));
+
       }
     }
   }

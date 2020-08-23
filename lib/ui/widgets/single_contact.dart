@@ -9,7 +9,10 @@ import 'package:flutter/material.dart';
 class SingleContact extends StatelessWidget {
   final String number;
   final String name;
-  const SingleContact({this.number, this.name});
+  final bool searching;
+  final String matchString;
+  const SingleContact(
+      {this.number, this.name, this.searching, this.matchString});
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +40,29 @@ class SingleContact extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    name,
-                    style: textStyle.copyWith(
-                        color: AppColors.textColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  searching
+                      ? RichText(
+                          text: TextSpan(
+                            style: textStyle.copyWith(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: name.substring(0, matchString.length),
+                                  style:
+                                      TextStyle(color: AppColors.unreadText)),
+                              TextSpan(
+                                  text: name.substring(matchString.length),
+                                  style: TextStyle(color: AppColors.textColor)),
+                            ],
+                          ),
+                        )
+                      : Text(
+                          name,
+                          style: textStyle.copyWith(
+                              color: AppColors.textColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
                   Text(
                     number,
                     style: textStyle.copyWith(
