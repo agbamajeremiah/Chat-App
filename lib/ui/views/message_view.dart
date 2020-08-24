@@ -16,26 +16,14 @@ class MessagesView extends StatefulWidget {
 }
 
 class _MessagesViewState extends State<MessagesView> {
-  final TextEditingController _searchTextCon = TextEditingController();
+  final _searchTextCon = TextEditingController();
   bool _isSearching = false;
-  String _searchQuery = "";
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.white),
     );
-    _searchTextCon.addListener(() {
-      setState(() {
-        _searchQuery = _searchTextCon.text;
-      });
-    });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _searchTextCon.dispose();
-    super.dispose();
   }
 
   @override
@@ -79,7 +67,6 @@ class _MessagesViewState extends State<MessagesView> {
                               onPressed: () {
                                 setState(() {
                                   _isSearching = false;
-                                  _searchQuery = "";
                                 });
                               },
                               icon: Icon(Icons.arrow_back)),
@@ -108,7 +95,8 @@ class _MessagesViewState extends State<MessagesView> {
                                   suffixIcon: IconButton(
                                     icon: Icon(Icons.clear),
                                     onPressed: () {
-                                      _searchTextCon.clear();
+                                      print(_searchTextCon.text);
+                                      //_searchTextCon.clear();
                                     },
                                   ),
                                 ),

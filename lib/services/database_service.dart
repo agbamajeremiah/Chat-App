@@ -25,7 +25,7 @@ class DatabaseService {
   static const String COLUMN_MSG_THREAD_ID = "thread_id";
   static const String COLUMN_STATUS = "status";
   static const String COLUMN_SENDER = "sender";
-  static const String COLUMN_CREATED_AT = "created_id";
+  static const String COLUMN_CREATED_AT = "created_at";
   static const String COLUMN_QUOTE = "quote";
 
   DatabaseService._();
@@ -50,7 +50,7 @@ class DatabaseService {
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
     return await openDatabase(
-      join(dbPath, 'msg_new_db.db'),
+      join(dbPath, 'msg_db.db'),
       version: 1,
       onCreate: (Database database, int version) async {
         print("creating contact db");
@@ -148,12 +148,13 @@ class DatabaseService {
     final db = await database;
     List<Chat> allChats = [];
     List chats = await db.rawQuery(
-        '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_id as lastMsgTime
+      
+        '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_at as lastMsgTime
          FROM threads 
         LEFT JOIN (
           SELECT id, thread_id, content, 
-          status, created_id 
-           FROM messages ORDER BY id DESC LIMIT 1
+          status, created_at
+           FROM messages ORDER BY created_at DESC LIMIT 1
         ) AS msg
         ON threads.id = msg.thread_id
         LEFT JOIN contacts ON threads.members = contacts.phoneNumber
@@ -171,7 +172,7 @@ class DatabaseService {
     List<Message> messages = List<Message>();
     var chats = await db.query(TABLE_MESSAGE,
         where: "$COLUMN_MSG_THREAD_ID = ?",
-        orderBy: "$COLUMN_MESSAGE_ID DESC",
+        orderBy: "$COLUMN_CREATED_AT DESC",
         whereArgs: [threadId]);
     print(chats);
     chats.forEach((message) {
@@ -206,6 +207,7 @@ class DatabaseService {
       message.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    print("message inserted");
   }
 
   Future<void> updateRegContact(String phoneNumber) async {

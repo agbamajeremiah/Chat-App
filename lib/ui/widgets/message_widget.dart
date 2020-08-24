@@ -19,9 +19,31 @@ class MessageContainer extends StatelessWidget {
     this.isRead = false,
   });
   String convertToTime(String stringTime) {
-    DateTime dTime = DateTime.parse(stringTime);
-    print(dTime);
-    return DateFormat.jm().format(DateTime.parse(stringTime));
+    var returnTime;
+    DateTime curTime = DateTime.now();
+    print(curTime);
+    DateTime msgTime = DateTime.parse(stringTime);
+    print(msgTime);
+    int dayDiff = curTime.day - msgTime.day;
+    print(dayDiff);
+    switch (dayDiff) {
+      case 0:
+        returnTime = DateFormat.jm().format(DateTime.parse(stringTime));
+        break;
+      case 1:
+        returnTime = "Yesterday";
+        break;
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        returnTime = DateFormat.E().add_jm().format(DateTime.parse(stringTime));
+        break;
+      default:
+        returnTime = DateFormat.yMd().format(DateTime.parse(stringTime));
+    }
+    return returnTime;
   }
 
   @override
@@ -35,7 +57,6 @@ class MessageContainer extends StatelessWidget {
       Colors.purple
     ];
     Random random = new Random();
-    var time = convertToTime(msgTime);
     int index = random.nextInt(colors.length);
     return Container(
       padding: EdgeInsets.only(left: 10, right: 7),

@@ -1,5 +1,4 @@
 import 'package:MSG/models/chat.dart';
-import 'package:MSG/models/contacts.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
@@ -10,10 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends StatefulWidget {
   final Chat chat;
   ChatView({Key key, @required this.chat}) : super(key: key);
+
+  @override
+  _ChatViewState createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
   final messageTextController = TextEditingController();
+  bool typingMessage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +31,15 @@ class ChatView extends StatelessWidget {
     print(DateFormat.E().format(DateTime.parse(timeFromServer)));
     */
     return ViewModelProvider<ChatViewModel>.withConsumer(
-        viewModelBuilder: () =>
-            ChatViewModel(threadId: chat.id, phoneNumber: chat.memberPhone),
+        viewModelBuilder: () => ChatViewModel(
+            threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
           return Scaffold(
             appBar: PreferredSize(
                 preferredSize: Size.fromHeight(60),
                 child: CustomAppBar(
-                  title: chat.displayName ?? chat.memberPhone,
+                  title: widget.chat.displayName ?? widget.chat.memberPhone,
                   back: true,
                 )),
             body: SafeArea(
@@ -42,6 +48,7 @@ class ChatView extends StatelessWidget {
                   FutureBuilder(
                       future: chatMessages,
                       builder: (context, snapshot) {
+                        print(snapshot.data);
                         if (!snapshot.hasData) {
                           return Expanded(
                             child: Padding(
@@ -72,10 +79,10 @@ class ChatView extends StatelessWidget {
                               print(message.sender);
 
                               return MessageBubble(
-                                sender: "ssjsjj",
-                                text: message.content.toString(),
-                                isMe: true,
-                              );
+                                  sender: "ssjsjj",
+                                  text: message.content.toString(),
+                                  isMe: message.sender == "+2348132368804" ||
+                                      message.sender == "+23408132368804");
                             },
                           ));
                         }
@@ -89,17 +96,21 @@ class ChatView extends StatelessWidget {
                           child: TextField(
                             controller: messageTextController,
                             decoration: kMessageTextFieldDecoration,
+                            onTap: () {
+                              setState(() => typingMessage = true);
+                            },
                           ),
                         ),
                         FlatButton(
                             onPressed: () async {
                               String messageText = messageTextController.text;
-                              String receiver = chat.memberPhone;
-                              dynamic response = await model.sendMessage(
+                              String receiver = widget.chat.memberPhone;
+                              await model.sendMessage(
                                   message: messageText,
                                   receiver: receiver,
                                   isQuote: false);
                               messageTextController.clear();
+                              setState(() => typingMessage = false);
                             },
                             child: Icon(
                               Icons.send,
