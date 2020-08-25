@@ -104,6 +104,7 @@ class ChatViewModel extends BaseModel {
       );
     }
     await DatabaseService.db.insertNewMessage(newMessage);
+    notifyListeners();
   }
 
   Future sendMsg(
