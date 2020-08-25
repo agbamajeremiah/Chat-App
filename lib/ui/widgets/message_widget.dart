@@ -46,18 +46,19 @@ class MessageContainer extends StatelessWidget {
     return returnTime;
   }
 
+  static final List colors = [
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+    Colors.blue,
+    Colors.pinkAccent,
+    Colors.purple
+  ];
+  static final Random random = new Random();
+  static final int index = random.nextInt(colors.length);
+
   @override
   Widget build(BuildContext context) {
-    List colors = [
-      Colors.red,
-      Colors.green,
-      Colors.yellow,
-      Colors.blue,
-      Colors.pinkAccent,
-      Colors.purple
-    ];
-    Random random = new Random();
-    int index = random.nextInt(colors.length);
     return Container(
       padding: EdgeInsets.only(left: 10, right: 7),
       child: Row(

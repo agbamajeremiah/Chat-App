@@ -2,10 +2,11 @@ import 'package:MSG/models/chat.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseService {
+class DatabaseService extends ChangeNotifier {
   //Contact  table fields
   static const String TABLE_CONTACT = "contacts";
   static const String COLUMN_ID = "id";

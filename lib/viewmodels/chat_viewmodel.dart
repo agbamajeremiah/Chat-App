@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/services/authentication_service.dart';
@@ -15,11 +17,27 @@ class ChatViewModel extends BaseModel {
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
 
+  //first run
+  Timer timer;
+  void initialise() {
+    const sevenSec = const Duration(seconds: 7);
+    timer = Timer.periodic(sevenSec, (Timer t) {
+      getChatMessages();
+      notifyListeners();
+    });
+  }
+
+  void cancelTimer() {
+    timer?.cancel();
+  }
+
   //Fetch contact's from database
   Future get thread async {
     print("Thread getter called");
     if (threadId == null) {
       String result = await DatabaseService.db.getContactThread(phoneNumber);
+      print("thread id: " + result);
+      print(result);
       if (result != null) {
         threadId = result;
       } else {
@@ -44,7 +62,9 @@ class ChatViewModel extends BaseModel {
   }
 
   Future<List<Message>> getChatMessages() async {
+    await thread;
     await myNumber;
+    //List<Message> messages = [];
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
@@ -84,7 +104,6 @@ class ChatViewModel extends BaseModel {
       );
     }
     await DatabaseService.db.insertNewMessage(newMessage);
-    setBusy(false);
   }
 
   Future sendMsg(

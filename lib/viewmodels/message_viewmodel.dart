@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/models/messages.dart';
@@ -11,10 +13,20 @@ import 'package:flutter/foundation.dart';
 
 class MessageViewModel extends BaseModel {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  void initialise() {
+    const tenSec = const Duration(seconds: 10);
+    Timer.periodic(tenSec, (Timer t) {
+      getAllChats();
+      notifyListeners();
+    });
+  }
+
   //Get saved chat/tread from db
   Future<List<Chat>> getAllChats() async {
     //test
     //await DatabaseService.db.deleteDb();
+    //first run
+
     List<Chat> activeChat = [];
     await getSyncChats();
     List chats = await DatabaseService.db.getAllChatsFromDb();
@@ -24,7 +36,6 @@ class MessageViewModel extends BaseModel {
       }
     });
     print(activeChat);
-
     return activeChat;
   }
 

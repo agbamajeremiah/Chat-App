@@ -23,6 +23,7 @@ class _MessagesViewState extends State<MessagesView> {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.white),
     );
+
     super.initState();
   }
 
@@ -30,6 +31,7 @@ class _MessagesViewState extends State<MessagesView> {
   Widget build(BuildContext context) {
     return ViewModelProvider<MessageViewModel>.withConsumer(
         viewModelBuilder: () => MessageViewModel(),
+        onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
           return FutureBuilder(
             future: model.getAllChats(),

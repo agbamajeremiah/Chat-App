@@ -25,6 +25,8 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
+        onModelReady: (model) => model.initialise(),
+        disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
           return Scaffold(
@@ -97,12 +99,13 @@ class _ChatViewState extends State<ChatView> {
                             onPressed: () async {
                               String messageText = messageTextController.text;
                               String receiver = widget.chat.memberPhone;
-                              setState(() => typingMessage = false);
+
                               await model.sendMessage(
                                   message: messageText,
                                   receiver: receiver,
                                   isQuote: false);
                               messageTextController.clear();
+                              setState(() => typingMessage = false);
                             },
                             child: Icon(
                               Icons.send,
