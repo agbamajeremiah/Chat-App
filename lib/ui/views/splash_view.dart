@@ -1,3 +1,4 @@
+import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/viewmodels/startup_view_model.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _SplashViewState extends State<SplashView> {
         onModelReady: (model) => model.handleStartUpLogic(),
         builder: (context, model, snapshot) {
           return Scaffold(
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: AppColors.splashBlue,
             body: Center(
               child: Text(
                 "MSG",

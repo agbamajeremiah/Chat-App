@@ -65,6 +65,7 @@ class AuthenticationSerivice {
         _token = response.data["token"];
         print(_token);
         prefs.setString("token", response.data["token"]);
+        prefs.setString("number", response.data["phoneNumber"]);
       }
       // return jsonDecode(response);
       return response;

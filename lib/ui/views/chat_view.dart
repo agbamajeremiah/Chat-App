@@ -6,7 +6,6 @@ import 'package:MSG/ui/widgets/appbar.dart';
 import 'package:MSG/ui/widgets/message_bubble.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 class ChatView extends StatefulWidget {
@@ -23,13 +22,6 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    //test
-    /*
-    String timeFromServer = "2020-08-07T12:16:05.8772Z";
-    DateTime dte = DateTime.parse(timeFromServer);
-    print(dte);
-    print(DateFormat.E().format(DateTime.parse(timeFromServer)));
-    */
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
@@ -105,12 +97,12 @@ class _ChatViewState extends State<ChatView> {
                             onPressed: () async {
                               String messageText = messageTextController.text;
                               String receiver = widget.chat.memberPhone;
+                              setState(() => typingMessage = false);
                               await model.sendMessage(
                                   message: messageText,
                                   receiver: receiver,
                                   isQuote: false);
                               messageTextController.clear();
-                              setState(() => typingMessage = false);
                             },
                             child: Icon(
                               Icons.send,

@@ -1,16 +1,17 @@
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
-import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatViewModel extends BaseModel {
   String threadId;
   String phoneNumber;
+  String userNumber;
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
 
@@ -18,7 +19,6 @@ class ChatViewModel extends BaseModel {
   Future get thread async {
     print("Thread getter called");
     if (threadId == null) {
-      print(phoneNumber);
       String result = await DatabaseService.db.getContactThread(phoneNumber);
       if (result != null) {
         threadId = result;
@@ -29,13 +29,26 @@ class ChatViewModel extends BaseModel {
     }
   }
 
+  Future get myNumber async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userNumber = prefs.getString("number");
+    print("my number :");
+    print(userNumber);
+  }
+
+  Future resendPendingMessages() async {
+    List<Message> unsentMessages =
+        await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
+    print("unsent Messages");
+    print(unsentMessages);
+  }
+
   Future<List<Message>> getChatMessages() async {
-    await thread;
-    print(threadId);
+    await myNumber;
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      print("chats called:");
+      await resendPendingMessages();
       return messages;
     } else
       return null;
@@ -47,27 +60,23 @@ class ChatViewModel extends BaseModel {
       @required String receiver,
       @required bool isQuote}) async {
     await thread;
-    print(threadId);
     var response = await sendMsg(receiver, message, isQuote, "");
     final now = DateTime.now();
     Message newMessage;
-
-    print(response.statusCode);
-    print(response.data);
     if (response.statusCode == 200) {
       newMessage = Message(
           id: response.data['messageID'],
           content: message,
-          sender: "+23408132368804",
+          sender: userNumber,
           threadId: threadId,
           createdAt: now.toIso8601String(),
-          status: "sent",
+          status: "SENT",
           isQuote: isQuote.toString());
     } else {
       newMessage = Message(
         id: now.toString(),
         content: message,
-        sender: "+2348132368804",
+        sender: userNumber,
         threadId: threadId,
         createdAt: now.toIso8601String(),
         status: "PENDING",
@@ -75,12 +84,12 @@ class ChatViewModel extends BaseModel {
       );
     }
     await DatabaseService.db.insertNewMessage(newMessage);
+    setBusy(false);
   }
 
   Future sendMsg(
       String receiver, String message, bool isQuote, String replyTo) async {
     final _userToken = _authService.token;
-    print(_userToken);
     try {
       Map<String, dynamic> body = {
         "content": message,

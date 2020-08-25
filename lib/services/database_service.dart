@@ -40,12 +40,12 @@ class DatabaseService {
     _database = await createDatabase();
     return _database;
   }
-
+  /*
   Future deleteDb() async {
     var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "msg_new_db.db");
+    var path = join(databasesPath, "msg_database.db");
     await deleteDatabase(path);
-  }
+  }*/
 
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
@@ -148,18 +148,23 @@ class DatabaseService {
     final db = await database;
     List<Chat> allChats = [];
     List chats = await db.rawQuery(
-      
-        '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_at as lastMsgTime
-         FROM threads 
-        LEFT JOIN (
-          SELECT id, thread_id, content, 
-          status, created_at
-           FROM messages ORDER BY created_at DESC LIMIT 1
-        ) AS msg
-        ON threads.id = msg.thread_id
-        LEFT JOIN contacts ON threads.members = contacts.phoneNumber
-         ORDER BY threads.id DESC''');
-    print(chats);
+        // '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_at as lastMsgTime
+        //  FROM threads
+        // LEFT JOIN (
+        //   SELECT id, thread_id, content,
+        //   status, created_at
+        //    FROM messages ORDER BY created_at DESC LIMIT 2
+        // ) AS msg
+        // ON threads.id = msg.thread_id
+        // LEFT JOIN contacts ON threads.members = contacts.phoneNumber
+        //  ORDER BY threads.id DESC'''
+        '''SELECT * FROM (SELECT t.id, contacts.displayName, contacts.phoneNumber, msg.thread_id, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
+        FROM threads AS t
+        LEFT JOIN contacts ON t.members = contacts.phoneNumber
+        JOIN messages AS msg ON t.id = msg.thread_id
+        ORDER BY lastMsgTime DESC) AS chat  
+        GROUP BY id ORDER BY chat.lastMsgTime DESC''');
+    //print(chats);
     chats.forEach((chat) {
       allChats.add(Chat.fromMap(chat));
     });
@@ -174,6 +179,20 @@ class DatabaseService {
         where: "$COLUMN_MSG_THREAD_ID = ?",
         orderBy: "$COLUMN_CREATED_AT DESC",
         whereArgs: [threadId]);
+    print(chats);
+    chats.forEach((message) {
+      messages.add(Message.fromDBMap(message));
+    });
+    return messages;
+  }
+
+  Future<List<Message>> getUnsentChatMessageFromDb(String threadId) async {
+    final db = await database;
+    List<Message> messages = List<Message>();
+    var chats = await db.query(TABLE_MESSAGE,
+        where: "$COLUMN_MSG_THREAD_ID = ? AND $COLUMN_STATUS = ?",
+        orderBy: "$COLUMN_CREATED_AT DESC",
+        whereArgs: [threadId, "PENDING"]);
     print(chats);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));

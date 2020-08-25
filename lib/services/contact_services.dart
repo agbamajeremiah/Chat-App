@@ -20,20 +20,15 @@ class ContactServices {
       //uploadContacts.add(con.phoneNumber);
       await DatabaseService.db.insertContact(con);
     });
-    print("upload contacts:");
-    print(uploadContacts);
     List<MyContact> unSyncContacts =
         await DatabaseService.db.getUnRegContactsFromDb();
-    print(unSyncContacts);
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
-    print(uploadContacts);
     List<MyContact> regContacts = await getRegisteredContact(uploadContacts);
     regContacts.forEach((cont) async {
       String phoneNumber =
           cont.phoneNumber.substring(5, cont.phoneNumber.length);
-      print(phoneNumber);
       await DatabaseService.db.updateRegContact(phoneNumber);
     });
   }
@@ -80,8 +75,6 @@ class ContactServices {
     dynamic response = await sendContacts(uploadContacts);
     //print(response);
     List<dynamic> contactsData = response.data['contacts'];
-    print(contactsData);
-    print(contactsData.length);
     contactsData.forEach((contact) {
       regContacts.add(MyContact.fromSyncMap(contact));
     });

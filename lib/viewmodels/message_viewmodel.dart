@@ -14,15 +14,12 @@ class MessageViewModel extends BaseModel {
   //Get saved chat/tread from db
   Future<List<Chat>> getAllChats() async {
     //test
-    await DatabaseService.db.deleteDb();
+    //await DatabaseService.db.deleteDb();
     List<Chat> activeChat = [];
-
     await getSyncChats();
     List chats = await DatabaseService.db.getAllChatsFromDb();
     chats.forEach((element) {
-      print(element.lastMessage);
       if (element.lastMessage != null) {
-        print(element.lastMessage);
         activeChat.add(element);
       }
     });
@@ -39,7 +36,6 @@ class MessageViewModel extends BaseModel {
       List<dynamic> chats = response.data['messages'];
       //save threads
       chats.forEach((chat) async {
-        print("chat =");
         List messages = chat['messages'];
         await DatabaseService.db.insertThread(Thread.fromMap(chat));
         messages.forEach((message) async {
@@ -54,7 +50,6 @@ class MessageViewModel extends BaseModel {
 
   Future getThreads() async {
     final _userToken = _authService.token;
-    print(_userToken);
     try {
       Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",

@@ -46,13 +46,10 @@ class _LoginViewState extends State<LoginView> {
                         children: [
                           Container(
                             child: CountryCodePicker(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0),
                               textStyle: textStyle.copyWith(
-                                  color: AppColors.textColor),
-                              onChanged: (value) {
-                                setState(() {
-                                  prefix = value.toString();
-                                });
-                              },
+                                  color: AppColors.textColor, fontSize: 16),
+                              onChanged: print,
                               // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
                               initialSelection: 'NG',
                               favorite: ['+234', 'NG'],
@@ -68,7 +65,7 @@ class _LoginViewState extends State<LoginView> {
                             child: InputField(
                               controller: phoneNumber,
                               placeholder: 'Enter Number',
-                              textInputType: TextInputType.phone,
+                              textInputType: TextInputType.number,
                               formatter:
                                   WhitelistingTextInputFormatter.digitsOnly,
                             ),
