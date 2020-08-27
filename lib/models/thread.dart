@@ -11,7 +11,7 @@ class Thread {
   });
 
   factory Thread.fromMap(Map<String, dynamic> json) => Thread(
-        members: json["members"][0],
+        members: json["members"][1],
         id: json["_id"],
       );
 
