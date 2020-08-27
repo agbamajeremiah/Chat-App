@@ -40,25 +40,25 @@ class DatabaseService {
     _database = await createDatabase();
     return _database;
   }
-  /*
+
   Future deleteDb() async {
     var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "msg_database.db");
+    var path = join(databasesPath, "msg_db.db");
     await deleteDatabase(path);
-  }*/
+  }
 
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
     return await openDatabase(
-      join(dbPath, 'msg_db.db'),
+      join(dbPath, 'new_msg_db.db'),
       version: 1,
       onCreate: (Database database, int version) async {
         print("creating contact db");
         await database.execute(
           "CREATE TABLE $TABLE_CONTACT ("
-          "$COLUMN_ID INTEGER PRIMARY KEY, "
+          "$COLUMN_ID INTEGER UNIQUE PRIMARY KEY, "
           "$COLUMN_NAME TEXT, "
-          "$COLUMN_NUMBER TEXT, "
+          "$COLUMN_NUMBER TEXT UNIQUE, "
           "$COLUMN_REG_STATUS INTEGER NOT NULL "
           ")",
         );
@@ -70,7 +70,7 @@ class DatabaseService {
         );
         await database.execute(
           "CREATE TABLE $TABLE_MESSAGE ("
-          "$COLUMN_MESSAGE_ID TEXT PRIMARY KEY, "
+          "$COLUMN_MESSAGE_ID TEXT UNIQUE PRIMARY KEY, "
           "$COLUMN_CONTENT TEXT, "
           "$COLUMN_MSG_THREAD_ID TEXT, "
           "$COLUMN_SENDER TEXT, "
@@ -98,6 +98,34 @@ class DatabaseService {
       print(element.contactId);
       print(element.regStatus);
       print(element.fullName);
+    });
+    return allContacts;
+  }
+
+  Future<List<MyContact>> getUnRegContactsFromDb() async {
+    final db = await database;
+    List<MyContact> allContacts = List<MyContact>();
+    var contacts = await db.query(TABLE_CONTACT,
+        columns: [COLUMN_NUMBER, COLUMN_REG_STATUS],
+        where: "$COLUMN_REG_STATUS = ?",
+        whereArgs: [0]);
+    contacts.forEach((cont) {
+      MyContact contact = MyContact.fromMap(cont);
+      allContacts.add(contact);
+    });
+    return allContacts;
+  }
+
+  Future<List<MyContact>> getAllContactsFromDb() async {
+    final db = await database;
+    List<MyContact> allContacts = List<MyContact>();
+    var contacts = await db.query(
+      TABLE_CONTACT,
+      columns: [COLUMN_ID, COLUMN_NUMBER, COLUMN_NAME, COLUMN_REG_STATUS],
+    );
+    contacts.forEach((cont) {
+      MyContact contact = MyContact.fromMap(cont);
+      allContacts.add(contact);
     });
     return allContacts;
   }
@@ -130,20 +158,6 @@ class DatabaseService {
     return singleContact;
   }
 
-  Future<List<MyContact>> getUnRegContactsFromDb() async {
-    final db = await database;
-    List<MyContact> allContacts = List<MyContact>();
-    var contacts = await db.query(TABLE_CONTACT,
-        columns: [COLUMN_NUMBER, COLUMN_REG_STATUS],
-        where: "$COLUMN_REG_STATUS = ?",
-        whereArgs: [0]);
-    contacts.forEach((cont) {
-      MyContact contact = MyContact.fromMap(cont);
-      allContacts.add(contact);
-    });
-    return allContacts;
-  }
-
   Future<List<Chat>> getAllChatsFromDb() async {
     final db = await database;
     List<Chat> allChats = [];
@@ -158,13 +172,17 @@ class DatabaseService {
         // ON threads.id = msg.thread_id
         // LEFT JOIN contacts ON threads.members = contacts.phoneNumber
         //  ORDER BY threads.id DESC'''
-        '''SELECT * FROM (SELECT t.id, contacts.displayName, contacts.phoneNumber, msg.thread_id, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
+        '''SELECT * FROM (SELECT t.id, t.members, contacts.displayName, contacts.phoneNumber, msg.thread_id, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
         FROM threads AS t
         LEFT JOIN contacts ON t.members = contacts.phoneNumber
         JOIN messages AS msg ON t.id = msg.thread_id
-        ORDER BY lastMsgTime DESC) AS chat  
+        ORDER BY lastMsgTime ASC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
-    //print(chats);
+    print(chats);
+
+    chats.forEach((element) {
+      print(element);
+    });
     chats.forEach((chat) {
       allChats.add(Chat.fromMap(chat));
     });
@@ -206,7 +224,7 @@ class DatabaseService {
     await db.insert(
       TABLE_CONTACT,
       contact.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
@@ -236,5 +254,15 @@ class DatabaseService {
       SET $COLUMN_REG_STATUS = ?
       WHERE $COLUMN_NUMBER Like '%$phoneNumber'
     ''', [1]);
+  }
+
+  Future<void> updateResentMessages(Message message, String oldMsgId) async {
+    final db = await database;
+    await db.update(
+      TABLE_MESSAGE,
+      message.toMap(),
+      where: "$COLUMN_MESSAGE_ID = ?",
+      whereArgs: [oldMsgId],
+    );
   }
 }

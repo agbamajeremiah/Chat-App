@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
+import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/api.dart';
+import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,29 +22,37 @@ class ChatViewModel extends BaseModel {
   //first run
   Timer timer;
   void initialise() {
-    const sevenSec = const Duration(seconds: 7);
+    const sevenSec = const Duration(seconds: 200);
     timer = Timer.periodic(sevenSec, (Timer t) {
       getChatMessages();
       notifyListeners();
     });
   }
 
-  void cancelTimer() {
-    timer?.cancel();
-  }
-
-  //Fetch contact's from database
+  //set chat threadId
   Future get thread async {
     print("Thread getter called");
     if (threadId == null) {
       String result = await DatabaseService.db.getContactThread(phoneNumber);
-      print("thread id: " + result);
+      //print("thread id: " + result);
       print(result);
       if (result != null) {
         threadId = result;
       } else {
         print(phoneNumber);
-        await initiateThread(phoneNumber);
+        var res = await initiateThread(phoneNumber);
+        if (res.statusCode == 200) {
+          List threadMembers = res.data['thread']['members'];
+          String otherMember =
+              threadMembers[0] == userNumber && threadMembers[1] != null
+                  ? threadMembers[1]
+                  : '';
+          Thread newThread =
+              Thread(id: res.data['thread']['_id'], members: otherMember);
+          print(newThread.toMap());
+          await DatabaseService.db.insertThread(newThread);
+          threadId = res.data['thread']['_id'];
+        }
       }
     }
   }
@@ -55,20 +65,45 @@ class ChatViewModel extends BaseModel {
   }
 
   Future resendPendingMessages() async {
-    List<Message> unsentMessages =
-        await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
-    print("unsent Messages");
-    print(unsentMessages);
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      List<Message> unsentMessages =
+          await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
+      print("unsent Messages");
+      print(unsentMessages);
+      unsentMessages.forEach((mes) async {
+        print(mes.content + mes.status + mes.createdAt + mes.isQuote + mes.id);
+        var response =
+            await sendMsg(threadId, mes.content, mes.isQuote != "false", "");
+        if (response.statusCode == 200) {
+          print(response);
+          print(response.data['messageID']);
+          Message updatedMessage = Message(
+              isQuote: mes.isQuote,
+              createdAt: mes.createdAt,
+              id: response.data['messageID'],
+              sender: mes.sender,
+              content: mes.content,
+              status: "SENT",
+              threadId: mes.threadId);
+          //update mesage record
+          DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
+          print("message updated");
+        }
+      });
+    }
   }
 
   Future<List<Message>> getChatMessages() async {
-    await thread;
     await myNumber;
-    //List<Message> messages = [];
+    await thread;
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      await resendPendingMessages();
+      messages.forEach((element) {
+        print(element.toMap());
+      });
+      //await resendPendingMessages();
       return messages;
     } else
       return null;
@@ -79,19 +114,21 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
-    await thread;
-    var response = await sendMsg(receiver, message, isQuote, "");
-    final now = DateTime.now();
     Message newMessage;
-    if (response.statusCode == 200) {
-      newMessage = Message(
-          id: response.data['messageID'],
-          content: message,
-          sender: userNumber,
-          threadId: threadId,
-          createdAt: now.toIso8601String(),
-          status: "SENT",
-          isQuote: isQuote.toString());
+    final now = DateTime.now();
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      var response = await sendMsg(threadId, message, isQuote, "");
+      if (response.statusCode == 200) {
+        newMessage = Message(
+            id: response.data['messageID'],
+            content: message,
+            sender: userNumber,
+            threadId: threadId,
+            createdAt: now.toIso8601String(),
+            status: "SENT",
+            isQuote: isQuote.toString());
+      }
     } else {
       newMessage = Message(
         id: now.toString(),
@@ -156,6 +193,7 @@ class ChatViewModel extends BaseModel {
         headers: headers,
         body: body,
       );
+      print(response);
       return response;
     } catch (e) {
       if (e is DioError) {

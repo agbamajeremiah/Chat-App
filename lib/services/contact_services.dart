@@ -15,13 +15,14 @@ class ContactServices {
     //DatabaseService.db.deleteDb();
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await getAllContactsFromDevice();
-    //print(allContacts);
+    print(allContacts);
     allContacts.forEach((con) async {
       //uploadContacts.add(con.phoneNumber);
       await DatabaseService.db.insertContact(con);
     });
     List<MyContact> unSyncContacts =
         await DatabaseService.db.getUnRegContactsFromDb();
+
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
@@ -44,10 +45,15 @@ class ContactServices {
           await ContactsService.getContacts(withThumbnails: false);
       if (contacts.length > 0) {
         contacts.forEach((con) {
+          print(con.phones.toList());
           contactsAll.add(MyContact(
               contactId: con.identifier,
               fullName: con.displayName ?? "",
-              phoneNumber: con.phones.toList()[0].value ?? "",
+              phoneNumber: con.phones.length == 0
+                  ? ""
+                  : con.phones
+                      .toList()[0]
+                      .value, //con.phones.toList()[0].value ?? "",
               regStatus: 0));
         });
       }
@@ -57,16 +63,21 @@ class ContactServices {
 
   //Check contacts permission
   Future<PermissionStatus> _getPermission() async {
-    final PermissionStatus permission = await Permission.contacts.status;
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.denied) {
-      final Map<Permission, PermissionStatus> permissionStatus =
-          await [Permission.contacts].request();
-      return permissionStatus[Permission.contacts] ??
-          PermissionStatus.undetermined;
-    } else {
-      return permission;
+    var permission = await Permission.contacts.status;
+    if (permission.isUndetermined) {
+      await Permission.contacts.request();
     }
+    // if (permission != PermissionStatus.granted &&
+    //     permission != PermissionStatus.denied) {
+    //   print("Permission Status:");
+    //   print(PermissionStatus.granted.toString());
+    // final Map<Permission, PermissionStatus> permissionStatus =
+    //     await [Permission.contacts].request();
+    // return permissionStatus[Permission.contacts] ??
+    //     PermissionStatus.undetermined;
+    // } else {
+    return permission;
+    // }
   }
 
   //Sync User contacts from server

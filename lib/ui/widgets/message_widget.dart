@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
+import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MessageContainer extends StatelessWidget {
   final String name;
@@ -18,33 +18,6 @@ class MessageContainer extends StatelessWidget {
     @required this.msgTime,
     this.isRead = false,
   });
-  String convertToTime(String stringTime) {
-    var returnTime;
-    DateTime curTime = DateTime.now();
-    print(curTime);
-    DateTime msgTime = DateTime.parse(stringTime);
-    print(msgTime);
-    int dayDiff = curTime.day - msgTime.day;
-    print(dayDiff);
-    switch (dayDiff) {
-      case 0:
-        returnTime = DateFormat.jm().format(DateTime.parse(stringTime));
-        break;
-      case 1:
-        returnTime = "Yesterday";
-        break;
-      case 2:
-      case 3:
-      case 4:
-      case 5:
-      case 6:
-        returnTime = DateFormat.E().add_jm().format(DateTime.parse(stringTime));
-        break;
-      default:
-        returnTime = DateFormat.yMd().format(DateTime.parse(stringTime));
-    }
-    return returnTime;
-  }
 
   static final List colors = [
     Colors.red,
@@ -55,10 +28,10 @@ class MessageContainer extends StatelessWidget {
     Colors.purple
   ];
   static final Random random = new Random();
-  static final int index = random.nextInt(colors.length);
 
   @override
   Widget build(BuildContext context) {
+    int index = random.nextInt(colors.length);
     return Container(
       padding: EdgeInsets.only(left: 10, right: 7),
       child: Row(
@@ -69,7 +42,7 @@ class MessageContainer extends StatelessWidget {
             backgroundColor: colors[index],
             child: Center(
               child: Text(
-                name[0],
+                name != null ? name[0] : '',
                 style: textStyle.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

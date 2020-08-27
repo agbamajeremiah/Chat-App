@@ -2,6 +2,7 @@ import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/viewmodels/startup_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 class SplashView extends StatefulWidget {
@@ -12,6 +13,9 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: AppColors.splashBlue,
+        statusBarBrightness: Brightness.light));
     super.initState();
   }
 

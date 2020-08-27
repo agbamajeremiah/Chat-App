@@ -25,7 +25,7 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
-        onModelReady: (model) => model.initialise(),
+        //onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
@@ -45,40 +45,54 @@ class _ChatViewState extends State<ChatView> {
                         print(snapshot.data);
                         if (!snapshot.hasData) {
                           return Expanded(
-                            child: Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Text(
-                                    "No Conversation yet",
-                                    style: textStyle.copyWith(
-                                        color: AppColors.textColor,
-                                        fontSize: 15.0),
-                                  ),
-                                )),
+                            child: Center(
+                              child: LinearProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                    AppColors.primaryColor),
+                              ),
+                            ),
                           );
                         } else {
                           List<Message> allMessages = snapshot.data;
                           final messageCount = allMessages.length;
-                          return Expanded(
-                              child: ListView.builder(
-                            itemCount: messageCount,
-                            reverse: true,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 20),
-                            itemBuilder: (context, index) {
-                              final message = allMessages[index];
-                              print(message.content);
-                              print(message.createdAt);
-                              print(message.sender);
+                          return messageCount > 0
+                              ? Expanded(
+                                  child: ListView.builder(
+                                    itemCount: messageCount,
+                                    reverse: true,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 20),
+                                    itemBuilder: (context, index) {
+                                      final message = allMessages[index];
+                                      print(message.content);
+                                      print(message.createdAt);
+                                      print(message.sender);
 
-                              return MessageBubble(
-                                  sender: "ssjsjj",
-                                  text: message.content.toString(),
-                                  isMe: message.sender == "+2348132368804" ||
-                                      message.sender == "+23408132368804");
-                            },
-                          ));
+                                      return MessageBubble(
+                                        sender: message.sender,
+                                        text: message.content.toString(),
+                                        isMe:
+                                            message.sender == model.userNumber,
+                                        messageTime: message.createdAt,
+                                        status: message.status,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 15.0),
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Text(
+                                        "No Messages",
+                                        style: textStyle.copyWith(
+                                            color: AppColors.textColor,
+                                            fontSize: 15.0),
+                                      ),
+                                    ),
+                                  ),
+                                );
                         }
                       }),
                   Container(

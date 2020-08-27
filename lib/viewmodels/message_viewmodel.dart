@@ -14,7 +14,7 @@ import 'package:flutter/foundation.dart';
 class MessageViewModel extends BaseModel {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   void initialise() {
-    const fiveSec = const Duration(seconds: 5);
+    const fiveSec = const Duration(seconds: 100);
     Timer.periodic(fiveSec, (Timer t) {
       getAllChats();
       notifyListeners();

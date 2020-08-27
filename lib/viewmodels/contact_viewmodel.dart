@@ -7,6 +7,15 @@ class ContactViewModel extends BaseModel {
   Future<List<MyContact>> getContactsFromDb() async {
     List<MyContact> allContacts =
         await DatabaseService.db.getRegContactsFromDb();
+    print("registered Contact:");
+    allContacts.forEach((con) {
+      print(con.toMap());
+    });
+    List<MyContact> contactspool =
+        await DatabaseService.db.getAllContactsFromDb();
+    contactspool.forEach((element) {
+      print(element.toMap());
+    });
     return allContacts;
   }
 }
