@@ -24,7 +24,7 @@ class UpdateProvfileViewModel extends BaseModel {
       } catch (e) {
         print(e.toString());
       }
-      _navigationService.navigateTo(MessageViewRoute);
+      _navigationService.removeAllAndNavigateTo(MessageViewRoute);
       setBusy(false);
     } catch (e) {
       print(e.message);

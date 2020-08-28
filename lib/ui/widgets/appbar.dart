@@ -30,6 +30,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         style: textStyle.copyWith(fontSize: 20, color: AppColors.textColor),
       ),
       actions: [
+        /*
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: IconButton(
@@ -37,7 +38,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
             icon: Icon(Icons.search),
             color: AppColors.textColor,
           ),
-        ),
+        ),*/
         Padding(
           padding: const EdgeInsets.only(right: 10),
           child: PopupMenuButton<String>(

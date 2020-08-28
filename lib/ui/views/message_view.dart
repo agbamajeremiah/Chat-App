@@ -129,38 +129,53 @@ class _MessagesViewState extends State<MessagesView> {
                           ],
                         ),
                   body: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0),
-                      child: ListView.separated(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        itemCount: chatCount,
-                        itemBuilder: (context, index) {
-                          final chat = allChats[index];
-                          print("member:");
-                          return InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(context, ChatViewRoute,
-                                  arguments: Chat(
-                                      id: chat.id,
-                                      displayName: chat.displayName,
-                                      memberPhone: chat.memberPhone));
-                            },
-                            child: MessageContainer(
-                              name: chat.displayName ?? chat.memberPhone,
-                              lastMessage: chat.lastMessage,
-                              msgTime: chat.lastMsgTime,
-                              isRead: true,
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return Divider(
-                            color: Colors.grey,
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                      child: chatCount > 0
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 0.0),
+                              child: ListView.separated(
+                                padding: EdgeInsets.symmetric(vertical: 10.0),
+                                itemCount: chatCount,
+                                itemBuilder: (context, index) {
+                                  final chat = allChats[index];
+                                  print("member:");
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, ChatViewRoute,
+                                          arguments: Chat(
+                                              id: chat.id,
+                                              displayName: chat.displayName,
+                                              memberPhone: chat.memberPhone));
+                                    },
+                                    child: MessageContainer(
+                                      name:
+                                          chat.displayName ?? chat.memberPhone,
+                                      lastMessage: chat.lastMessage,
+                                      msgTime: chat.lastMsgTime,
+                                      isRead: true,
+                                    ),
+                                  );
+                                },
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return Divider(
+                                    color: Colors.grey,
+                                  );
+                                },
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(top: 15),
+                              child: Align(
+                                child: Text(
+                                  "No conversation yet",
+                                  style: textStyle.copyWith(
+                                      color: AppColors.textColor,
+                                      fontSize: 14.0),
+                                ),
+                              ),
+                            )),
                 );
               }
             },
