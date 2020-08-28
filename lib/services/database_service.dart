@@ -40,17 +40,17 @@ class DatabaseService {
     _database = await createDatabase();
     return _database;
   }
-
+/*
   Future deleteDb() async {
     var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "msg_db.db");
+    var path = join(databasesPath, "new_msg_db.db");
     await deleteDatabase(path);
-  }
+  }*/
 
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
     return await openDatabase(
-      join(dbPath, 'new_msg_db.db'),
+      join(dbPath, 'msg_db.db'),
       version: 1,
       onCreate: (Database database, int version) async {
         print("creating contact db");
