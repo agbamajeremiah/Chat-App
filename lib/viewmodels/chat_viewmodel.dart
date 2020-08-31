@@ -20,7 +20,7 @@ class ChatViewModel extends BaseModel {
   //first run
   Timer timer;
   void initialise() {
-    const tenSec = const Duration(seconds: 10);
+    const tenSec = const Duration(seconds: 20);
     timer = Timer.periodic(tenSec, (Timer t) {
       getChatMessages();
       notifyListeners();
