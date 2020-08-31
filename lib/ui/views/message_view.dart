@@ -18,20 +18,25 @@ class MessagesView extends StatefulWidget {
 class _MessagesViewState extends State<MessagesView> {
   final _searchTextCon = TextEditingController();
   bool _isSearching = false;
+  String _searchQuery = "";
   @override
   void initState() {
+    super.initState();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.white),
     );
-
-    super.initState();
+    _searchTextCon.addListener(() {
+      setState(() {
+        _searchQuery = _searchTextCon.text;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<MessageViewModel>.withConsumer(
         viewModelBuilder: () => MessageViewModel(),
-        onModelReady: (model) => model.initialise(),
+        //onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
           return FutureBuilder(
             future: model.getAllChats(),
@@ -48,6 +53,16 @@ class _MessagesViewState extends State<MessagesView> {
               } else {
                 List<Chat> allChats = snapshot.data;
                 final chatCount = allChats.length;
+                final searchChatList = _searchTextCon.text.isEmpty
+                    ? []
+                    : allChats
+                        .where((ch) =>
+                            ch.displayName.contains(new RegExp(_searchQuery,
+                                caseSensitive: false)) ||
+                            ch.lastMessage.contains(
+                                new RegExp(_searchQuery, caseSensitive: false)))
+                        .toList();
+
                 return Scaffold(
                   backgroundColor: Colors.white,
                   floatingActionButton: FloatingActionButton(
@@ -68,6 +83,7 @@ class _MessagesViewState extends State<MessagesView> {
                           leading: IconButton(
                               onPressed: () {
                                 setState(() {
+                                  _searchTextCon.clear();
                                   _isSearching = false;
                                 });
                               },
@@ -98,7 +114,7 @@ class _MessagesViewState extends State<MessagesView> {
                                     icon: Icon(Icons.clear),
                                     onPressed: () {
                                       print(_searchTextCon.text);
-                                      //_searchTextCon.clear();
+                                      _searchTextCon.clear();
                                     },
                                   ),
                                 ),
@@ -130,41 +146,94 @@ class _MessagesViewState extends State<MessagesView> {
                         ),
                   body: SafeArea(
                       child: chatCount > 0
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 0.0),
-                              child: ListView.separated(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                itemCount: chatCount,
-                                itemBuilder: (context, index) {
-                                  final chat = allChats[index];
-                                  print("member:");
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, ChatViewRoute,
-                                          arguments: Chat(
-                                              id: chat.id,
-                                              displayName: chat.displayName,
-                                              memberPhone: chat.memberPhone));
+                          ? _searchQuery.isEmpty
+                              ? Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 0.0),
+                                  child: ListView.separated(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 10.0),
+                                    itemCount: chatCount,
+                                    itemBuilder: (context, index) {
+                                      final chat = allChats[index];
+                                      print("member:");
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, ChatViewRoute,
+                                              arguments: Chat(
+                                                  id: chat.id,
+                                                  displayName: chat.displayName,
+                                                  memberPhone:
+                                                      chat.memberPhone));
+                                        },
+                                        child: MessageContainer(
+                                          searchquery: "",
+                                          name: chat.displayName ??
+                                              chat.memberPhone,
+                                          lastMessage: chat.lastMessage,
+                                          msgTime: chat.lastMsgTime,
+                                          isNotRead: false,
+                                        ),
+                                      );
                                     },
-                                    child: MessageContainer(
-                                      name:
-                                          chat.displayName ?? chat.memberPhone,
-                                      lastMessage: chat.lastMessage,
-                                      msgTime: chat.lastMsgTime,
-                                      isRead: true,
-                                    ),
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return Divider(
-                                    color: Colors.grey,
-                                  );
-                                },
-                              ),
-                            )
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return Divider(
+                                        color: Colors.grey,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : searchChatList.length > 0
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 0.0),
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10.0),
+                                        itemCount: searchChatList.length,
+                                        itemBuilder: (context, index) {
+                                          final chat = searchChatList[index];
+                                          print("member:");
+                                          return InkWell(
+                                            onTap: () {
+                                              _searchTextCon.clear();
+                                              _isSearching = false;
+                                              Navigator.pushNamed(
+                                                  context, ChatViewRoute,
+                                                  arguments: Chat(
+                                                      id: chat.id,
+                                                      displayName:
+                                                          chat.displayName,
+                                                      memberPhone:
+                                                          chat.memberPhone));
+                                            },
+                                            child: MessageContainer(
+                                              searchquery: _searchQuery,
+                                              name: chat.displayName ??
+                                                  chat.memberPhone,
+                                              lastMessage: chat.lastMessage,
+                                              msgTime: chat.lastMsgTime,
+                                              isNotRead: false,
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                          return Divider(
+                                            color: Colors.grey,
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: EdgeInsets.only(top: 20.0),
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Text("No Match Found!"),
+                                      ),
+                                    )
                           : Padding(
                               padding: EdgeInsets.only(top: 15),
                               child: Align(
@@ -181,5 +250,11 @@ class _MessagesViewState extends State<MessagesView> {
             },
           );
         });
+  }
+
+  @override
+  void dispose() {
+    _searchTextCon.dispose();
+    super.dispose();
   }
 }

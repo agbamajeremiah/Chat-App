@@ -32,3 +32,61 @@ String getFullTime(String stringTime) {
   }
   return returnTime;
 }
+
+int getColorMatch(String firstLetter) {
+  int colorIndex;
+  if (firstLetter == "") {
+    colorIndex = 0;
+  } else {
+    String letterToLower = firstLetter.toLowerCase();
+    switch (letterToLower) {
+      case 'a':
+      case 'b':
+      case 'c':
+        colorIndex = 1;
+        break;
+      case 'd':
+      case 'e':
+      case 'f':
+        colorIndex = 2;
+        break;
+      case 'g':
+      case 'h':
+      case 'i':
+        colorIndex = 3;
+        break;
+      case 'j':
+      case 'k':
+      case 'l':
+        colorIndex = 4;
+        break;
+      case 'm':
+      case 'n':
+      case 'o':
+        colorIndex = 5;
+        break;
+      case 'p':
+      case 'g':
+      case 'r':
+        colorIndex = 6;
+        break;
+      case 's':
+      case 't':
+      case 'u':
+        colorIndex = 7;
+        break;
+      case 'v':
+      case 'w':
+      case 'x':
+        colorIndex = 8;
+        break;
+      case 'y':
+      case 'z':
+        colorIndex = 9;
+        break;
+      default:
+        colorIndex = 0;
+    }
+  }
+  return colorIndex;
+}

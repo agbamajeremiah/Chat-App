@@ -3,6 +3,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/navigtion_service.dart';
+import 'package:MSG/utils/connectivity.dart';
 import 'base_model.dart';
 
 class StartUpViewModel extends BaseModel {
@@ -13,20 +14,22 @@ class StartUpViewModel extends BaseModel {
 
   Future handleStartUpLogic() async {
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
-
     if (hasLoggedInUser) {
-      try {
-        //test
-        //await DatabaseService.db.deleteDb();
-        //first run
-
-        await _contactService.syncContacts();
-      } catch (e) {
-        print(e.toString());
-      }
       _navigationService.clearLastAndNavigateTo(MessageViewRoute);
+      final internetStatus = await checkInternetConnection();
+      if (internetStatus == true) {
+        await syncContacts();
+      }
     } else {
       _navigationService.clearLastAndNavigateTo(LoginViewRoute);
+    }
+  }
+
+  Future syncContacts() async {
+    try {
+      await _contactService.syncContacts();
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

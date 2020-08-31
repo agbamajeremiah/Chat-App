@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
@@ -10,7 +9,6 @@ import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatViewModel extends BaseModel {
   String threadId;
@@ -57,13 +55,6 @@ class ChatViewModel extends BaseModel {
     }
   }
 
-  Future get myNumber async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userNumber = prefs.getString("number");
-    print("my number :");
-    print(userNumber);
-  }
-
   Future resendPendingMessages() async {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
@@ -89,13 +80,14 @@ class ChatViewModel extends BaseModel {
           //update mesage record
           DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
           print("message updated");
+          notifyListeners();
         }
       });
     }
   }
 
   Future<List<Message>> getChatMessages() async {
-    await myNumber;
+    userNumber = _authService.userNumber;
     await thread;
     if (threadId != null) {
       List<Message> messages =
@@ -194,6 +186,43 @@ class ChatViewModel extends BaseModel {
         body: body,
       );
       print(response);
+      return response;
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.data,
+        );
+      }
+      print(e.runtimeType);
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  Future updateMarkedMessages() async {
+    final conectionStatus = await checkInternetConnection();
+    if (conectionStatus == true) {
+      var res = await makeAsRead();
+      print(res);
+    }
+  }
+
+  Future makeAsRead() async {
+    final _userToken = _authService.token;
+    try {
+      Map<String, String> body = {
+        "threadID": threadId,
+      };
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_userToken",
+      };
+
+      var response = await patchResquest(
+        url: "/markasread",
+        body: body,
+        headers: headers,
+      );
       return response;
     } catch (e) {
       if (e is DioError) {

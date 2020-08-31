@@ -14,8 +14,10 @@ class Chat {
   });
   factory Chat.fromMap(Map<String, dynamic> map) => Chat(
       id: map['id'],
-      displayName: map['displayName'],
-      memberPhone: map['phoneNumber'],
+      displayName:
+          map['displayName'] != null ? map['displayName'] : map['members'],
+      memberPhone:
+          map['phoneNumber'] != null ? map['phoneNumber'] : map['members'],
       lastMessage: map['lastMessage'],
       lastMsgTime: map['lastMsgTime']);
 

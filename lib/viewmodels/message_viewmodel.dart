@@ -7,6 +7,7 @@ import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/api.dart';
+import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -28,7 +29,10 @@ class MessageViewModel extends BaseModel {
     //first run
 
     List<Chat> activeChat = [];
-    await getSyncChats();
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      await getSyncChats();
+    }
     List chats = await DatabaseService.db.getAllChatsFromDb();
     chats.forEach((element) {
       if (element.lastMessage != null) {

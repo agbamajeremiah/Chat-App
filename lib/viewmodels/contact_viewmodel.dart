@@ -4,18 +4,16 @@ import 'package:MSG/viewmodels/base_model.dart';
 
 class ContactViewModel extends BaseModel {
   //Fetch all registered contacts from database
-  Future<List<MyContact>> getContactsFromDb() async {
-    List<MyContact> allContacts =
+  Future<Map<String, List<MyContact>>> getContactsFromDb() async {
+    List<MyContact> regContacts =
         await DatabaseService.db.getRegContactsFromDb();
     print("registered Contact:");
-    allContacts.forEach((con) {
-      print(con.toMap());
-    });
-    List<MyContact> contactspool =
-        await DatabaseService.db.getAllContactsFromDb();
-    contactspool.forEach((element) {
-      print(element.toMap());
-    });
-    return allContacts;
+    List<MyContact> unRegContacts =
+        await DatabaseService.db.getUnRegContactsFromDb();
+    Map<String, List<MyContact>> contacts = {
+      "registeredContacts": regContacts,
+      "unregisteredContacs": unRegContacts
+    };
+    return contacts;
   }
 }

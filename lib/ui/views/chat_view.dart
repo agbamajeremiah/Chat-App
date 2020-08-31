@@ -25,7 +25,7 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
-        onModelReady: (model) => model.initialise(),
+        //onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
@@ -46,7 +46,8 @@ class _ChatViewState extends State<ChatView> {
                         if (!snapshot.hasData) {
                           return Expanded(
                             child: Center(
-                              child: LinearProgressIndicator(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3.0,
                                 valueColor: AlwaysStoppedAnimation(
                                     AppColors.primaryColor),
                               ),
@@ -113,11 +114,14 @@ class _ChatViewState extends State<ChatView> {
                             onPressed: () async {
                               String messageText = messageTextController.text;
                               String receiver = widget.chat.memberPhone;
-
-                              await model.sendMessage(
-                                  message: messageText,
-                                  receiver: receiver,
-                                  isQuote: false);
+                              print("messageLenth: " +
+                                  messageText.length.toString());
+                              if (messageText.length > 0) {
+                                await model.sendMessage(
+                                    message: messageText,
+                                    receiver: receiver,
+                                    isQuote: false);
+                              }
                               messageTextController.clear();
                               setState(() => typingMessage = false);
                             },

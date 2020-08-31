@@ -87,7 +87,8 @@ class MessageBubble extends StatelessWidget {
                     bottomRight: Radius.circular(15),
                   ),
                   color: Colors.lightBlueAccent,
-                  child: Padding(
+                  child: Container(
+                    constraints: BoxConstraints(minWidth: 100.0),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 20),
                     child: Text(
@@ -130,7 +131,8 @@ class MessageBubble extends StatelessWidget {
                     topRight: Radius.circular(15),
                   ),
                   color: Colors.white,
-                  child: Padding(
+                  child: Container(
+                    constraints: BoxConstraints(minWidth: 100.0),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 20),
                     child: Text(

@@ -43,14 +43,15 @@ class DatabaseService {
 /*
   Future deleteDb() async {
     var databasesPath = await getDatabasesPath();
-    var path = join(databasesPath, "new_msg_db.db");
+    var path = join(databasesPath, "msg_db.db");
     await deleteDatabase(path);
-  }*/
+  }
+  */
 
   Future<Database> createDatabase() async {
     String dbPath = await getDatabasesPath();
     return await openDatabase(
-      join(dbPath, 'msg_db.db'),
+      join(dbPath, 'new_msg_db.db'),
       version: 1,
       onCreate: (Database database, int version) async {
         print("creating contact db");
@@ -106,9 +107,8 @@ class DatabaseService {
     final db = await database;
     List<MyContact> allContacts = List<MyContact>();
     var contacts = await db.query(TABLE_CONTACT,
-        columns: [COLUMN_NUMBER, COLUMN_REG_STATUS],
-        where: "$COLUMN_REG_STATUS = ?",
-        whereArgs: [0]);
+        where: "$COLUMN_REG_STATUS = ? AND $COLUMN_NUMBER != ?",
+        whereArgs: [0, ""]);
     contacts.forEach((cont) {
       MyContact contact = MyContact.fromMap(cont);
       allContacts.add(contact);
@@ -158,25 +158,68 @@ class DatabaseService {
     return singleContact;
   }
 
+  Future listChat() async {
+    final db = await database;
+    List<Chat> allChat = [];
+    await db.query(TABLE_THREAD).then((value) {
+      value.forEach((thd) async {
+        String threadId = thd["id"];
+        String memberPhone = thd["members"];
+        String displayName;
+        String displayPhone = memberPhone;
+        String msgContent;
+        String msgTime;
+        String subMemberPhone;
+        if (memberPhone.startsWith("+")) {
+          subMemberPhone = memberPhone.substring(5);
+        } else {
+          subMemberPhone = memberPhone.substring(1);
+        }
+        print(subMemberPhone);
+        var lastMsgDetails = await db.query(TABLE_MESSAGE,
+            where: "$COLUMN_MSG_THREAD_ID = ?",
+            orderBy: "$COLUMN_CREATED_AT DESC",
+            limit: 1,
+            whereArgs: [threadId]);
+        print(lastMsgDetails);
+        if (lastMsgDetails.isNotEmpty) {
+          msgContent = lastMsgDetails[0]['content'];
+          msgTime = lastMsgDetails[0]['created_at'];
+          print(lastMsgDetails.isNotEmpty.toString());
+          var memberDetails = await db.query(TABLE_CONTACT,
+              where: "$COLUMN_NUMBER LIKE ? AND $COLUMN_REG_STATUS = ?",
+              whereArgs: ["%$subMemberPhone", 1],
+              limit: 1);
+          if (memberDetails.isNotEmpty) {
+            displayName = memberDetails[0]['displayName'];
+            displayPhone = memberDetails[0]['phoneNumber'];
+          } else {
+            displayName = memberPhone;
+          }
+          print(threadId + displayName + displayPhone + msgContent + msgTime);
+          Chat chat = Chat(
+              displayName: displayName,
+              id: threadId,
+              memberPhone: memberPhone,
+              lastMessage: msgContent,
+              lastMsgTime: msgTime);
+
+          allChat.add(chat);
+        }
+      });
+      return allChat;
+    });
+  }
+
   Future<List<Chat>> getAllChatsFromDb() async {
     final db = await database;
     List<Chat> allChats = [];
     List chats = await db.rawQuery(
-        // '''SELECT threads.id, contacts.displayName, contacts.phoneNumber, msg.content as lastMessage, msg.created_at as lastMsgTime
-        //  FROM threads
-        // LEFT JOIN (
-        //   SELECT id, thread_id, content,
-        //   status, created_at
-        //    FROM messages ORDER BY created_at DESC LIMIT 2
-        // ) AS msg
-        // ON threads.id = msg.thread_id
-        // LEFT JOIN contacts ON threads.members = contacts.phoneNumber
-        //  ORDER BY threads.id DESC'''
         '''SELECT * FROM (SELECT t.id, t.members, contacts.displayName, contacts.phoneNumber, msg.thread_id, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
         FROM threads AS t
         LEFT JOIN contacts ON t.members = contacts.phoneNumber
         JOIN messages AS msg ON t.id = msg.thread_id
-        ORDER BY lastMsgTime ASC) AS chat  
+        ORDER BY lastMsgTime DESC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
     print(chats);
 
@@ -186,7 +229,6 @@ class DatabaseService {
     chats.forEach((chat) {
       allChats.add(Chat.fromMap(chat));
     });
-    //print(allChats);
     return allChats;
   }
 
@@ -224,7 +266,7 @@ class DatabaseService {
     await db.insert(
       TABLE_CONTACT,
       contact.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 

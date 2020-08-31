@@ -4,13 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationSerivice {
-  String _token;
+  String _token, _userNumber;
   String get token => _token;
+  String get userNumber => _userNumber;
   Future<bool> isUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString("token");
-
     if (data != null) {
+      _userNumber = prefs.getString("number");
       _token = data;
     }
     return data != null;

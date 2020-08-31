@@ -26,8 +26,12 @@ class ContactServices {
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
+    print(uploadContacts);
     List<MyContact> regContacts = await getRegisteredContact(uploadContacts);
+    print("reg Contacts:");
+    print(regContacts);
     regContacts.forEach((cont) async {
+      print(cont.toMap());
       String phoneNumber =
           cont.phoneNumber.substring(5, cont.phoneNumber.length);
       await DatabaseService.db.updateRegContact(phoneNumber);
