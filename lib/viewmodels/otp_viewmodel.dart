@@ -6,6 +6,7 @@ import 'package:MSG/viewmodels/base_model.dart';
 import 'package:flutter/foundation.dart';
 
 class OTPViewModel extends BaseModel {
+  String verifyMessage;
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
   final NavigationService _navigationService = locator<NavigationService>();
@@ -13,12 +14,15 @@ class OTPViewModel extends BaseModel {
   Future verify({
     @required String code,
   }) async {
-    try {
-      setBusy(true);
-      var resposnse = await _authenticationSerivice.verifyOTP(otp: code);
-      print(resposnse);
-      _navigationService.navigateTo(UpdateProfileRoute);
-      setBusy(false);
-    } catch (e) {}
+    setBusy(true);
+    var response = await _authenticationSerivice.verifyOTP(otp: code);
+    _navigationService.navigateTo(UpdateProfileRoute);
+    setBusy(false);
+  }
+
+  Future resendOTP({
+    @required String phoneNumber,
+  }) async {
+    await _authenticationSerivice.resentOTP(phoneNumber: phoneNumber);
   }
 }

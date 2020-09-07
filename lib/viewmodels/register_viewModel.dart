@@ -17,7 +17,7 @@ class RegisterViewModel extends BaseModel {
     var resposnse =
         await _authenticationSerivice.register(phoneNumber: phoneNumber);
     print(resposnse);
-    _navigationService.navigateTo(OtpViewRoute);
+    _navigationService.navigateTo(OtpViewRoute, arguments: phoneNumber);
     setBusy(false);
   }
 }

@@ -13,9 +13,9 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: AppColors.splashBlue,
-        statusBarBrightness: Brightness.light));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     statusBarColor: AppColors.splashBlue,
+    //     statusBarBrightness: Brightness.light));
     super.initState();
   }
 
@@ -25,15 +25,22 @@ class _SplashViewState extends State<SplashView> {
         viewModelBuilder: () => StartUpViewModel(),
         onModelReady: (model) => model.handleStartUpLogic(),
         builder: (context, model, snapshot) {
-          return Scaffold(
-            backgroundColor: AppColors.splashBlue,
-            body: Center(
-              child: Text(
-                "MSG",
-                style: textStyle.copyWith(
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColors.splashBlue,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+            ),
+            child: Scaffold(
+              backgroundColor: AppColors.splashBlue,
+              body: Center(
+                child: Text(
+                  "MSG",
+                  style: textStyle.copyWith(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
               ),
             ),
           );

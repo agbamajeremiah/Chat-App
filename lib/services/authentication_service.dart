@@ -82,7 +82,32 @@ class AuthenticationSerivice {
     }
   }
 
-  // login
+  // Resend OTP
+  Future resentOTP({
+    @required String phoneNumber,
+  }) async {
+    try {
+      Map<String, String> body = {
+        "phoneNumber": phoneNumber,
+      };
+
+      var response = await postResquest(
+        url: "/resendotp",
+        body: body,
+      );
+      // return jsonDecode(response);
+      return response;
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.data,
+        );
+      }
+      print(e.runtimeType);
+      print(e.toString());
+      throw e;
+    }
+  }
 
   Future<Response> updateProfile({
     @required String name,

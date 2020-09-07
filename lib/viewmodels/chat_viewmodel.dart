@@ -55,6 +55,20 @@ class ChatViewModel extends BaseModel {
     }
   }
 
+  Future<List<Message>> getChatMessages() async {
+    userNumber = _authService.userNumber;
+    await thread;
+    if (threadId != null) {
+      List<Message> messages =
+          await DatabaseService.db.getSingleChatMessageFromDb(threadId);
+      messages.forEach((element) {
+        print(element.toMap());
+      });
+      return messages;
+    } else
+      return [];
+  }
+
   Future resendPendingMessages() async {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
@@ -79,26 +93,15 @@ class ChatViewModel extends BaseModel {
               threadId: mes.threadId);
           //update mesage record
           DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
-          print("message updated");
           notifyListeners();
         }
       });
     }
   }
 
-  Future<List<Message>> getChatMessages() async {
-    userNumber = _authService.userNumber;
-    await thread;
-    if (threadId != null) {
-      List<Message> messages =
-          await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      messages.forEach((element) {
-        print(element.toMap());
-      });
-      //await resendPendingMessages();
-      return messages;
-    } else
-      return null;
+  Future synChat() async {
+    await makeAsRead();
+    await resendPendingMessages();
   }
 
   //send new new nessage
@@ -200,8 +203,8 @@ class ChatViewModel extends BaseModel {
   }
 
   Future updateMarkedMessages() async {
-    final conectionStatus = await checkInternetConnection();
-    if (conectionStatus == true) {
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
       var res = await makeAsRead();
       print(res);
     }

@@ -28,7 +28,7 @@ class _AllContactsState extends State<AllContacts> {
     });
   }
 
-  void _refreshContacts() {}
+  // void _refreshContacts() {}
   @override
   Widget build(BuildContext context) {
     return ViewModelProvider<ContactViewModel>.withConsumer(
@@ -165,51 +165,52 @@ class _AllContactsState extends State<AllContacts> {
                                     ),
                                   )
                                 : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      Container(
+                                      Expanded(
                                         child: ListView.builder(
-                                          shrinkWrap: true,
                                           padding: EdgeInsets.symmetric(
                                               vertical: 10.0),
-                                          itemCount: searchRegList.length,
+                                          itemCount: searchRegList.length +
+                                              searchUnRegList.length +
+                                              1,
                                           itemBuilder: (context, index) {
-                                            final item = searchRegList[index];
-                                            return SingleContact(
-                                              name: item.fullName.toString(),
-                                              number: item.phoneNumber,
-                                              searching: true,
-                                              matchString: _searchQuery,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        child: Text(
-                                          "Invite",
-                                          style: textStyle.copyWith(
-                                              fontSize: 17,
-                                              color: AppColors.textColor2,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      Container(
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          itemCount: searchUnRegList.length,
-                                          itemBuilder: (context, index) {
-                                            final item = searchUnRegList[index];
-                                            return SingleContact(
-                                              name: item.fullName.toString(),
-                                              number: item.phoneNumber,
-                                              searching: true,
-                                              matchString: _searchQuery,
-                                            );
+                                            final item = index <
+                                                    searchRegList.length
+                                                ? searchRegList[index]
+                                                : index == searchRegList.length
+                                                    ? null
+                                                    : searchUnRegList[index -
+                                                        (searchRegList.length +
+                                                            1)];
+                                            return index == searchRegList.length
+                                                ? Container(
+                                                    padding:
+                                                        EdgeInsets.only(top: 5),
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 15,
+                                                          vertical: 10),
+                                                      child: Text(
+                                                        "Invite Friends",
+                                                        style:
+                                                            textStyle.copyWith(
+                                                                fontSize: 17,
+                                                                color: AppColors
+                                                                    .textColor2,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : SingleContact(
+                                                    name: item.fullName
+                                                        .toString(),
+                                                    number: item.phoneNumber,
+                                                    searching: true,
+                                                    matchString: _searchQuery,
+                                                  );
                                           },
                                         ),
                                       ),
@@ -217,44 +218,45 @@ class _AllContactsState extends State<AllContacts> {
                                   ),
                           )
                         : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
+                              Expanded(
                                 child: ListView.builder(
-                                  shrinkWrap: true,
                                   padding: EdgeInsets.symmetric(vertical: 10.0),
-                                  itemCount: regContacts.length,
+                                  itemCount: regContacts.length +
+                                      unregContacts.length +
+                                      1,
                                   itemBuilder: (context, index) {
-                                    final item = regContacts[index];
-                                    return SingleContact(
-                                        name: item.fullName.toString(),
-                                        number: item.phoneNumber.toString(),
-                                        searching: false);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  "Invite",
-                                  style: textStyle.copyWith(
-                                      fontSize: 17,
-                                      color: AppColors.textColor2,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Container(
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                                  itemCount: unregContacts.length,
-                                  itemBuilder: (context, index) {
-                                    final item = unregContacts[index];
-                                    return SingleContact(
-                                        name: item.fullName.toString(),
-                                        number: item.phoneNumber.toString(),
-                                        searching: false);
+                                    print(contactsCount);
+                                    print(index);
+                                    final item = index < regContacts.length
+                                        ? regContacts[index]
+                                        : index == regContacts.length
+                                            ? null
+                                            : unregContacts[index -
+                                                (regContacts.length + 1)];
+
+                                    return index == regContacts.length
+                                        ? Container(
+                                            padding: EdgeInsets.only(top: 5),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 10),
+                                              child: Text(
+                                                "Invite Friends",
+                                                style: textStyle.copyWith(
+                                                    fontSize: 17,
+                                                    color: AppColors.textColor2,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          )
+                                        : SingleContact(
+                                            name: item.fullName.toString(),
+                                            number: item.phoneNumber.toString(),
+                                            searching: false);
                                   },
                                 ),
                               ),
@@ -274,3 +276,20 @@ class _AllContactsState extends State<AllContacts> {
     super.dispose();
   }
 }
+/*
+  BusyButton(
+                        title: "Continue",
+                        busy: model.busy,
+                        onPressed: () async {
+                          // print(prefix + phoneNumber.text);
+                          await model.login(
+                              phoneNumber: prefix + phoneNumber.text);
+                        },
+                        color: Colors.blue)
+                  ],
+                  
+                  
+                  
+                  
+                  
+*/

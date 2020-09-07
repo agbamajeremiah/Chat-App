@@ -35,20 +35,14 @@ class MessageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (searchquery.isEmpty) {
-      print("empty");
-    } else {
-      print("searchQuery: " + searchquery); //
-
-    }
     int index = getColorMatch(name != null ? name[0] : '');
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 7),
+      padding: EdgeInsets.only(left: 10, right: 7, top: 2, bottom: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            radius: 23,
+            radius: 25,
             backgroundColor: colors[index],
             child: Center(
               child: Text(
@@ -74,7 +68,7 @@ class MessageContainer extends StatelessWidget {
                                     ? AppColors.unreadText
                                     : AppColors.textColor,
                                 fontSize: 20,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w600),
                           ),
                           Text(
                             "$lastMessage",
@@ -83,6 +77,7 @@ class MessageContainer extends StatelessWidget {
                             maxLines: 1,
                             style: textStyle.copyWith(
                                 color: AppColors.textColor2,
+                                fontSize: 15,
                                 fontWeight: FontWeight.normal),
                           ),
                         ],
@@ -91,6 +86,7 @@ class MessageContainer extends StatelessWidget {
                   : Container(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           RichText(
                             text: TextSpan(
@@ -143,7 +139,7 @@ class MessageContainer extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    convertToTime(msgTime),
+                    getFullTime(msgTime),
                     style: textStyle.copyWith(color: AppColors.textColor2),
                   ),
                 ),

@@ -22,9 +22,11 @@ class _MessagesViewState extends State<MessagesView> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.white),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //       statusBarColor: Colors.white,
+    //       statusBarIconBrightness: Brightness.dark),
+    // );
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
@@ -38,17 +40,13 @@ class _MessagesViewState extends State<MessagesView> {
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
+          model.syncChatAndContacs();
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
                   color: Colors.white,
-                  child: Center(
-                      child: CircularProgressIndicator(
-                    strokeWidth: 3.0,
-                    valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
-                  )),
                 );
               } else {
                 List<Chat> allChats = snapshot.data;

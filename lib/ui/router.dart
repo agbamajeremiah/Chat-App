@@ -37,7 +37,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case OtpViewRoute:
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: OtpView(),
+        viewToShow: OtpView(
+          phoneNumber: settings.arguments,
+        ),
       );
     case ContactViewRoute:
       return _getPageRoute(

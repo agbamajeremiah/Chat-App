@@ -48,7 +48,7 @@ class MessageBubble extends StatelessWidget {
                                   ),
                                 ],
                               )
-                            : status == 'RECEIVED'
+                            : status == 'READ'
                                 ? Row(
                                     children: [
                                       Icon(

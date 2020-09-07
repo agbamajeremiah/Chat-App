@@ -40,15 +40,16 @@ final TextStyle buttonTitleTextStyleBlack = GoogleFonts.poppins(
   color: AppColors.textColor,
 ));
 
-final TextStyle textStyle = GoogleFonts.poppins(
-  textStyle: TextStyle(
-    fontSize: 11,
+final TextStyle textStyle = TextStyle(
+    fontFamily: 'Raleway',
+    fontSize: 13,
     color: Colors.white,
-  ),
-);
+    fontStyle: FontStyle.normal);
+
 final TextStyle menuTextStyle = GoogleFonts.poppins(
   textStyle: TextStyle(
     fontSize: 13,
+    fontWeight: FontWeight.normal,
     color: AppColors.textColor,
   ),
 );

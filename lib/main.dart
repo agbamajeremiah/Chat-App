@@ -18,9 +18,19 @@ class MyApp extends StatelessWidget {
       title: 'Messaging App',
       debugShowCheckedModeBanner: false,
       navigatorKey: locator<NavigationService>().navigationKey,
-      theme: ThemeData(
-        primaryColor: Colors.blue,
+      theme: Theme.of(context).copyWith(
+        appBarTheme: Theme.of(context)
+            .appBarTheme
+            .copyWith(color: Colors.white, brightness: Brightness.dark),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        primaryColor: Colors.blue,
+        //ThemeData(
+        //   appBarTheme: AppBarTheme(
+        //     brightness: Brightness.dark,
+        //     color: Colors.white,
+        //   ),
+        //   primaryColor: Colors.blue,
+        //   visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: SplashViewRoute,
       onGenerateRoute: generateRoute,

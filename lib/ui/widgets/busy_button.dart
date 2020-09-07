@@ -29,29 +29,24 @@ class _BusyButtonState extends State<BusyButton> {
       onTap: !widget.busy ? widget.onPressed : null,
       child: InkWell(
         child: AnimatedContainer(
-          // height: widget.busy ? 48 : null,
-          // width: widget.busy ? 48 : null,
           duration: const Duration(milliseconds: 300),
           alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(
-              horizontal: widget.busy ? 15 : 15,
-              vertical: widget.busy ? 10 : 10),
+          padding: EdgeInsets.symmetric(horizontal: 13, vertical: 13),
           decoration: BoxDecoration(
-            color: !widget.outline
-                ? widget.busy ? widget.color : widget.color
-                : Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            color: widget.color,
+            borderRadius: BorderRadius.circular(18),
           ),
           child: !widget.busy
-              ? Text(
-                  widget.title,
-                  style: widget.outline
-                      ? buttonTitleTextStyleBlack
-                      : buttonTitleTextStyle,
-                )
-              : CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+              ? Text(widget.title,
+                  style: buttonTitleTextStyleBlack.copyWith(
+                      color: Colors.white, fontSize: 17))
+              : SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                ),
         ),
       ),
     );

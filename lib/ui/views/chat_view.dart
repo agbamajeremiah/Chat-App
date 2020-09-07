@@ -25,10 +25,11 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
-        onModelReady: (model) => model.initialise(),
+        //onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
+          model.synChat();
           return Scaffold(
             appBar: PreferredSize(
                 preferredSize: Size.fromHeight(60),
@@ -45,13 +46,7 @@ class _ChatViewState extends State<ChatView> {
                         print(snapshot.data);
                         if (!snapshot.hasData) {
                           return Expanded(
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3.0,
-                                valueColor: AlwaysStoppedAnimation(
-                                    AppColors.primaryColor),
-                              ),
-                            ),
+                            child: Container(),
                           );
                         } else {
                           List<Message> allMessages = snapshot.data;
@@ -59,16 +54,12 @@ class _ChatViewState extends State<ChatView> {
                           return messageCount > 0
                               ? Expanded(
                                   child: ListView.builder(
-                                    itemCount: messageCount,
                                     reverse: true,
+                                    itemCount: messageCount,
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 20),
                                     itemBuilder: (context, index) {
                                       final message = allMessages[index];
-                                      print(message.content);
-                                      print(message.createdAt);
-                                      print(message.sender);
-
                                       return MessageBubble(
                                         sender: message.sender,
                                         text: message.content.toString(),
@@ -114,8 +105,6 @@ class _ChatViewState extends State<ChatView> {
                             onPressed: () async {
                               String messageText = messageTextController.text;
                               String receiver = widget.chat.memberPhone;
-                              print("messageLenth: " +
-                                  messageText.length.toString());
                               if (messageText.length > 0) {
                                 await model.sendMessage(
                                     message: messageText,
