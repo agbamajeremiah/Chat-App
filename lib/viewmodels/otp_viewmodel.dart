@@ -16,6 +16,7 @@ class OTPViewModel extends BaseModel {
   }) async {
     setBusy(true);
     var response = await _authenticationSerivice.verifyOTP(otp: code);
+    print(response);
     _navigationService.navigateTo(UpdateProfileRoute);
     setBusy(false);
   }

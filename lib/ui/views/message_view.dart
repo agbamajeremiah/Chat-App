@@ -7,7 +7,6 @@ import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider_architecture/provider_architecture.dart';
 
 class MessagesView extends StatefulWidget {
@@ -40,7 +39,7 @@ class _MessagesViewState extends State<MessagesView> {
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
-          model.syncChatAndContacs();
+          model.syncChat();
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
