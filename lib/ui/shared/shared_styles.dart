@@ -41,7 +41,7 @@ final TextStyle buttonTitleTextStyleBlack = GoogleFonts.poppins(
 ));
 
 final TextStyle textStyle = TextStyle(
-    fontFamily: 'Raleway',
+    fontFamily: 'Ubuntu',
     fontSize: 13,
     color: Colors.white,
     fontStyle: FontStyle.normal);

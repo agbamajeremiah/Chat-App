@@ -37,13 +37,12 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   fonts:
-    - family: Raleway
+    - family: Ubuntu
       fonts:
-        - asset: fonts/Raleway-Regular.ttf
-        - asset: fonts/Raleway-Black.ttf
-        - asset: fonts/Raleway-Medium.ttf
-        - asset: fonts/Raleway-Bold.ttf
-        - asset: fonts/Raleway-SemiBold.ttf
+        - asset: fonts/Ubuntu-Bold.ttf
+        - asset: fonts/Ubuntu-Light.ttf
+        - asset: fonts/Ubuntu-Medium.ttf
+        - asset: fonts/Ubuntu-Regular.ttf
   assets:
     - assets/images/
   #   - images/a_dot_ham.jpeg

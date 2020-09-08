@@ -11,10 +11,15 @@ class AuthenticationSerivice {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString("token");
     if (data != null) {
-      _userNumber = prefs.getString("number");
       _token = data;
+      _userNumber = prefs.getString("number");
     }
     return data != null;
+  }
+
+  Future setNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _userNumber = prefs.getString("number");
   }
 
   Future register({

@@ -17,6 +17,7 @@ class MessagingServices {
       print(response);
       List<dynamic> chats = response.data['messages'];
       //save threads
+      _authService.setNumber();
       chats.forEach((chat) async {
         List messages = chat['messages'];
         await DatabaseService.db.insertThread(Thread.fromMap(chat));

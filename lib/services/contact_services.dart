@@ -37,15 +37,16 @@ class ContactServices {
     });
   }
 
-  //get contacts from device
+  //get contacts from device);
   Future<List<MyContact>> getAllContactsFromDevice() async {
-    List<MyContact> contactsAll = [];
-
+    List<MyContact> contactsAll = List<MyContact>();
     final PermissionStatus permissionStatus = await _getPermission();
+    print(permissionStatus);
     if (permissionStatus == PermissionStatus.granted) {
       //We can now access our contacts here
       Iterable<Contact> contacts =
           await ContactsService.getContacts(withThumbnails: false);
+      print(contacts);
       if (contacts.length > 0) {
         contacts.forEach((con) {
           print(con.phones.toList());
@@ -70,17 +71,8 @@ class ContactServices {
     if (permission.isUndetermined) {
       await Permission.contacts.request();
     }
-    // if (permission != PermissionStatus.granted &&
-    //     permission != PermissionStatus.denied) {
-    //   print("Permission Status:");
-    //   print(PermissionStatus.granted.toString());
-    // final Map<Permission, PermissionStatus> permissionStatus =
-    //     await [Permission.contacts].request();
-    // return permissionStatus[Permission.contacts] ??
-    //     PermissionStatus.undetermined;
-    // } else {
+
     return permission;
-    // }
   }
 
   //Sync User contacts from server
