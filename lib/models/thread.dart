@@ -14,12 +14,12 @@ class Thread {
 
   static AuthenticationSerivice _authSerivice =
       locator<AuthenticationSerivice>();
-  static String userNumber = _authSerivice.userNumber;
 
   factory Thread.fromMap(Map<String, dynamic> json) => Thread(
-        members: json["members"][0].endsWith(userNumber.substring(5))
-            ? json["members"][1]
-            : json["members"][0],
+        members:
+            json["members"][0].endsWith(_authSerivice.userNumber.substring(5))
+                ? json["members"][1]
+                : json["members"][0],
         id: json["_id"],
       );
 

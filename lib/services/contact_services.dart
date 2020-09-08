@@ -68,11 +68,13 @@ class ContactServices {
   //Check contacts permission
   Future<PermissionStatus> _getPermission() async {
     var permission = await Permission.contacts.status;
-    if (permission.isUndetermined) {
-      await Permission.contacts.request();
+    if (permission.isUndetermined || permission.isDenied) {
+      //await Permission.contacts.request();
+      final permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
     }
-
-    return permission;
   }
 
   //Sync User contacts from server
