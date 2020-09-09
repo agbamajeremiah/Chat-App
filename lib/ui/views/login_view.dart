@@ -86,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                                 style: textStyle.copyWith(
                                   fontSize: 14.5,
                                   color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.normal,
                                 ),
                               ),
                             ),
@@ -172,36 +172,41 @@ class _LoginViewState extends State<LoginView> {
                       SizedBox(
                         height: _checkKeyboardOpen(context)
                             ? MediaQuery.of(context).size.height * 0.05
-                            : MediaQuery.of(context).size.height * 0.1,
+                            : MediaQuery.of(context).size.height * 0.2,
                       ),
-                      Container(
-                        constraints: BoxConstraints(maxWidth: 500),
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: BusyButton(
-                            busy: isRegistering ? true : false,
-                            title: "Continue",
-                            onPressed: () async {
-                              setState(() => isRegistering = true);
-                              if (phoneNumber.text != "" && prefix != "") {
-                                setState(() => errorMessage = "");
-                                print(prefix + phoneNumber.text);
-                                await model
-                                    .login(
-                                        phoneNumber: prefix + phoneNumber.text)
-                                    .then((value) {
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          constraints: BoxConstraints(maxWidth: 500),
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: BusyButton(
+                              busy: isRegistering ? true : false,
+                              title: "Continue",
+                              onPressed: () async {
+                                setState(() => isRegistering = true);
+                                if (phoneNumber.text != "" && prefix != "") {
+                                  setState(() => errorMessage = "");
+                                  print(prefix + phoneNumber.text);
+                                  await model
+                                      .login(
+                                          phoneNumber:
+                                              prefix + phoneNumber.text)
+                                      .then((value) {
+                                    setState(() {
+                                      isRegistering = false;
+                                    });
+                                  });
+                                  phoneNumber.clear();
+                                } else {
                                   setState(() {
                                     isRegistering = false;
+                                    errorMessage = "Invalid Number!";
                                   });
-                                });
-                                phoneNumber.clear();
-                              } else {
-                                setState(() {
-                                  isRegistering = false;
-                                  errorMessage = "Invalid Number!";
-                                });
-                              }
-                            },
-                            color: Colors.blue),
+                                }
+                              },
+                              color: Colors.blue),
+                        ),
                       )
                     ],
                   ),

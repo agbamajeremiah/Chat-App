@@ -27,7 +27,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           : null,
       title: Text(
         "${widget.title}",
-        style: textStyle.copyWith(fontSize: 20, color: AppColors.textColor),
+        style: textStyle.copyWith(fontSize: 22.5, color: AppColors.textColor),
       ),
       actions: [
         /*

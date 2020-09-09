@@ -37,12 +37,12 @@ class MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     int index = getColorMatch(name != null ? name[0] : '');
     return Container(
-      padding: EdgeInsets.only(left: 10, right: 7, top: 2, bottom: 2),
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            radius: 25,
+            radius: 24,
             backgroundColor: colors[index],
             child: Center(
               child: Text(
@@ -58,32 +58,7 @@ class MessageContainer extends StatelessWidget {
           Expanded(
               child: searchquery.isEmpty
                   ? Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "$name",
-                            style: textStyle.copyWith(
-                                color: isNotRead
-                                    ? AppColors.unreadText
-                                    : AppColors.textColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            "$lastMessage",
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            maxLines: 1,
-                            style: textStyle.copyWith(
-                                color: AppColors.textColor2,
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(
+                      padding: EdgeInsets.symmetric(vertical: 5),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -97,50 +72,106 @@ class MessageContainer extends StatelessWidget {
                                       color: isNotRead
                                           ? AppColors.unreadText
                                           : AppColors.textColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w300),
                                 ),
-                                TextSpan(text: ' world!'),
                               ],
                             ),
                           ),
-                          Text(
-                            "$lastMessage",
+                          RichText(
                             overflow: TextOverflow.ellipsis,
                             softWrap: true,
                             maxLines: 1,
-                            style: textStyle.copyWith(
-                                color: AppColors.textColor2,
-                                fontWeight: FontWeight.normal),
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: "$lastMessage",
+                                  style: textStyle.copyWith(
+                                      color: AppColors.textColor2,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: "$name",
+                                  style: textStyle.copyWith(
+                                      color: isNotRead
+                                          ? AppColors.unreadText
+                                          : AppColors.textColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
+                          ),
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            maxLines: 1,
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: "$name",
+                                  style: textStyle.copyWith(
+                                      color: AppColors.textColor2,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     )),
+          horizontalSpaceTiny,
           Container(
-            padding: EdgeInsets.only(top: 5.0),
-            height: 45,
+            padding: EdgeInsets.symmetric(vertical: 12.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Center(
-                  child: isNotRead
-                      ? CircleAvatar(
-                          radius: 8,
-                          backgroundColor: AppColors.unreadText,
-                          child: Center(
-                            child: Text(
-                              unreadMessages.toString(),
-                              style: textStyle.copyWith(color: Colors.white),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3.0),
+                  child: Center(
+                    child: isNotRead
+                        ? SizedBox(
+                            height: 14,
+                            child: CircleAvatar(
+                              radius: 7,
+                              backgroundColor: AppColors.unreadText,
+                              child: Center(
+                                child: Text(
+                                  unreadMessages.toString(),
+                                  style:
+                                      textStyle.copyWith(color: Colors.white),
+                                ),
+                              ),
                             ),
-                          ),
-                        )
-                      : null,
+                          )
+                        : SizedBox(height: 14),
+                  ),
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
                     getFullTime(msgTime),
-                    style: textStyle.copyWith(color: AppColors.textColor2),
+                    style: textStyle.copyWith(
+                        color: AppColors.textColor2,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w300),
                   ),
                 ),
               ],

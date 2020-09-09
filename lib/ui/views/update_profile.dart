@@ -23,9 +23,6 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
 
   @override
   void initState() {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: AppColors.bgGrey),
-    );
     super.initState();
   }
 
@@ -34,16 +31,16 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
     return ViewModelProvider<UpdateProvfileViewModel>.withConsumer(
         viewModelBuilder: () => UpdateProvfileViewModel(),
         builder: (context, model, child) {
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              brightness: Brightness.dark,
-              iconTheme: IconThemeData(color: AppColors.textColor),
-              elevation: 0.0,
+          return SafeArea(
+            child: Scaffold(
               backgroundColor: Colors.white,
-            ),
-            body: SafeArea(
-              child: Column(
+              appBar: AppBar(
+                brightness: Brightness.dark,
+                iconTheme: IconThemeData(color: AppColors.textColor),
+                elevation: 0.0,
+                backgroundColor: Colors.white,
+              ),
+              body: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -56,10 +53,10 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
                           child: Text(
-                            "Welcome",
+                            "Welcome!!",
                             style: textStyle.copyWith(
                                 color: Colors.black,
-                                fontSize: 30,
+                                fontSize: 40,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -97,10 +94,10 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                           /*borderSide: BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                      */
+                          width: 0,
+                          style: BorderStyle.none,
+                        ),
+                        */
                           borderSide:
                               BorderSide(color: AppColors.bgGrey, width: 2),
                         ),

@@ -14,13 +14,13 @@ class AllContacts extends StatefulWidget {
 
 class _AllContactsState extends State<AllContacts> {
   final TextEditingController _searchTextCon = TextEditingController();
-  GlobalKey<RefreshIndicatorState> _refreshKey;
+  //GlobalKey<RefreshIndicatorState> _refreshKey;
   bool _isSearching = false;
   String _searchQuery = "";
   @override
   void initState() {
     super.initState();
-    _refreshKey = GlobalKey<RefreshIndicatorState>();
+    // _refreshKey = GlobalKey<RefreshIndicatorState>();
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
@@ -70,200 +70,208 @@ class _AllContactsState extends State<AllContacts> {
                             .startsWith(_searchQuery.toLowerCase()))
                         .toList();
                 //print(regContacts);
-                return Scaffold(
-                  backgroundColor: Colors.white,
-                  appBar: (_isSearching)
-                      ? AppBar(
-                          iconTheme: IconThemeData(
-                            color: AppColors.textColor,
-                          ),
-                          backgroundColor: Colors.white,
-                          leading: IconButton(
-                              onPressed: () {
-                                _searchTextCon.clear();
-                                setState(() {
-                                  _isSearching = false;
-                                  _searchQuery = "";
-                                });
-                              },
-                              icon: Icon(Icons.arrow_back)),
-                          title: Container(
-                            child: Theme(
-                              data: Theme.of(context).copyWith(
-                                // override textfield's icon color when selected
-                                primaryColor: AppColors.textColor,
-                              ),
-                              child: TextField(
-                                autofocus: true,
-                                controller: _searchTextCon,
-                                style: TextStyle(
-                                  fontSize: 18.0,
-                                  color: Colors.black,
+                return SafeArea(
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: (_isSearching)
+                        ? AppBar(
+                            iconTheme: IconThemeData(
+                              color: AppColors.textColor,
+                            ),
+                            backgroundColor: Colors.white,
+                            leading: IconButton(
+                                onPressed: () {
+                                  _searchTextCon.clear();
+                                  setState(() {
+                                    _isSearching = false;
+                                    _searchQuery = "";
+                                  });
+                                },
+                                icon: Icon(Icons.arrow_back)),
+                            title: Container(
+                              child: Theme(
+                                data: Theme.of(context).copyWith(
+                                  // override textfield's icon color when selected
+                                  primaryColor: AppColors.textColor,
                                 ),
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 15.0),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  hintText: "Search...",
-                                  suffixIcon: IconButton(
-                                    icon: Icon(Icons.clear),
-                                    onPressed: () {
-                                      _searchTextCon.clear();
+                                child: TextField(
+                                  autofocus: true,
+                                  controller: _searchTextCon,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Colors.black,
+                                  ),
+                                  decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 15.0),
+                                    border: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    errorBorder: InputBorder.none,
+                                    disabledBorder: InputBorder.none,
+                                    hintText: "Search...",
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        _searchTextCon.clear();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : AppBar(
+                            iconTheme: IconThemeData(
+                              color: AppColors.textColor,
+                            ),
+                            elevation: 2,
+                            backgroundColor: Colors.white,
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Select Contact",
+                                  style: textStyle.copyWith(
+                                      color: AppColors.textColor, fontSize: 20),
+                                ),
+                                Text(
+                                  "${contactsCount.toString()} Contacts",
+                                  style: textStyle.copyWith(
+                                      color: AppColors.textColor, fontSize: 12),
+                                ),
+                              ],
+                            ),
+                            actions: <Widget>[
+                              IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isSearching = true;
+                                  });
+                                },
+                                icon: Icon(Icons.search),
+                              ),
+                              MyPopupMenu(),
+                            ],
+                          ),
+                    body: Container(
+                      child: _searchQuery.isNotEmpty
+                          ? Container(
+                              //searchRegList
+                              child: (searchRegList.length < 1 &&
+                                      searchUnRegList.length < 1)
+                                  ? Container(
+                                      padding: EdgeInsets.only(top: 20.0),
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Text("No Contact Found!"),
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Expanded(
+                                          child: ListView.builder(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10.0),
+                                            itemCount: searchRegList.length +
+                                                searchUnRegList.length +
+                                                1,
+                                            itemBuilder: (context, index) {
+                                              final item = index <
+                                                      searchRegList.length
+                                                  ? searchRegList[index]
+                                                  : index ==
+                                                          searchRegList.length
+                                                      ? null
+                                                      : searchUnRegList[index -
+                                                          (searchRegList
+                                                                  .length +
+                                                              1)];
+                                              return index ==
+                                                      searchRegList.length
+                                                  ? Container(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal: 15,
+                                                                vertical: 10),
+                                                        child: Text(
+                                                          "Invite Friends",
+                                                          style: textStyle.copyWith(
+                                                              fontSize: 17,
+                                                              color: AppColors
+                                                                  .textColor2,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : SingleContact(
+                                                      name: item.fullName
+                                                          .toString(),
+                                                      number: item.phoneNumber,
+                                                      searching: true,
+                                                      matchString: _searchQuery,
+                                                    );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            )
+                          : Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 10.0),
+                                    itemCount: regContacts.length +
+                                        unregContacts.length +
+                                        1,
+                                    itemBuilder: (context, index) {
+                                      print(contactsCount);
+                                      print(index);
+                                      final item = index < regContacts.length
+                                          ? regContacts[index]
+                                          : index == regContacts.length
+                                              ? null
+                                              : unregContacts[index -
+                                                  (regContacts.length + 1)];
+
+                                      return index == regContacts.length
+                                          ? Container(
+                                              padding: EdgeInsets.only(top: 5),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 10),
+                                                child: Text(
+                                                  "Invite Friends",
+                                                  style: textStyle.copyWith(
+                                                      fontSize: 17,
+                                                      color:
+                                                          AppColors.textColor2,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            )
+                                          : SingleContact(
+                                              name: item.fullName.toString(),
+                                              number:
+                                                  item.phoneNumber.toString(),
+                                              searching: false);
                                     },
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ),
-                        )
-                      : AppBar(
-                          iconTheme: IconThemeData(
-                            color: AppColors.textColor,
-                          ),
-                          elevation: 2,
-                          backgroundColor: Colors.white,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                "Select Contact",
-                                style: textStyle.copyWith(
-                                    color: AppColors.textColor, fontSize: 20),
-                              ),
-                              Text(
-                                "${contactsCount.toString()} Contacts",
-                                style: textStyle.copyWith(
-                                    color: AppColors.textColor, fontSize: 12),
-                              ),
-                            ],
-                          ),
-                          actions: <Widget>[
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isSearching = true;
-                                });
-                              },
-                              icon: Icon(Icons.search),
-                            ),
-                            MyPopupMenu(),
-                          ],
-                        ),
-                  body: Container(
-                    child: _searchQuery.isNotEmpty
-                        ? Container(
-                            //searchRegList
-                            child: (searchRegList.length < 1 &&
-                                    searchUnRegList.length < 1)
-                                ? Container(
-                                    padding: EdgeInsets.only(top: 20.0),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Text("No Contact Found!"),
-                                    ),
-                                  )
-                                : Column(
-                                    children: [
-                                      Expanded(
-                                        child: ListView.builder(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          itemCount: searchRegList.length +
-                                              searchUnRegList.length +
-                                              1,
-                                          itemBuilder: (context, index) {
-                                            final item = index <
-                                                    searchRegList.length
-                                                ? searchRegList[index]
-                                                : index == searchRegList.length
-                                                    ? null
-                                                    : searchUnRegList[index -
-                                                        (searchRegList.length +
-                                                            1)];
-                                            return index == searchRegList.length
-                                                ? Container(
-                                                    padding:
-                                                        EdgeInsets.only(top: 5),
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 15,
-                                                          vertical: 10),
-                                                      child: Text(
-                                                        "Invite Friends",
-                                                        style:
-                                                            textStyle.copyWith(
-                                                                fontSize: 17,
-                                                                color: AppColors
-                                                                    .textColor2,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : SingleContact(
-                                                    name: item.fullName
-                                                        .toString(),
-                                                    number: item.phoneNumber,
-                                                    searching: true,
-                                                    matchString: _searchQuery,
-                                                  );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                          )
-                        : Column(
-                            children: [
-                              Expanded(
-                                child: ListView.builder(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                                  itemCount: regContacts.length +
-                                      unregContacts.length +
-                                      1,
-                                  itemBuilder: (context, index) {
-                                    print(contactsCount);
-                                    print(index);
-                                    final item = index < regContacts.length
-                                        ? regContacts[index]
-                                        : index == regContacts.length
-                                            ? null
-                                            : unregContacts[index -
-                                                (regContacts.length + 1)];
-
-                                    return index == regContacts.length
-                                        ? Container(
-                                            padding: EdgeInsets.only(top: 5),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15,
-                                                      vertical: 10),
-                                              child: Text(
-                                                "Invite Friends",
-                                                style: textStyle.copyWith(
-                                                    fontSize: 17,
-                                                    color: AppColors.textColor2,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          )
-                                        : SingleContact(
-                                            name: item.fullName.toString(),
-                                            number: item.phoneNumber.toString(),
-                                            searching: false);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                    ),
                   ),
                 );
               }

@@ -34,7 +34,9 @@ class MessageBubble extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(
+                          left: 5,
+                        ),
                         child: status == 'SENT'
                             ? Row(
                                 children: [
@@ -88,7 +90,9 @@ class MessageBubble extends StatelessWidget {
                   ),
                   color: Colors.lightBlueAccent,
                   child: Container(
-                    constraints: BoxConstraints(minWidth: 100.0),
+                    constraints: BoxConstraints(
+                        minWidth: 100.0,
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 20),
                     child: Text(
@@ -113,7 +117,8 @@ class MessageBubble extends StatelessWidget {
                             width: 20,
                           )),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 5, bottom: 1),
                         child: Text(
                           convertToTime(messageTime),
                           style:
@@ -132,7 +137,9 @@ class MessageBubble extends StatelessWidget {
                   ),
                   color: Colors.white,
                   child: Container(
-                    constraints: BoxConstraints(minWidth: 100.0),
+                    constraints: BoxConstraints(
+                        minWidth: 100.0,
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15.0, horizontal: 20),
                     child: Text(

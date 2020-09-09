@@ -30,98 +30,100 @@ class _ChatViewState extends State<ChatView> {
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
           model.synChat();
-          return Scaffold(
-            appBar: PreferredSize(
-                preferredSize: Size.fromHeight(60),
-                child: CustomAppBar(
-                  title: widget.chat.displayName ?? widget.chat.memberPhone,
-                  back: true,
-                )),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  FutureBuilder(
-                      future: chatMessages,
-                      builder: (context, snapshot) {
-                        print(snapshot.data);
-                        if (!snapshot.hasData) {
-                          return Expanded(
-                            child: Container(),
-                          );
-                        } else {
-                          List<Message> allMessages = snapshot.data;
-                          final messageCount = allMessages.length;
-                          return messageCount > 0
-                              ? Expanded(
-                                  child: ListView.builder(
-                                    reverse: true,
-                                    itemCount: messageCount,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 20),
-                                    itemBuilder: (context, index) {
-                                      final message = allMessages[index];
-                                      return MessageBubble(
-                                        sender: message.sender,
-                                        text: message.content.toString(),
-                                        isMe:
-                                            message.sender == model.userNumber,
-                                        messageTime: message.createdAt,
-                                        status: message.status,
-                                      );
-                                    },
-                                  ),
-                                )
-                              : Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(top: 15.0),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Text(
-                                        "No Messages",
-                                        style: textStyle.copyWith(
-                                            color: AppColors.textColor,
-                                            fontSize: 15.0),
+          return SafeArea(
+            child: Scaffold(
+              appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(60),
+                  child: CustomAppBar(
+                    title: widget.chat.displayName ?? widget.chat.memberPhone,
+                    back: true,
+                  )),
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    FutureBuilder(
+                        future: chatMessages,
+                        builder: (context, snapshot) {
+                          print(snapshot.data);
+                          if (!snapshot.hasData) {
+                            return Expanded(
+                              child: Container(),
+                            );
+                          } else {
+                            List<Message> allMessages = snapshot.data;
+                            final messageCount = allMessages.length;
+                            return messageCount > 0
+                                ? Expanded(
+                                    child: ListView.builder(
+                                      reverse: true,
+                                      itemCount: messageCount,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 20),
+                                      itemBuilder: (context, index) {
+                                        final message = allMessages[index];
+                                        return MessageBubble(
+                                          sender: message.sender,
+                                          text: message.content.toString(),
+                                          isMe: message.sender ==
+                                              model.userNumber,
+                                          messageTime: message.createdAt,
+                                          status: message.status,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 15.0),
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: Text(
+                                          "No Messages",
+                                          style: textStyle.copyWith(
+                                              color: AppColors.textColor,
+                                              fontSize: 15.0),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                        }
-                      }),
-                  Container(
-                    decoration: kMessageContainerDecoration,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: TextField(
-                            controller: messageTextController,
-                            decoration: kMessageTextFieldDecoration,
-                            onTap: () {
-                              setState(() => typingMessage = true);
-                            },
+                                  );
+                          }
+                        }),
+                    Container(
+                      decoration: kMessageContainerDecoration,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: TextField(
+                              controller: messageTextController,
+                              decoration: kMessageTextFieldDecoration,
+                              onTap: () {
+                                setState(() => typingMessage = true);
+                              },
+                            ),
                           ),
-                        ),
-                        FlatButton(
-                            onPressed: () async {
-                              String messageText = messageTextController.text;
-                              String receiver = widget.chat.memberPhone;
-                              if (messageText.length > 0) {
-                                await model.sendMessage(
-                                    message: messageText,
-                                    receiver: receiver,
-                                    isQuote: false);
-                              }
-                              messageTextController.clear();
-                              setState(() => typingMessage = false);
-                            },
-                            child: Icon(
-                              Icons.send,
-                              size: 20,
-                            )),
-                      ],
+                          FlatButton(
+                              onPressed: () async {
+                                String messageText = messageTextController.text;
+                                String receiver = widget.chat.memberPhone;
+                                if (messageText.length > 0) {
+                                  await model.sendMessage(
+                                      message: messageText,
+                                      receiver: receiver,
+                                      isQuote: false);
+                                }
+                                messageTextController.clear();
+                                setState(() => typingMessage = false);
+                              },
+                              child: Icon(
+                                Icons.send,
+                                size: 20,
+                              )),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

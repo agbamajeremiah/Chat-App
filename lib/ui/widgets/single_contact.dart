@@ -11,6 +11,7 @@ class SingleContact extends StatelessWidget {
   final String name;
   final bool searching;
   final String matchString;
+  //bool registered = false;
   const SingleContact(
       {this.number, this.name, this.searching, this.matchString});
 
@@ -44,7 +45,7 @@ class SingleContact extends StatelessWidget {
                       ? RichText(
                           text: TextSpan(
                             style: textStyle.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 16, fontWeight: FontWeight.normal),
                             children: <TextSpan>[
                               TextSpan(
                                   text: name.substring(0, matchString.length),
@@ -56,13 +57,22 @@ class SingleContact extends StatelessWidget {
                             ],
                           ),
                         )
-                      : Text(
-                          name,
-                          style: textStyle.copyWith(
-                              color: AppColors.textColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                      : RichText(
+                          text: TextSpan(
+                            text: name,
+                            style: textStyle.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: AppColors.textColor),
+                          ),
                         ),
+                  // : Text(
+                  //     name,
+                  //     style: textStyle.copyWith(
+                  //         color: AppColors.textColor,
+                  //         fontSize: 16,
+                  //         fontWeight: FontWeight.bold),
+                  //   ),
                   Text(
                     number,
                     style: textStyle.copyWith(

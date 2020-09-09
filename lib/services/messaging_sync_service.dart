@@ -16,9 +16,9 @@ class MessagingServices {
       var response = await getThreads();
       print(response);
       List<dynamic> chats = response.data['messages'];
-      //save threads
-      String userNumber = _authService.userNumber;
-      if (userNumber == null) {
+
+      _authService.userNumber;
+      if (_authService.userNumber == null) {
         _authService.setNumber();
       }
       chats.forEach((chat) async {

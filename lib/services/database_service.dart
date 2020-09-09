@@ -219,7 +219,7 @@ class DatabaseService {
         FROM threads AS t
         LEFT JOIN contacts ON t.members = contacts.phoneNumber
         JOIN messages AS msg ON t.id = msg.thread_id
-        ORDER BY lastMsgTime DESC) AS chat  
+        ORDER BY lastMsgTime ASC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
     print(chats);
 

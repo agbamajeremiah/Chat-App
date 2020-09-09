@@ -9,10 +9,10 @@ import 'package:MSG/viewmodels/base_model.dart';
 class MessageViewModel extends BaseModel {
   final MessagingServices _messageService = locator<MessagingServices>();
   void initialise() {
-    const tenSec = const Duration(seconds: 15);
+    const tenSec = const Duration(seconds: 10);
     Timer.periodic(tenSec, (Timer t) {
-      getAllChats();
       syncChat();
+      getAllChats();
       notifyListeners();
     });
   }
