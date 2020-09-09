@@ -46,7 +46,9 @@ class MessageContainer extends StatelessWidget {
             backgroundColor: colors[index],
             child: Center(
               child: Text(
-                name != null ? name[0] : '',
+                name != null
+                    ? name[0] == "+" || name[0] == '0' ? '0' : name[0]
+                    : '0',
                 style: textStyle.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -125,7 +127,7 @@ class MessageContainer extends StatelessWidget {
                             text: TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "$name",
+                                  text: "$lastMessage",
                                   style: textStyle.copyWith(
                                       color: AppColors.textColor2,
                                       fontSize: 13,

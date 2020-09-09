@@ -171,7 +171,7 @@ class _LoginViewState extends State<LoginView> {
                       ),
                       SizedBox(
                         height: _checkKeyboardOpen(context)
-                            ? MediaQuery.of(context).size.height * 0.05
+                            ? MediaQuery.of(context).size.height * 0.1
                             : MediaQuery.of(context).size.height * 0.2,
                       ),
                       Align(

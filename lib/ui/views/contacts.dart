@@ -34,11 +34,9 @@ class _AllContactsState extends State<AllContacts> {
     return ViewModelProvider<ContactViewModel>.withConsumer(
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
-          final myContactList = model.getContactsFromDb();
           model.syncContacts();
-
           return FutureBuilder(
-            future: myContactList,
+            future: model.getContactsFromDb(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
