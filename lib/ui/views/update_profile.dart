@@ -13,6 +13,7 @@ class UpdateProfileView extends StatefulWidget {
 
 class _UpdateProfileViewState extends State<UpdateProfileView> {
   final nameController = TextEditingController();
+  bool nameError = false;
 
   bool _checkKeyboardOpen(BuildContext context) {
     if (MediaQuery.of(context).viewInsets.bottom != 0.0) {
@@ -98,8 +99,9 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                           style: BorderStyle.none,
                         ),
                         */
-                          borderSide:
-                              BorderSide(color: AppColors.bgGrey, width: 2),
+                          borderSide: BorderSide(
+                              color: nameError ? Colors.red : AppColors.bgGrey,
+                              width: 2),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -130,9 +132,11 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                             title: "Continue",
                             busy: model.busy,
                             onPressed: () async {
+                              if (nameController.text != "") {
+                                await model.updateProfile(
+                                    name: nameController.text);
+                              } else {}
                               print(nameController.text);
-                              await model.updateProfile(
-                                  name: nameController.text);
                             },
                             color: Colors.blue),
                       )),
