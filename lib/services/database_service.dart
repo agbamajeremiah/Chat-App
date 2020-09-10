@@ -266,7 +266,7 @@ class DatabaseService {
     await db.insert(
       TABLE_CONTACT,
       contact.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 

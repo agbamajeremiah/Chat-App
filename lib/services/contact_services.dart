@@ -56,9 +56,8 @@ class ContactServices {
               fullName: con.displayName ?? "",
               phoneNumber: con.phones.length == 0
                   ? ""
-                  : con.phones
-                      .toList()[0]
-                      .value, //con.phones.toList()[0].value ?? "",
+                  : con.phones.toList()[0].value.replaceAll(
+                      " ", ""), //con.phones.toList()[0].value ?? "",
               regStatus: 0));
         });
       }
