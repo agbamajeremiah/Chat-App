@@ -34,7 +34,7 @@ class _AllContactsState extends State<AllContacts> {
     return ViewModelProvider<ContactViewModel>.withConsumer(
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
-          model.syncContacts();
+          //model.syncContacts();
           return FutureBuilder(
             future: model.getContactsFromDb(),
             builder: (context, snapshot) {

@@ -37,12 +37,12 @@ class MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     int index = getColorMatch(name != null ? name[0] : '');
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            radius: 24,
+            radius: 22,
             backgroundColor: colors[index],
             child: Center(
               child: Text(
@@ -74,7 +74,7 @@ class MessageContainer extends StatelessWidget {
                                       color: isNotRead
                                           ? AppColors.unreadText
                                           : AppColors.textColor,
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.w300),
                                 ),
                               ],
@@ -114,7 +114,7 @@ class MessageContainer extends StatelessWidget {
                                       color: isNotRead
                                           ? AppColors.unreadText
                                           : AppColors.textColor,
-                                      fontSize: 18,
+                                      fontSize: 17,
                                       fontWeight: FontWeight.w300),
                                 ),
                               ],
@@ -141,7 +141,7 @@ class MessageContainer extends StatelessWidget {
                     )),
           horizontalSpaceTiny,
           Container(
-            padding: EdgeInsets.symmetric(vertical: 12.0),
+            padding: EdgeInsets.symmetric(vertical: 5.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
