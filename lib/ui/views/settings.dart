@@ -10,18 +10,20 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: AppColors.textColor,
-        ),
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.white,
-        title: Text(
-          "Settings",
-          style: textStyle.copyWith(color: AppColors.textColor, fontSize: 20),
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: AppColors.textColor,
+          ),
+          backgroundColor: Colors.white,
+          title: Text(
+            "Settings",
+            style: textStyle.copyWith(color: AppColors.textColor, fontSize: 20),
+          ),
+          elevation: 2,
         ),
-        elevation: 2,
       ),
     );
   }
