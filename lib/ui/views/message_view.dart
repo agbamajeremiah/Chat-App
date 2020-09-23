@@ -22,11 +22,6 @@ class _MessagesViewState extends State<MessagesView> {
   @override
   void initState() {
     super.initState();
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //       statusBarColor: Colors.white,
-    //       statusBarIconBrightness: Brightness.dark),
-    // );
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
@@ -38,7 +33,7 @@ class _MessagesViewState extends State<MessagesView> {
   Widget build(BuildContext context) {
     return ViewModelProvider<MessageViewModel>.withConsumer(
         viewModelBuilder: () => MessageViewModel(),
-        //onModelReady: (model) => model.initialise(),
+        onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
           model.syncChat();
           return FutureBuilder(

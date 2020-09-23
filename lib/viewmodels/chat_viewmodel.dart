@@ -4,6 +4,7 @@ import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
@@ -16,15 +17,16 @@ class ChatViewModel extends BaseModel {
   String userNumber;
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  final SocketServices _socketService = locator<SocketServices>();
 
   //first run
   Timer timer;
   void initialise() {
-    const tenSec = const Duration(seconds: 20);
-    timer = Timer.periodic(tenSec, (Timer t) {
-      getChatMessages();
-      notifyListeners();
-    });
+    // const tenSec = const Duration(seconds: 20);
+    // timer = Timer.periodic(tenSec, (Timer t) {
+    //   getChatMessages();
+    //   notifyListeners();
+    // });
   }
 
   //set chat threadId

@@ -163,7 +163,7 @@ class _OtpViewState extends State<OtpView> {
                                                           phoneNumber: widget
                                                               .phoneNumber)
                                                       .then((value) {
-                                                    print("otp resent");
+                                                    // print("otp resent");
                                                     Scaffold.of(context)
                                                         .showSnackBar(
                                                       SnackBar(
