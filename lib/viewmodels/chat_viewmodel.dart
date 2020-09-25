@@ -64,11 +64,14 @@ class ChatViewModel extends BaseModel {
   }
 
   Future<List<Message>> getChatMessages() async {
+    if (threadId == null) {
+      await thread;
+    }
     userNumber = _authService.userNumber;
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-  
+
       return messages;
     } else
       return [];
