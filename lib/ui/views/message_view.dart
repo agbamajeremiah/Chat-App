@@ -184,6 +184,7 @@ class _MessagesViewState extends State<MessagesView> {
                                         separatorBuilder:
                                             (BuildContext context, int index) {
                                           return Divider(
+                                            thickness: 1,
                                             color: Colors.grey,
                                           );
                                         },

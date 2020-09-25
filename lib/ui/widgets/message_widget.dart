@@ -114,7 +114,7 @@ class MessageContainer extends StatelessWidget {
                                       color: isNotRead
                                           ? AppColors.unreadText
                                           : AppColors.textColor,
-                                      fontSize: 17,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w300),
                                 ),
                               ],
@@ -130,7 +130,7 @@ class MessageContainer extends StatelessWidget {
                                   text: "$lastMessage",
                                   style: textStyle.copyWith(
                                       color: AppColors.textColor2,
-                                      fontSize: 13,
+                                      fontSize: 12.5,
                                       fontWeight: FontWeight.w300),
                                 ),
                               ],
@@ -157,8 +157,8 @@ class MessageContainer extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   unreadMessages.toString(),
-                                  style:
-                                      textStyle.copyWith(color: Colors.white),
+                                  style: textStyle.copyWith(
+                                      color: Colors.white, fontSize: 12.5),
                                 ),
                               ),
                             ),

@@ -4,6 +4,7 @@ import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
@@ -16,6 +17,7 @@ class ChatViewModel extends BaseModel {
   String userNumber;
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  final SocketServices _socketService = locator<SocketServices>();
 
   //first run
   Timer timer;
@@ -29,23 +31,33 @@ class ChatViewModel extends BaseModel {
     if (threadId == null) {
       String result = await DatabaseService.db.getContactThread(phoneNumber);
       //print("thread id: " + result);
-      print(result);
       if (result != null) {
         threadId = result;
       } else {
         // print(phoneNumber);
-        var res = await initiateThread(phoneNumber);
-        if (res.statusCode == 200) {
-          List threadMembers = res.data['thread']['members'];
-          String otherMember =
-              threadMembers[0] == userNumber && threadMembers[1] != null
-                  ? threadMembers[1]
-                  : '';
-          Thread newThread =
-              Thread(id: res.data['thread']['_id'], members: otherMember);
-          // print(newThread.toMap());
-          await DatabaseService.db.insertThread(newThread);
-          threadId = res.data['thread']['_id'];
+        final internetStatus = await checkInternetConnection();
+        if (internetStatus == true) {
+          var res = await initiateThread(phoneNumber);
+          if (res.statusCode == 200) {
+            List threadMembers = res.data['thread']['members'];
+            String otherMember =
+                threadMembers[0] == userNumber && threadMembers[1] != null
+                    ? threadMembers[1]
+                    : '';
+            Thread newThread =
+                Thread(id: res.data['thread']['_id'], members: otherMember);
+            // print(newThread.toMap());
+            await DatabaseService.db.insertThread(newThread);
+            threadId = res.data['thread']['_id'];
+            //Subscribe to new threed two
+            if (_socketService.socketIO != null) {
+              _socketService.registerSocketId();
+            } else {
+              _socketService.connectSockets();
+              _socketService.registerSocketId();
+            }
+            _socketService.subscribeToThread(threadId);
+          }
         }
       }
     }
@@ -53,13 +65,10 @@ class ChatViewModel extends BaseModel {
 
   Future<List<Message>> getChatMessages() async {
     userNumber = _authService.userNumber;
-    await thread;
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      // messages.forEach((element) {
-      //   print(element.toMap());
-      // });
+  
       return messages;
     } else
       return [];

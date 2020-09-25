@@ -27,11 +27,11 @@ class MessageViewModel extends BaseModel {
         _socketService.subscribeToThread(element.id);
       });
     }
-    // Timer.periodic(Duration(seconds: 5), (Timer t) {
-    //   print("Get new mesage");
-    //   getAllChats();
-    //   notifyListeners();
-    // });
+    Timer.periodic(Duration(seconds: 5), (Timer t) {
+      print("Get new mesage");
+      getAllChats();
+      notifyListeners();
+    });
   }
 
   //Get saved chat/tread from db
