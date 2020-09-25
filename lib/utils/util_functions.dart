@@ -97,7 +97,7 @@ int getColorMatch(String firstLetter) {
 //   print("New Time: " + newTime);
 // }
 String convertToLocalTime(String jsonTime) {
-  DateTime msgTime = DateTime.parse("2020-09-24 17:09:49.661607");
+  DateTime msgTime = DateTime.parse(jsonTime);
   var newTime = msgTime.toLocal().toString();
   // print("new time: " + newTime);
   return newTime;
