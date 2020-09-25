@@ -1,4 +1,5 @@
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/foundation.dart';
 
 class Message {
@@ -22,13 +23,14 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> json) => Message(
         isQuote: json["isQuote"].toString(),
-        createdAt: json["createdAt"].toString(),
+        createdAt: convertToLocalTime(json["createdAt"]).toString(),
         id: json["_id"],
         sender: json["sender"],
         content: json["content"],
         status: json["status"],
         threadId: json["threadID"],
       );
+
   Map<String, dynamic> toMap() => {
         DatabaseService.COLUMN_MESSAGE_ID: id,
         DatabaseService.COLUMN_CONTENT: content,

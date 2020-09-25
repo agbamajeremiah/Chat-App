@@ -14,7 +14,7 @@ class MessagingServices {
   Future<void> getSyncChats() async {
     try {
       var response = await getThreads();
-      print(response);
+      // print(response);
       List<dynamic> chats = response.data['messages'];
 
       _authService.userNumber;

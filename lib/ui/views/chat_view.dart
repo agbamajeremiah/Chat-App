@@ -25,7 +25,7 @@ class _ChatViewState extends State<ChatView> {
     return ViewModelProvider<ChatViewModel>.withConsumer(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
-        //onModelReady: (model) => model.initialise(),
+        onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
@@ -44,7 +44,7 @@ class _ChatViewState extends State<ChatView> {
                     FutureBuilder(
                         future: chatMessages,
                         builder: (context, snapshot) {
-                          print(snapshot.data);
+                          // print(snapshot.data);
                           if (!snapshot.hasData) {
                             return Expanded(
                               child: Container(),

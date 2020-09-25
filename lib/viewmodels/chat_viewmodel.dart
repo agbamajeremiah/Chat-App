@@ -4,7 +4,6 @@ import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
@@ -17,16 +16,11 @@ class ChatViewModel extends BaseModel {
   String userNumber;
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
-  final SocketServices _socketService = locator<SocketServices>();
 
   //first run
   Timer timer;
-  void initialise() {
-    // const tenSec = const Duration(seconds: 20);
-    // timer = Timer.periodic(tenSec, (Timer t) {
-    //   getChatMessages();
-    //   notifyListeners();
-    // });
+  void initialise() async {
+    await thread;
   }
 
   //set chat threadId
@@ -39,7 +33,7 @@ class ChatViewModel extends BaseModel {
       if (result != null) {
         threadId = result;
       } else {
-        print(phoneNumber);
+        // print(phoneNumber);
         var res = await initiateThread(phoneNumber);
         if (res.statusCode == 200) {
           List threadMembers = res.data['thread']['members'];
@@ -49,7 +43,7 @@ class ChatViewModel extends BaseModel {
                   : '';
           Thread newThread =
               Thread(id: res.data['thread']['_id'], members: otherMember);
-          print(newThread.toMap());
+          // print(newThread.toMap());
           await DatabaseService.db.insertThread(newThread);
           threadId = res.data['thread']['_id'];
         }
@@ -63,9 +57,9 @@ class ChatViewModel extends BaseModel {
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      messages.forEach((element) {
-        print(element.toMap());
-      });
+      // messages.forEach((element) {
+      //   print(element.toMap());
+      // });
       return messages;
     } else
       return [];
@@ -83,8 +77,8 @@ class ChatViewModel extends BaseModel {
         var response =
             await sendMsg(threadId, mes.content, mes.isQuote != "false", "");
         if (response.statusCode == 200) {
-          print(response);
-          print(response.data['messageID']);
+          // print(response);
+          // print(response.data['messageID']);
           Message updatedMessage = Message(
               isQuote: mes.isQuote,
               createdAt: mes.createdAt,

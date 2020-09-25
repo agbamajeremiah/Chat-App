@@ -1,7 +1,7 @@
+import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
-import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class _AllContactsState extends State<AllContacts> {
   //GlobalKey<RefreshIndicatorState> _refreshKey;
   bool _isSearching = false;
   String _searchQuery = "";
+
   @override
   void initState() {
     super.initState();
@@ -149,7 +150,52 @@ class _AllContactsState extends State<AllContacts> {
                                 },
                                 icon: Icon(Icons.search),
                               ),
-                              MyPopupMenu(),
+                              PopupMenuButton<String>(
+                                  //padding: EdgeInsets.symmetric(horizontal: 5),
+                                  icon: Icon(Icons.more_vert,
+                                      color: AppColors.textColor),
+                                  onSelected: (option) {
+                                    switch (option) {
+                                      case "refresh":
+                                        print("refresh contacts");
+                                        model.syncContacts();
+                                        break;
+                                      case "settings":
+                                        print("Switch to Settings");
+                                        Navigator.pushNamed(
+                                            context, SettingsViewRoute);
+                                        break;
+                                      case "help":
+                                        print("Switch to Help Screen");
+                                        break;
+                                      default:
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) {
+                                    return <PopupMenuEntry<String>>[
+                                      PopupMenuItem(
+                                        child: Text("Refresh",
+                                            style: menuTextStyle),
+                                        value: "refresh",
+                                      ),
+                                      PopupMenuDivider(
+                                        height: 2,
+                                      ),
+                                      PopupMenuItem(
+                                        child: Text("Settings",
+                                            style: menuTextStyle),
+                                        value: "settings",
+                                      ),
+                                      PopupMenuDivider(
+                                        height: 2,
+                                      ),
+                                      PopupMenuItem(
+                                        child:
+                                            Text("Help", style: menuTextStyle),
+                                        value: "help",
+                                      ),
+                                    ];
+                                  })
                             ],
                           ),
                     body: Container(

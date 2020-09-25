@@ -5,6 +5,7 @@ import 'package:MSG/ui/shared/shared_styles.dart';
 //import 'package:MSG/ui/widgets/appbar.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
+// import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ class _MessagesViewState extends State<MessagesView> {
   @override
   void initState() {
     super.initState();
+    // convertToLocalTime("2020-09-24 17:09:49.661607");
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
@@ -35,7 +37,7 @@ class _MessagesViewState extends State<MessagesView> {
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
-          model.syncChat();
+          // model.syncChat();
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {

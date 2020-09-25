@@ -27,7 +27,6 @@ class ContactViewModel extends BaseModel {
     if (internetStatus == true) {
       try {
         await _contactService.syncContacts();
-        notifyListeners();
       } catch (e) {
         print(e.toString());
       }
