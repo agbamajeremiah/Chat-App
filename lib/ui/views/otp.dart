@@ -5,7 +5,7 @@ import 'package:MSG/ui/widgets/busy_button.dart';
 import 'package:MSG/viewmodels/otp_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:numeric_keyboard/numeric_keyboard.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:stacked/stacked.dart';
 
 class OtpView extends StatefulWidget {
   final String phoneNumber;
@@ -53,7 +53,7 @@ class _OtpViewState extends State<OtpView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<OTPViewModel>.withConsumer(
+    return ViewModelBuilder<OTPViewModel>.reactive(
         viewModelBuilder: () => OTPViewModel(),
         builder: (context, model, child) {
           return SafeArea(

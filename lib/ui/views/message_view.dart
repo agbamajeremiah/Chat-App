@@ -9,7 +9,7 @@ import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:stacked/stacked.dart';
 
 class MessagesView extends StatefulWidget {
   @override
@@ -20,6 +20,7 @@ class _MessagesViewState extends State<MessagesView> {
   final _searchTextCon = TextEditingController();
   bool _isSearching = false;
   String _searchQuery = "";
+  bool rebuild = false;
   @override
   void initState() {
     super.initState();
@@ -33,8 +34,9 @@ class _MessagesViewState extends State<MessagesView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<MessageViewModel>.withConsumer(
+    return ViewModelBuilder<MessageViewModel>.reactive(
         viewModelBuilder: () => MessageViewModel(),
+        createNewModelOnInsert: true,
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
           // model.syncChat();
@@ -161,15 +163,17 @@ class _MessagesViewState extends State<MessagesView> {
                                           final chat = allChats[index];
                                           print("member:");
                                           return InkWell(
-                                            onTap: () {
-                                              Navigator.pushNamed(
-                                                  context, ChatViewRoute,
-                                                  arguments: Chat(
-                                                      id: chat.id,
-                                                      displayName:
-                                                          chat.displayName,
-                                                      memberPhone:
-                                                          chat.memberPhone));
+                                            onTap: () async {
+                                              var refresh =
+                                                  await Navigator.pushNamed(
+                                                      context, ChatViewRoute,
+                                                      arguments: Chat(
+                                                          displayName:
+                                                              chat.displayName,
+                                                          memberPhone: chat
+                                                              .memberPhone));
+                                              // print(refresh);
+                                              setState(() => rebuild = refresh);
                                             },
                                             child: MessageContainer(
                                               searchquery: "",
@@ -184,7 +188,7 @@ class _MessagesViewState extends State<MessagesView> {
                                         separatorBuilder:
                                             (BuildContext context, int index) {
                                           return Divider(
-                                            thickness: 1,
+                                            thickness: 0.3,
                                             color: Colors.grey,
                                           );
                                         },

@@ -15,7 +15,7 @@ class ContactServices {
     //DatabaseService.db.deleteDb();
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await getAllContactsFromDevice();
-    print(allContacts);
+    // print("All Contacts: " + allContacts.toString());
     allContacts.forEach((con) async {
       //uploadContacts.add(con.phoneNumber);
       await DatabaseService.db.insertContact(con);

@@ -4,7 +4,7 @@ import 'package:MSG/ui/widgets/busy_button.dart';
 import 'package:MSG/viewmodels/update_profile_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:stacked/stacked.dart';
 
 class UpdateProfileView extends StatefulWidget {
   @override
@@ -29,7 +29,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<UpdateProvfileViewModel>.withConsumer(
+    return ViewModelBuilder<UpdateProvfileViewModel>.reactive(
         viewModelBuilder: () => UpdateProvfileViewModel(),
         builder: (context, model, child) {
           return SafeArea(

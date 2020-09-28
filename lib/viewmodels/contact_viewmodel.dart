@@ -7,7 +7,7 @@ import 'package:MSG/viewmodels/base_model.dart';
 
 class ContactViewModel extends BaseModel {
   final ContactServices _contactService = locator<ContactServices>();
-
+  bool refreshingContacts = false;
   //Fetch all registered contacts from database
   Future<Map<String, List<MyContact>>> getContactsFromDb() async {
     List<MyContact> regContacts =
@@ -23,14 +23,17 @@ class ContactViewModel extends BaseModel {
   }
 
   Future syncContacts() async {
+    refreshingContacts = true;
+    setBusy(true);
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
       try {
         await _contactService.syncContacts();
-        notifyListeners();
       } catch (e) {
         print(e.toString());
       }
     }
+    refreshingContacts = false;
+    setBusy(false);
   }
 }

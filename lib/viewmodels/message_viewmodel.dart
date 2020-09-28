@@ -1,17 +1,14 @@
 import 'dart:async';
-// import 'package:MSG/locator.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/connectivity.dart';
-// import 'package:MSG/services/messaging_sync_service.dart';
-// import 'package:MSG/services/socket_services.dart';
-// import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 
 class MessageViewModel extends BaseModel {
-  // final MessagingServices _messageService = locator<MessagingServices>();
+  @override
+  bool get busy => super.busy;
   final SocketServices _socketService = locator<SocketServices>();
   void initialise() async {
     final internetStatus = await checkInternetConnection();
@@ -27,11 +24,11 @@ class MessageViewModel extends BaseModel {
         _socketService.subscribeToThread(element.id);
       });
     }
-    Timer.periodic(Duration(seconds: 5), (Timer t) {
-      print("Get new mesage");
-      getAllChats();
-      notifyListeners();
-    });
+    // Timer.periodic(Duration(seconds: 5), (Timer t) {
+    //   print("Get new mesage");
+    //   getAllChats();
+    //   notifyListeners();
+    // });
   }
 
   //Get saved chat/tread from db

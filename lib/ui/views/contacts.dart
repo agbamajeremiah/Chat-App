@@ -2,25 +2,31 @@ import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
+import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:stacked/stacked.dart';
 
 class AllContacts extends StatefulWidget {
   @override
   _AllContactsState createState() => _AllContactsState();
 }
 
-class _AllContactsState extends State<AllContacts> {
+class _AllContactsState extends State<AllContacts>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _searchTextCon = TextEditingController();
   //GlobalKey<RefreshIndicatorState> _refreshKey;
   bool _isSearching = false;
   String _searchQuery = "";
+  AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
+    _animationController =
+        AnimationController(duration: const Duration(seconds: 1), vsync: this);
     // _refreshKey = GlobalKey<RefreshIndicatorState>();
     _searchTextCon.addListener(() {
       setState(() {
@@ -32,7 +38,7 @@ class _AllContactsState extends State<AllContacts> {
   // void _refreshContacts() {}
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<ContactViewModel>.withConsumer(
+    return ViewModelBuilder<ContactViewModel>.reactive(
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
           //model.syncContacts();
@@ -142,14 +148,25 @@ class _AllContactsState extends State<AllContacts> {
                               ],
                             ),
                             actions: <Widget>[
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _isSearching = true;
-                                  });
-                                },
-                                icon: Icon(Icons.search),
-                              ),
+                              model.refreshingContacts
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 5.0),
+                                      child: SpinKitRing(
+                                        color: AppColors.textColor,
+                                        lineWidth: 2.0,
+                                        size: 20.0,
+                                        controller: _animationController,
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _isSearching = true;
+                                        });
+                                      },
+                                      icon: Icon(Icons.search),
+                                    ),
                               PopupMenuButton<String>(
                                   //padding: EdgeInsets.symmetric(horizontal: 5),
                                   icon: Icon(Icons.more_vert,

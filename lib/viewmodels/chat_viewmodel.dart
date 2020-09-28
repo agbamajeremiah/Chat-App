@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
@@ -10,6 +12,7 @@ import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_socket_io/flutter_socket_io.dart';
 
 class ChatViewModel extends BaseModel {
   String threadId;
@@ -56,11 +59,24 @@ class ChatViewModel extends BaseModel {
               _socketService.connectSockets();
               _socketService.registerSocketId();
             }
-            _socketService.subscribeToThread(threadId);
+            _subscribeToThread(threadId, _socketService.socketIO);
           }
         }
       }
     }
+  }
+
+  void _subscribeToThread(String threadId, SocketIO socketIO) {
+    socketIO.sendMessage('subscribe', json.encode({'threadId': threadId}));
+    socketIO.subscribe('new message', (dynamic socketMessage) {
+      print("Socket Message:");
+      var newMessage = json.decode(socketMessage);
+      Map message = newMessage['message'][0];
+      print("Socket message inserted");
+      print(message);
+      DatabaseService.db.insertNewMessage(Message.fromMap(message));
+      notifyListeners();
+    });
   }
 
   Future<List<Message>> getChatMessages() async {
@@ -117,20 +133,14 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
+    setBusy(true);
     Message newMessage;
     final now = DateTime.now();
     final internetStatus = await checkInternetConnection();
-    if (internetStatus == true) {
+    if (internetStatus == true && _socketService.socketIO != null) {
       var response = await sendMsg(threadId, message, isQuote, "");
       if (response.statusCode == 200) {
-        newMessage = Message(
-            id: response.data['messageID'],
-            content: message,
-            sender: userNumber,
-            threadId: threadId,
-            createdAt: now.toIso8601String(),
-            status: "SENT",
-            isQuote: isQuote.toString());
+        print("message sent");
       }
     } else {
       newMessage = Message(
@@ -142,9 +152,9 @@ class ChatViewModel extends BaseModel {
         status: "PENDING",
         isQuote: isQuote.toString(),
       );
+      await DatabaseService.db.insertNewMessage(newMessage);
     }
-    await DatabaseService.db.insertNewMessage(newMessage);
-    notifyListeners();
+    setBusy(false);
   }
 
   Future sendMsg(

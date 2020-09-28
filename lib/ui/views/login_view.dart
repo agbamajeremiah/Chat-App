@@ -6,7 +6,7 @@ import 'package:MSG/viewmodels/register_viewModel.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider_architecture/_viewmodel_provider.dart';
+import 'package:stacked/stacked.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<RegisterViewModel>.withConsumer(
+    return ViewModelBuilder<RegisterViewModel>.reactive(
         viewModelBuilder: () => RegisterViewModel(),
         builder: (context, model, child) {
           return AnnotatedRegion<SystemUiOverlayStyle>(

@@ -1,4 +1,3 @@
-//
 import 'package:intl/intl.dart';
 
 String convertToTime(String stringTime) {
@@ -91,14 +90,9 @@ int getColorMatch(String firstLetter) {
   return colorIndex;
 }
 
-// String addHourToTime(String jsonTime) {
-//   DateTime msgTime = DateTime.parse("2020-09-24 17:09:49.661607");
-//   var newTime = msgTime.add(Duration(hours: 1)).toIso8601String();
-//   print("New Time: " + newTime);
-// }
 String convertToLocalTime(String jsonTime) {
   DateTime msgTime = DateTime.parse(jsonTime);
-  var newTime = msgTime.toLocal().toString();
+  var newTime = msgTime.toLocal().toIso8601String();
   // print("new time: " + newTime);
   return newTime;
 }

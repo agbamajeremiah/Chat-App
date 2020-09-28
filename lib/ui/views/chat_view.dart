@@ -2,11 +2,10 @@ import 'package:MSG/models/chat.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
-import 'package:MSG/ui/widgets/appbar.dart';
 import 'package:MSG/ui/widgets/message_bubble.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:stacked/stacked.dart';
 
 class ChatView extends StatefulWidget {
   final Chat chat;
@@ -22,7 +21,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<ChatViewModel>.withConsumer(
+    return ViewModelBuilder<ChatViewModel>.reactive(
         viewModelBuilder: () => ChatViewModel(
             threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
         onModelReady: (model) => model.initialise(),
@@ -32,12 +31,53 @@ class _ChatViewState extends State<ChatView> {
           // model.synChat();
           return SafeArea(
             child: Scaffold(
-              appBar: PreferredSize(
-                  preferredSize: Size.fromHeight(60),
-                  child: CustomAppBar(
-                    title: widget.chat.displayName ?? widget.chat.memberPhone,
-                    back: true,
-                  )),
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                elevation: 2.0,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: AppColors.textColor,
+                  ),
+                  onPressed: () => Navigator.pop(context, true),
+                ),
+                title: Text(
+                  widget.chat.displayName ?? widget.chat.memberPhone,
+                  style: textStyle.copyWith(
+                      fontSize: 20.5, color: AppColors.textColor),
+                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: PopupMenuButton<String>(
+                      onSelected: (value) {
+                        print(value);
+                      },
+                      child: Center(
+                          child: Icon(
+                        Icons.more_vert,
+                        size: 25,
+                        color: AppColors.textColor,
+                      )),
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value: 'Value1',
+                          child: Text('Choose value 1'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'Value2',
+                          child: Text('Choose value 2'),
+                        ),
+                        PopupMenuItem<String>(
+                          value: 'Value3',
+                          child: Text('Choose value 3'),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
               body: SafeArea(
                 child: Column(
                   children: [

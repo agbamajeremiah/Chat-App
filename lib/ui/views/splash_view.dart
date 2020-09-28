@@ -3,7 +3,7 @@ import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/viewmodels/startup_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider_architecture/provider_architecture.dart';
+import 'package:stacked/stacked.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelProvider<StartUpViewModel>.withConsumer(
+    return ViewModelBuilder<StartUpViewModel>.reactive(
         viewModelBuilder: () => StartUpViewModel(),
         onModelReady: (model) => model.handleStartUpLogic(),
         builder: (context, model, snapshot) {
