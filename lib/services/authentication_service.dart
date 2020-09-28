@@ -76,15 +76,14 @@ class AuthenticationSerivice {
         prefs.setString("number", response.data["phoneNumber"]);
       }
       // return jsonDecode(response);
-      return response;
+      return response.statusCode;
     } catch (e) {
       if (e is DioError) {
         debugPrint(
-          e.response.data,
+          e.response.data[0],
         );
+        return e.response.statusCode;
       }
-      print(e.runtimeType);
-      print(e.toString());
       throw e;
     }
   }

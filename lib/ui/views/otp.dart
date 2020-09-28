@@ -218,10 +218,13 @@ class _OtpViewState extends State<OtpView> {
                                     });
                                     await model
                                         .verify(code: text)
-                                        .whenComplete(() {
+                                        .then((value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          otpFailed = true;
+                                        });
+                                      }
                                       setState(() {
-                                        otpFailed = true;
-
                                         verifying = false;
                                       });
                                     });

@@ -21,7 +21,7 @@ class MessageViewModel extends BaseModel {
       }
       List<Chat> chat = await getAllChats();
       chat.forEach((element) {
-        _socketService.subscribeToThread(element.id);
+        _socketService.subscribeToThread(element.id, element.memberPhone);
       });
     }
     // Timer.periodic(Duration(seconds: 5), (Timer t) {

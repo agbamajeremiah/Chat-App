@@ -28,7 +28,7 @@ class _ChatViewState extends State<ChatView> {
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final chatMessages = model.getChatMessages();
-          // model.synChat();
+          model.synChat();
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(

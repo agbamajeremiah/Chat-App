@@ -26,8 +26,10 @@ class SocketServices {
         }));
   }
 
-  void subscribeToThread(String threadId) {
-    socketIO.sendMessage('subscribe', json.encode({'threadId': threadId}));
+  void subscribeToThread(String threadId, String phoneNumber) {
+    socketIO.sendMessage('subscribe',
+        json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
+    print("subscribed to :" + threadId);
     socketIO.subscribe('new message', (dynamic socketMessage) {
       print("Socket Message:");
       var newMessage = json.decode(socketMessage);
