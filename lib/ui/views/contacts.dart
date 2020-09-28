@@ -2,7 +2,6 @@ import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
-import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

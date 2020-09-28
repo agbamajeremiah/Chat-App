@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
