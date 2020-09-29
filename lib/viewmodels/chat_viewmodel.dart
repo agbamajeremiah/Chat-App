@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
@@ -19,6 +18,7 @@ class ChatViewModel extends BaseModel {
   ChatViewModel({@required this.threadId, @required this.phoneNumber});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
+  bool threadListened = false;
 
   //first run
   Timer timer;
@@ -26,10 +26,11 @@ class ChatViewModel extends BaseModel {
     await thread;
     //Subscribe to new threed two
     final internetStatus = await checkInternetConnection();
-    if (internetStatus == true) {
+    if (internetStatus == true && threadListened != true) {
       if (_socketService.socketIO != null) {
         //_socketService.registerSocketId();
         _socketService.subscribeToThread(threadId, phoneNumber);
+        threadListened = true;
       }
     }
   }
