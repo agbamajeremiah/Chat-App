@@ -70,8 +70,11 @@ class _MessagesViewState extends State<MessagesView> {
                     child: Scaffold(
                       backgroundColor: Colors.white,
                       floatingActionButton: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, ContactViewRoute);
+                        onPressed: () async {
+                          var refresh = await Navigator.pushNamed(
+                              context, ContactViewRoute);
+                          print("page rebuilt");
+                          setState(() => rebuild = refresh);
                         },
                         child: Icon(
                           Icons.message,
