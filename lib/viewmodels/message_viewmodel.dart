@@ -17,10 +17,11 @@ class MessageViewModel extends BaseModel {
         _socketService.registerSocketId();
       } else {
         _socketService.connectSockets();
-        _socketService.registerSocketId();
+        await Future.delayed(Duration(seconds: 2))
+            .whenComplete(() => _socketService.registerSocketId());
       }
       List<Chat> chat = await getAllChats();
-      chat.forEach((element) {
+      chat.forEach((element) async {
         _socketService.subscribeToThread(element.id, element.memberPhone);
       });
     }

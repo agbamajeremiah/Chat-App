@@ -11,7 +11,6 @@ import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_socket_io/flutter_socket_io.dart';
 
 class ChatViewModel extends BaseModel {
   String threadId;
@@ -25,6 +24,14 @@ class ChatViewModel extends BaseModel {
   Timer timer;
   void initialise() async {
     await thread;
+    //Subscribe to new threed two
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      if (_socketService.socketIO != null) {
+        //_socketService.registerSocketId();
+        _socketService.subscribeToThread(threadId, phoneNumber);
+      }
+    }
   }
 
   //set chat threadId
@@ -51,31 +58,10 @@ class ChatViewModel extends BaseModel {
             // print(newThread.toMap());
             await DatabaseService.db.insertThread(newThread);
             threadId = res.data['thread']['_id'];
-            //Subscribe to new threed two
-            if (_socketService.socketIO != null) {
-              _socketService.registerSocketId();
-            } else {
-              _socketService.connectSockets();
-              _socketService.registerSocketId();
-            }
-            _subscribeToThread(threadId, _socketService.socketIO);
           }
         }
       }
     }
-  }
-
-  void _subscribeToThread(String threadId, SocketIO socketIO) {
-    socketIO.sendMessage('subscribe', json.encode({'threadId': threadId}));
-    socketIO.subscribe('new message', (dynamic socketMessage) {
-      print("Socket Message:");
-      var newMessage = json.decode(socketMessage);
-      Map message = newMessage['message'][0];
-      print("Socket message inserted");
-      print(message);
-      DatabaseService.db.insertNewMessage(Message.fromMap(message));
-      notifyListeners();
-    });
   }
 
   Future<List<Message>> getChatMessages() async {
@@ -105,17 +91,17 @@ class ChatViewModel extends BaseModel {
             await sendMsg(threadId, mes.content, mes.isQuote != "false", "");
         if (response.statusCode == 200) {
           // print(response);
-          // print(response.data['messageID']);
-          Message updatedMessage = Message(
-              isQuote: mes.isQuote,
-              createdAt: mes.createdAt,
-              id: response.data['messageID'],
-              sender: mes.sender,
-              content: mes.content,
-              status: "SENT",
-              threadId: mes.threadId);
-          //update mesage record
-          DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
+          // // print(response.data['messageID']);
+          // Message updatedMessage = Message(
+          //     isQuote: mes.isQuote,
+          //     createdAt: mes.createdAt,
+          //     id: response.data['messageID'],
+          //     sender: mes.sender,
+          //     content: mes.content,
+          //     status: "SENT",
+          //     threadId: mes.threadId);
+          // //update mesage record
+          // DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
           notifyListeners();
         }
       });
@@ -124,7 +110,7 @@ class ChatViewModel extends BaseModel {
 
   Future synChat() async {
     await makeAsRead();
-    await resendPendingMessages();
+    // await resendPendingMessages();
   }
 
   //send new new nessage
@@ -140,6 +126,17 @@ class ChatViewModel extends BaseModel {
       var response = await sendMsg(threadId, message, isQuote, "");
       if (response.statusCode == 200) {
         print("message sent");
+      } else {
+        newMessage = Message(
+          id: now.toString(),
+          content: message,
+          sender: userNumber,
+          threadId: threadId,
+          createdAt: now.toIso8601String(),
+          status: "PENDING",
+          isQuote: isQuote.toString(),
+        );
+        await DatabaseService.db.insertNewMessage(newMessage);
       }
     } else {
       newMessage = Message(
