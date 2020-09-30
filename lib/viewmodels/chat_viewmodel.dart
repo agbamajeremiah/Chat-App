@@ -20,6 +20,10 @@ class ChatViewModel extends BaseModel {
   final SocketServices _socketService = locator<SocketServices>();
   bool threadListened = false;
 
+  void rebuildScreen() {
+    notifyListeners();
+  }
+
   //first run
   Timer timer;
   void initialise() async {
@@ -29,7 +33,7 @@ class ChatViewModel extends BaseModel {
     if (internetStatus == true && threadListened != true) {
       if (_socketService.socketIO != null) {
         //_socketService.registerSocketId();
-        _socketService.subscribeToThread(threadId, phoneNumber);
+        _socketService.subscribeToThread(threadId, phoneNumber, rebuildScreen);
         threadListened = true;
       }
     }
@@ -119,7 +123,7 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
-    setBusy(true);
+    // setBusy(true);
     Message newMessage;
     final now = DateTime.now();
     final internetStatus = await checkInternetConnection();
@@ -151,7 +155,7 @@ class ChatViewModel extends BaseModel {
       );
       await DatabaseService.db.insertNewMessage(newMessage);
     }
-    setBusy(false);
+    // setBusy(false);
   }
 
   Future sendMsg(

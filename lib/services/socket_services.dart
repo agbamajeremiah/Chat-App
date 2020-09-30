@@ -26,7 +26,8 @@ class SocketServices {
         }));
   }
 
-  void subscribeToThread(String threadId, String phoneNumber) {
+  void subscribeToThread(
+      String threadId, String phoneNumber, Function rebuild) {
     socketIO.sendMessage('subscribe',
         json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
     print("subscribed to :" + threadId);
@@ -37,6 +38,7 @@ class SocketServices {
       print("Socket message inserted");
       print(message);
       DatabaseService.db.insertNewMessage(Message.fromMap(message));
+      rebuild();
     });
   }
 

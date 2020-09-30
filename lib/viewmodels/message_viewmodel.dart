@@ -10,6 +10,11 @@ class MessageViewModel extends BaseModel {
   @override
   bool get busy => super.busy;
   final SocketServices _socketService = locator<SocketServices>();
+
+  void rebuildScreen() {
+    notifyListeners();
+  }
+
   void initialise() async {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
@@ -22,7 +27,8 @@ class MessageViewModel extends BaseModel {
       }
       List<Chat> chat = await getAllChats();
       chat.forEach((element) async {
-        _socketService.subscribeToThread(element.id, element.memberPhone);
+        _socketService.subscribeToThread(
+            element.id, element.memberPhone, rebuildScreen);
       });
     }
     // Timer.periodic(Duration(seconds: 5), (Timer t) {
