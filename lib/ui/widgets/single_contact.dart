@@ -21,9 +21,14 @@ class SingleContact extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, ChatViewRoute,
-              arguments:
-                  Chat(id: null, displayName: name, memberPhone: number));
+          Navigator.pushNamed(
+            context,
+            ChatViewRoute,
+            arguments: {
+              'chat': Chat(id: null, displayName: name, memberPhone: number),
+              'fromContact': true
+            },
+          );
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

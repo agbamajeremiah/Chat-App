@@ -170,11 +170,15 @@ class _MessagesViewState extends State<MessagesView> {
                                               var refresh =
                                                   await Navigator.pushNamed(
                                                       context, ChatViewRoute,
-                                                      arguments: Chat(
-                                                          displayName:
-                                                              chat.displayName,
-                                                          memberPhone: chat
-                                                              .memberPhone));
+                                                      arguments: {
+                                                    'chat': Chat(
+                                                        displayName:
+                                                            chat.displayName,
+                                                        memberPhone:
+                                                            chat.memberPhone),
+                                                    'fromContact': false
+                                                  });
+
                                               // print(refresh);
                                               setState(() => rebuild = refresh);
                                             },

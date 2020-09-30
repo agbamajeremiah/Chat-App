@@ -15,7 +15,11 @@ class ChatViewModel extends BaseModel {
   String threadId;
   String phoneNumber;
   String userNumber;
-  ChatViewModel({@required this.threadId, @required this.phoneNumber});
+  bool fromContact;
+  ChatViewModel(
+      {@required this.threadId,
+      @required this.phoneNumber,
+      @required this.fromContact});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
   bool threadListened = false;
@@ -30,7 +34,7 @@ class ChatViewModel extends BaseModel {
     await thread;
     //Subscribe to new threed two
     final internetStatus = await checkInternetConnection();
-    if (internetStatus == true && threadListened != true) {
+    if (internetStatus == true && fromContact == true) {
       if (_socketService.socketIO != null) {
         //_socketService.registerSocketId();
         _socketService.subscribeToThread(threadId, phoneNumber, rebuildScreen);

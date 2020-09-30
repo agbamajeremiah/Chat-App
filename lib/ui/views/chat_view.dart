@@ -8,9 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StatefulWidget {
-  final Chat chat;
-  ChatView({Key key, @required this.chat}) : super(key: key);
-
+  final Map argument;
+  ChatView({Key key, @required this.argument}) : super(key: key);
   @override
   _ChatViewState createState() => _ChatViewState();
 }
@@ -21,9 +20,13 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    Chat chat = widget.argument['chat'];
+    bool fromContact = widget.argument['fromContact'];
     return ViewModelBuilder<ChatViewModel>.reactive(
         viewModelBuilder: () => ChatViewModel(
-            threadId: widget.chat.id, phoneNumber: widget.chat.memberPhone),
+            threadId: chat.id,
+            phoneNumber: chat.memberPhone,
+            fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
@@ -42,7 +45,7 @@ class _ChatViewState extends State<ChatView> {
                   onPressed: () => Navigator.pop(context, true),
                 ),
                 title: Text(
-                  widget.chat.displayName ?? widget.chat.memberPhone,
+                  chat.displayName ?? chat.memberPhone,
                   style: textStyle.copyWith(
                       fontSize: 20.5, color: AppColors.textColor),
                 ),
@@ -145,7 +148,7 @@ class _ChatViewState extends State<ChatView> {
                           FlatButton(
                               onPressed: () async {
                                 String messageText = messageTextController.text;
-                                String receiver = widget.chat.memberPhone;
+                                String receiver = chat.memberPhone;
                                 if (messageText.length > 0) {
                                   await model.sendMessage(
                                       message: messageText,

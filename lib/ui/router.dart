@@ -26,7 +26,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: ChatView(
-          chat: settings.arguments,
+          argument: settings.arguments,
         ),
       );
     case LoginViewRoute:
