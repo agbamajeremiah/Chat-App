@@ -293,8 +293,6 @@ class _AllContactsState extends State<AllContacts>
                                         unregContacts.length +
                                         1,
                                     itemBuilder: (context, index) {
-                                      print(contactsCount);
-                                      print(index);
                                       final item = index < regContacts.length
                                           ? regContacts[index]
                                           : index == regContacts.length
@@ -321,11 +319,23 @@ class _AllContactsState extends State<AllContacts>
                                                 ),
                                               ),
                                             )
-                                          : SingleContact(
-                                              name: item.fullName.toString(),
-                                              number:
-                                                  item.phoneNumber.toString(),
-                                              searching: false);
+                                          : index < regContacts.length
+                                              ? SingleContact(
+                                                  name:
+                                                      item.fullName.toString(),
+                                                  number: item.phoneNumber
+                                                      .toString(),
+                                                  searching: false,
+                                                  registered: true,
+                                                )
+                                              : SingleContact(
+                                                  name:
+                                                      item.fullName.toString(),
+                                                  number: item.phoneNumber
+                                                      .toString(),
+                                                  searching: false,
+                                                  registered: false,
+                                                );
                                     },
                                   ),
                                 ),

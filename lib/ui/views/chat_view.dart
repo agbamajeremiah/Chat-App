@@ -135,9 +135,12 @@ class _ChatViewState extends State<ChatView> {
                       decoration: kMessageContainerDecoration,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
                             child: TextField(
+                              maxLines: 3,
+                              minLines: 1,
                               controller: messageTextController,
                               decoration: kMessageTextFieldDecoration,
                               onTap: () {
@@ -145,23 +148,28 @@ class _ChatViewState extends State<ChatView> {
                               },
                             ),
                           ),
-                          FlatButton(
-                              onPressed: () async {
-                                String messageText = messageTextController.text;
-                                String receiver = chat.memberPhone;
-                                if (messageText.length > 0) {
-                                  await model.sendMessage(
-                                      message: messageText,
-                                      receiver: receiver,
-                                      isQuote: false);
-                                }
-                                messageTextController.clear();
-                                setState(() => typingMessage = false);
-                              },
-                              child: Icon(
-                                Icons.send,
-                                size: 20,
-                              )),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            padding: EdgeInsets.only(right: 5),
+                            child: FlatButton(
+                                onPressed: () async {
+                                  String messageText =
+                                      messageTextController.text;
+                                  String receiver = chat.memberPhone;
+                                  if (messageText.length > 0) {
+                                    await model.sendMessage(
+                                        message: messageText,
+                                        receiver: receiver,
+                                        isQuote: false);
+                                  }
+                                  messageTextController.clear();
+                                  setState(() => typingMessage = false);
+                                },
+                                child: Icon(
+                                  Icons.send,
+                                  size: 20,
+                                )),
+                          ),
                         ],
                       ),
                     ),

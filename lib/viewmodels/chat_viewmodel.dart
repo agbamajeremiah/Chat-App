@@ -33,12 +33,16 @@ class ChatViewModel extends BaseModel {
   void initialise() async {
     await thread;
     //Subscribe to new threed two
-    final internetStatus = await checkInternetConnection();
-    if (internetStatus == true && fromContact == true) {
-      if (_socketService.socketIO != null) {
-        //_socketService.registerSocketId();
-        _socketService.subscribeToThread(threadId, phoneNumber, rebuildScreen);
-        threadListened = true;
+    if (true) {
+      //fromContact == true
+      final internetStatus = await checkInternetConnection();
+      if (internetStatus == true) {
+        if (_socketService.socketIO != null) {
+          //_socketService.registerSocketId();
+          _socketService.subscribeToThread(
+              threadId, phoneNumber, rebuildScreen);
+          threadListened = true;
+        }
       }
     }
   }
@@ -118,8 +122,11 @@ class ChatViewModel extends BaseModel {
   }
 
   Future synChat() async {
-    await makeAsRead();
-    // await resendPendingMessages();
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      await makeAsRead();
+      // await resendPendingMessages();
+    }
   }
 
   //send new new nessage

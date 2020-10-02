@@ -11,9 +11,14 @@ class SingleContact extends StatelessWidget {
   final String name;
   final bool searching;
   final String matchString;
+  final bool registered;
   //bool registered = false;
   const SingleContact(
-      {this.number, this.name, this.searching, this.matchString});
+      {this.number,
+      this.name,
+      this.searching,
+      this.matchString,
+      this.registered});
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +26,18 @@ class SingleContact extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            ChatViewRoute,
-            arguments: {
-              'chat': Chat(id: null, displayName: name, memberPhone: number),
-              'fromContact': true
-            },
-          );
+          if (registered == true) {
+            Navigator.pushNamed(
+              context,
+              ChatViewRoute,
+              arguments: {
+                'chat': Chat(id: null, displayName: name, memberPhone: number),
+                'fromContact': true
+              },
+            );
+          } else {
+            print("Contact not registered");
+          }
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

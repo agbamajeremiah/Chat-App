@@ -158,31 +158,23 @@ class DatabaseService {
     return singleContact;
   }
 
-  Future<List<Chat>> getAllChatsFromDb2() async {
+  Future<List<Chat>> getAllChatsFromDb() async {
+    List<Chat> allChat = [];
     final db = await database;
     var threads = await db.query(TABLE_THREAD);
-    List<Chat> allChats = await mapChatsToThread(threads);
-    print(allChats);
-    return allChats;
-  }
-
-  Future<List<Chat>> mapChatsToThread(var threads) async {
-    final db = await database;
-    List<Chat> allChat = [];
-    threads.forEach((thd) async {
-      String threadId = thd["id"];
-      String memberPhone = thd["members"];
+    for (int i = 0; i < threads.length; i++) {
+      String threadId = threads[i]['id'];
+      String memberPhone = threads[i]["members"];
       String displayName;
-      String displayPhone = memberPhone;
       String msgContent;
       String msgTime;
+      String lastMsgStatus;
       String subMemberPhone;
       if (memberPhone.startsWith("+")) {
-        subMemberPhone = memberPhone.substring(5);
+        subMemberPhone = memberPhone.substring(4);
       } else {
         subMemberPhone = memberPhone.substring(1);
       }
-      print(subMemberPhone);
       var lastMsgDetails = await db.query(TABLE_MESSAGE,
           where: "$COLUMN_MSG_THREAD_ID = ?",
           orderBy: "$COLUMN_CREATED_AT DESC",
@@ -192,50 +184,31 @@ class DatabaseService {
       if (lastMsgDetails.isNotEmpty) {
         msgContent = lastMsgDetails[0]['content'];
         msgTime = lastMsgDetails[0]['created_at'];
+        lastMsgStatus = lastMsgDetails[0]['status'];
         print(lastMsgDetails.isNotEmpty.toString());
         var memberDetails = await db.query(TABLE_CONTACT,
             where: "$COLUMN_NUMBER LIKE ? AND $COLUMN_REG_STATUS = ?",
             whereArgs: ["%$subMemberPhone", 1],
             limit: 1);
+
         if (memberDetails.isNotEmpty) {
           displayName = memberDetails[0]['displayName'];
-          displayPhone = memberDetails[0]['phoneNumber'];
         } else {
           displayName = memberPhone;
         }
-        print(threadId + displayName + displayPhone + msgContent + msgTime);
         Chat chat = Chat(
             displayName: displayName,
             id: threadId,
             memberPhone: memberPhone,
             lastMessage: msgContent,
-            lastMsgTime: msgTime);
+            lastMsgTime: msgTime,
+            lastMsgStatus: lastMsgStatus);
 
         allChat.add(chat);
       }
-    });
+    }
+    print(allChat);
     return allChat;
-  }
-
-  Future<List<Chat>> getAllChatsFromDb() async {
-    final db = await database;
-    List<Chat> allChats = [];
-    List chats = await db.rawQuery(
-        '''SELECT * FROM (SELECT t.id, t.members, contacts.displayName, contacts.phoneNumber, msg.thread_id, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
-        FROM threads AS t
-        LEFT JOIN contacts ON t.members = contacts.phoneNumber
-        JOIN messages AS msg ON t.id = msg.thread_id
-        ORDER BY lastMsgTime ASC) AS chat  
-        GROUP BY id ORDER BY chat.lastMsgTime DESC''');
-    // print(chats);
-
-    chats.forEach((element) {
-      // print(element);
-    });
-    chats.forEach((chat) {
-      allChats.add(Chat.fromMap(chat));
-    });
-    return allChats;
   }
 
   Future<List<Message>> getSingleChatMessageFromDb(String threadId) async {

@@ -22,7 +22,7 @@ class MessageViewModel extends BaseModel {
         _socketService.registerSocketId();
       } else {
         _socketService.connectSockets();
-        await Future.delayed(Duration(seconds: 2))
+        await Future.delayed(Duration(seconds: 3))
             .whenComplete(() => _socketService.registerSocketId());
       }
       List<Chat> chat = await getAllChats();
@@ -31,25 +31,11 @@ class MessageViewModel extends BaseModel {
             element.id, element.memberPhone, rebuildScreen);
       });
     }
-    // Timer.periodic(Duration(seconds: 5), (Timer t) {
-    //   print("Get new mesage");
-    //   getAllChats();
-    //   notifyListeners();
-    // });
   }
 
   //Get saved chat/tread from db
   Future<List<Chat>> getAllChats() async {
-    //test
-    //await DatabaseService.db.deleteDb();
-    //first run
-    List<Chat> activeChat = [];
-    List chats = await DatabaseService.db.getAllChatsFromDb();
-    chats.forEach((element) {
-      if (element.lastMessage != null) {
-        activeChat.add(element);
-      }
-    });
+    List<Chat> activeChat = await DatabaseService.db.getAllChatsFromDb();
     return activeChat;
   }
 
