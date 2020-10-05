@@ -134,7 +134,7 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
-    // setBusy(true);
+    setBusy(true);
     Message newMessage;
     final now = DateTime.now();
     final internetStatus = await checkInternetConnection();
@@ -153,6 +153,7 @@ class ChatViewModel extends BaseModel {
           isQuote: isQuote.toString(),
         );
         await DatabaseService.db.insertNewMessage(newMessage);
+        setBusy(false);
       }
     } else {
       newMessage = Message(
@@ -165,6 +166,7 @@ class ChatViewModel extends BaseModel {
         isQuote: isQuote.toString(),
       );
       await DatabaseService.db.insertNewMessage(newMessage);
+      setBusy(false);
     }
     // setBusy(false);
   }

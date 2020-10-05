@@ -46,6 +46,7 @@ class _LoginViewState extends State<LoginView> {
               statusBarColor: Colors.white,
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.light,
+              systemNavigationBarColor: Colors.white,
             ),
             child: Scaffold(
               backgroundColor: Colors.white,

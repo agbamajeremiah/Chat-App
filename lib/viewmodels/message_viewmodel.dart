@@ -12,7 +12,7 @@ class MessageViewModel extends BaseModel {
   final SocketServices _socketService = locator<SocketServices>();
 
   void rebuildScreen() {
-    notifyListeners();
+    setBusy(true);
   }
 
   void initialise() async {
@@ -22,7 +22,7 @@ class MessageViewModel extends BaseModel {
         _socketService.registerSocketId();
       } else {
         _socketService.connectSockets();
-        await Future.delayed(Duration(seconds: 3))
+        await Future.delayed(Duration(seconds: 2))
             .whenComplete(() => _socketService.registerSocketId());
       }
       List<Chat> chat = await getAllChats();

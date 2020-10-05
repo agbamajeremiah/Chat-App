@@ -36,10 +36,10 @@ class _MessagesViewState extends State<MessagesView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MessageViewModel>.reactive(
         viewModelBuilder: () => MessageViewModel(),
-        createNewModelOnInsert: true,
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
           // model.syncChat();
+          print(model.busy.toString());
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
@@ -62,6 +62,7 @@ class _MessagesViewState extends State<MessagesView> {
 
                 return AnnotatedRegion<SystemUiOverlayStyle>(
                   value: SystemUiOverlayStyle(
+                    systemNavigationBarColor: Colors.white,
                     statusBarColor: Colors.white,
                     statusBarIconBrightness: Brightness.dark,
                     statusBarBrightness: Brightness.light,

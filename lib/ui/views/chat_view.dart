@@ -17,6 +17,7 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   final messageTextController = TextEditingController();
   bool typingMessage = false;
+  bool rebuild;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,8 @@ class _ChatViewState extends State<ChatView> {
             phoneNumber: chat.memberPhone,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
-        disposeViewModel: false,
         builder: (context, model, snapshot) {
+          print(model.busy.toString());
           final chatMessages = model.getChatMessages();
           model.synChat();
           return SafeArea(
@@ -66,15 +67,15 @@ class _ChatViewState extends State<ChatView> {
                           <PopupMenuEntry<String>>[
                         PopupMenuItem<String>(
                           value: 'Value1',
-                          child: Text('Choose value 1'),
+                          child: Text('Profile'),
                         ),
                         PopupMenuItem<String>(
                           value: 'Value2',
-                          child: Text('Choose value 2'),
+                          child: Text('Settings'),
                         ),
                         PopupMenuItem<String>(
                           value: 'Value3',
-                          child: Text('Choose value 3'),
+                          child: Text('Help'),
                         ),
                       ],
                     ),

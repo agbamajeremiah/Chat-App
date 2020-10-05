@@ -13,9 +13,6 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //     statusBarColor: AppColors.splashBlue,
-    //     statusBarBrightness: Brightness.light));
     super.initState();
   }
 
@@ -27,9 +24,10 @@ class _SplashViewState extends State<SplashView> {
         builder: (context, model, snapshot) {
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
+              systemNavigationBarColor: AppColors.splashBlue,
               statusBarColor: AppColors.splashBlue,
-              statusBarIconBrightness: Brightness.dark,
-              statusBarBrightness: Brightness.light,
+              statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.dark,
             ),
             child: Scaffold(
               backgroundColor: AppColors.splashBlue,
