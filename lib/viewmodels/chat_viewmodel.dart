@@ -61,11 +61,12 @@ class ChatViewModel extends BaseModel {
         if (internetStatus == true) {
           var res = await initiateThread(phoneNumber);
           if (res.statusCode == 200) {
+            print(res.data);
             List threadMembers = res.data['thread']['members'];
-            String otherMember =
-                threadMembers[0] == userNumber && threadMembers[1] != null
-                    ? threadMembers[1]
-                    : '';
+            String otherMember = threadMembers[0] == _authService.userNumber &&
+                    threadMembers[1] != null
+                ? threadMembers[1]
+                : '';
             Thread newThread =
                 Thread(id: res.data['thread']['_id'], members: otherMember);
             // print(newThread.toMap());

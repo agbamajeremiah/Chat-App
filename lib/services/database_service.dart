@@ -161,36 +161,34 @@ class DatabaseService {
   Future<List<Chat>> getAllChatsFromDb() async {
     List<Chat> allChat = [];
     final db = await database;
-    var threads = await db.query(TABLE_THREAD);
-    for (int i = 0; i < threads.length; i++) {
-      String threadId = threads[i]['id'];
-      String memberPhone = threads[i]["members"];
+    List chats = await db.rawQuery(
+        '''SELECT * FROM (SELECT t.id, t.members, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
+        FROM threads AS t
+        INNER JOIN messages AS msg ON t.id = msg.thread_id
+        ORDER BY lastMsgTime ASC) AS chat  
+        GROUP BY id ORDER BY chat.lastMsgTime DESC''');
+    print(chats);
+    //   var threads = await db.query(TABLE_THREAD);
+    //   print(threads);
+
+    for (int i = 0; i < chats.length; i++) {
+      String threadId = chats[i]['id'];
+      String memberPhone = chats[i]["members"];
       String displayName;
-      String msgContent;
-      String msgTime;
-      String lastMsgStatus;
+      String msgContent = chats[i]["lastMessage"];
+      String msgTime = chats[i]["lastMsgTime"];
+      String lastMsgStatus = chats[i]["status"];
       String subMemberPhone;
       if (memberPhone.startsWith("+")) {
         subMemberPhone = memberPhone.substring(4);
       } else {
         subMemberPhone = memberPhone.substring(1);
       }
-      var lastMsgDetails = await db.query(TABLE_MESSAGE,
-          where: "$COLUMN_MSG_THREAD_ID = ?",
-          orderBy: "$COLUMN_CREATED_AT DESC",
-          limit: 1,
-          whereArgs: [threadId]);
-      print(lastMsgDetails);
-      if (lastMsgDetails.isNotEmpty) {
-        msgContent = lastMsgDetails[0]['content'];
-        msgTime = lastMsgDetails[0]['created_at'];
-        lastMsgStatus = lastMsgDetails[0]['status'];
-        print(lastMsgDetails.isNotEmpty.toString());
+      if (msgContent.isNotEmpty) {
         var memberDetails = await db.query(TABLE_CONTACT,
             where: "$COLUMN_NUMBER LIKE ? AND $COLUMN_REG_STATUS = ?",
             whereArgs: ["%$subMemberPhone", 1],
             limit: 1);
-
         if (memberDetails.isNotEmpty) {
           displayName = memberDetails[0]['displayName'];
         } else {
