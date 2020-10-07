@@ -164,10 +164,10 @@ class DatabaseService {
     List chats = await db.rawQuery(
         '''SELECT * FROM (SELECT t.id, t.members, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
         FROM threads AS t
-        INNER JOIN messages AS msg ON t.id = msg.thread_id
+        JOIN messages AS msg ON t.id = msg.thread_id
         ORDER BY lastMsgTime ASC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
-    print(chats);
+    // print(chats);
     //   var threads = await db.query(TABLE_THREAD);
     //   print(threads);
 
@@ -201,7 +201,6 @@ class DatabaseService {
             lastMessage: msgContent,
             lastMsgTime: msgTime,
             lastMsgStatus: lastMsgStatus);
-
         allChat.add(chat);
       }
     }
@@ -210,13 +209,14 @@ class DatabaseService {
   }
 
   Future<List<Message>> getSingleChatMessageFromDb(String threadId) async {
+    print(threadId);
     final db = await database;
     List<Message> messages = List<Message>();
     var chats = await db.query(TABLE_MESSAGE,
         where: "$COLUMN_MSG_THREAD_ID = ?",
         orderBy: "$COLUMN_CREATED_AT DESC",
         whereArgs: [threadId]);
-    // print(chats);
+    print(chats);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));
     });
