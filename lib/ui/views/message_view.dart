@@ -173,6 +173,7 @@ class _MessagesViewState extends State<MessagesView> {
                                                       context, ChatViewRoute,
                                                       arguments: {
                                                     'chat': Chat(
+                                                        id: chat.id,
                                                         displayName:
                                                             chat.displayName,
                                                         memberPhone:

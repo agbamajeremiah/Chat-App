@@ -130,12 +130,16 @@ class DatabaseService {
     return allContacts;
   }
 
-  Future<String> getContactThread(String number) async {
+  Future<String> getContactThread(String phoneNumber) async {
+    String number = phoneNumber.startsWith("+")
+        ? phoneNumber.substring(4)
+        : phoneNumber.substring(1);
+    print(number);
     final db = await database;
     var trd = await db.query(TABLE_THREAD,
         columns: [COLUMN_THREAD_ID],
-        where: "$COLUMN_MEMBER = ?",
-        whereArgs: [number]);
+        where: "$COLUMN_MEMBER LIKE ?",
+        whereArgs: ["%$number"]);
     if (trd.length > 0) {
       return trd[0]['id'];
     } else {

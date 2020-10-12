@@ -52,7 +52,7 @@ class ChatViewModel extends BaseModel {
     print("Thread getter called");
     if (threadId == null) {
       String result = await DatabaseService.db.getContactThread(phoneNumber);
-      //print("thread id: " + result);
+      // print("thread id: " + result);
       if (result != null) {
         threadId = result;
       } else {
@@ -86,7 +86,6 @@ class ChatViewModel extends BaseModel {
     if (threadId != null) {
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-
       return messages;
     } else
       return [];
