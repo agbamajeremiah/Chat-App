@@ -279,6 +279,22 @@ class DatabaseService {
     ''', [1]);
   }
 
+  Future<void> updateReadMessages(String msgId, String status) async {
+    final db = await database;
+    await db.rawUpdate('''
+      UPDATE $TABLE_MESSAGE 
+      SET $COLUMN_STATUS = ?
+      WHERE $COLUMN_MESSAGE_ID = ?
+    ''', [status, msgId]);
+    print("message updated");
+    // await db.update(
+    //   TABLE_MESSAGE,
+    //   message.toMap(),
+    //   where: "$COLUMN_MESSAGE_ID = ?",
+    //   whereArgs: [msgId],
+    // );
+  }
+
   Future<void> updateResentMessages(Message message, String oldMsgId) async {
     final db = await database;
     await db.update(

@@ -29,6 +29,7 @@ class _ChatViewState extends State<ChatView> {
             phoneNumber: chat.memberPhone,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
+        disposeViewModel: false,
         builder: (context, model, snapshot) {
           print(model.busy.toString());
           final chatMessages = model.getChatMessages();

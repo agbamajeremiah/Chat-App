@@ -24,7 +24,7 @@ class _SplashViewState extends State<SplashView> {
         builder: (context, model, snapshot) {
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
-              systemNavigationBarColor: AppColors.splashBlue,
+              // systemNavigationBarColor: AppColors.splashBlue,
               statusBarColor: AppColors.splashBlue,
               statusBarIconBrightness: Brightness.light,
               statusBarBrightness: Brightness.dark,
