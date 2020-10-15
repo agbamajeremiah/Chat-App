@@ -37,14 +37,14 @@ class SocketServices {
       var newMessage = json.decode(socketMessage);
       Map message = newMessage['message'][0];
       print("Socket message inserted");
-      print(message);
+      // print(message);
       DatabaseService.db.insertNewMessage(Message.fromMap(message));
       rebuild();
     });
     socketIO.subscribe('mark as read', (dynamic socketMessage) {
       print("Socket Read Message:");
       var update = json.decode(socketMessage);
-      print(update);
+      // print(update);RE
       List updatedMesssages = update['message'];
       if (updatedMesssages.length > 0) {
         updatedMesssages.forEach((mes) async {
