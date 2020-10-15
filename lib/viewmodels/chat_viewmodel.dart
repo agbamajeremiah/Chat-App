@@ -236,16 +236,7 @@ class ChatViewModel extends BaseModel {
   }
 
   Future updateMarkedMessages() async {
-    // setBusy(true);
-    var res = await makeAsRead();
-    // print(res);
-    List updatedMesssages = res.data['messages'];
-    if (updatedMesssages.length > 0) {
-      updatedMesssages.forEach((mes) async {
-        await DatabaseService.db.updateReadMessages(mes['_id'], mes['status']);
-      });
-      // setBusy(false);
-    }
+    await makeAsRead();
   }
 
   Future makeAsRead() async {

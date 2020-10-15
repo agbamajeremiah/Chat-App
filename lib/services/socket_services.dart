@@ -30,6 +30,7 @@ class SocketServices {
       String threadId, String phoneNumber, Function rebuild) {
     socketIO.sendMessage('subscribe',
         json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
+    print(phoneNumber);
     print("subscribed to :" + threadId);
     socketIO.subscribe('new message', (dynamic socketMessage) {
       print("Socket Message:");
@@ -39,6 +40,18 @@ class SocketServices {
       print(message);
       DatabaseService.db.insertNewMessage(Message.fromMap(message));
       rebuild();
+    });
+    socketIO.subscribe('mark as read', (dynamic socketMessage) {
+      print("Socket Read Message:");
+      var update = json.decode(socketMessage);
+      print(update);
+      List updatedMesssages = update['message'];
+      if (updatedMesssages.length > 0) {
+        updatedMesssages.forEach((mes) async {
+          await DatabaseService.db
+              .updateReadMessages(mes['_id'], mes['status']);
+        });
+      }
     });
   }
 
