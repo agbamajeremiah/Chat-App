@@ -3,6 +3,7 @@ import 'package:MSG/ui/views/contacts.dart';
 import 'package:MSG/ui/views/login_view.dart';
 import 'package:MSG/ui/views/message_view.dart';
 import 'package:MSG/ui/views/otp.dart';
+import 'package:MSG/ui/views/profile_view.dart';
 import 'package:MSG/ui/views/settings.dart';
 import 'package:MSG/ui/views/splash_view.dart';
 import 'package:MSG/ui/views/update_profile.dart';
@@ -50,6 +51,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SettingScreen(),
+      );
+    case ProfileViewRoute:
+      return _getPageRoute(
+        routeName: settings.name,
+        viewToShow: ProfileView(),
       );
     case UpdateProfileRoute:
       return _getPageRoute(

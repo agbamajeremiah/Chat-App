@@ -12,7 +12,7 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
   void _switchMenuScreen(String option, BuildContext cxt) {
     switch (option) {
       case "profile":
-        print("Switch to Profile");
+        Navigator.pushNamed(context, ProfileViewRoute);
         break;
       case "settings":
         print("Switch to Settings");

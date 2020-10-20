@@ -7,3 +7,4 @@ const String ContactViewRoute = "ContactView";
 const String SettingsViewRoute = "SettingsView";
 const String UpdateProfileRoute = "UpdateProfileView";
 const String WelcomeViewRoute = "WelcomeView";
+const String ProfileViewRoute = "ProfileView";
