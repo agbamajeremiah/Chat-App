@@ -33,7 +33,7 @@ class UpdateProvfileViewModel extends BaseModel {
     try {
       await _authenticationSerivice.setNumber();
       await _messageService.getSyncChats();
-      await _contactService.syncContacts();
+      await _contactService.firstSyncContacts();
     } catch (e) {
       print(e.toString());
     }

@@ -10,12 +10,40 @@ import 'package:contacts_service/contacts_service.dart';
 
 class ContactServices {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  // Fetch Contacts
+  Future fetchContactFromDevice() async {
+    List<MyContact> allContacts = await getAllContactsFromDevice();
+    // print("All Contacts: " + allContacts.toString());
+    allContacts.forEach((con) async {
+      await DatabaseService.db.insertContact(con);
+    });
+  }
+
   //Start of contact synchronization
+  Future firstSyncContacts() async {
+    List<String> uploadContacts = List<String>();
+    List<MyContact> unSyncContacts =
+        await DatabaseService.db.getUnRegContactsFromDb();
+    unSyncContacts.forEach((contact) {
+      uploadContacts.add(contact.phoneNumber);
+    });
+    print(uploadContacts);
+    List<MyContact> regContacts = await getServerRegContacts(uploadContacts);
+    print("reg Contacts:");
+    print(regContacts);
+    regContacts.forEach((cont) async {
+      print(cont.toMap());
+      String phoneNumber =
+          cont.phoneNumber.substring(5, cont.phoneNumber.length);
+      await DatabaseService.db.updateRegContact(phoneNumber);
+    });
+  }
+  //Normal Contact synchronization
   Future syncContacts() async {
     //DatabaseService.db.deleteDb();
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await getAllContactsFromDevice();
-    // print("All Contacts: " + allContacts.toString());
+    print(allContacts);
     allContacts.forEach((con) async {
       //uploadContacts.add(con.phoneNumber);
       await DatabaseService.db.insertContact(con);
@@ -26,17 +54,14 @@ class ContactServices {
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
-    print(uploadContacts);
-    List<MyContact> regContacts = await getRegisteredContact(uploadContacts);
-    print("reg Contacts:");
-    print(regContacts);
+    List<MyContact> regContacts = await getServerRegContacts(uploadContacts);
     regContacts.forEach((cont) async {
-      print(cont.toMap());
       String phoneNumber =
           cont.phoneNumber.substring(5, cont.phoneNumber.length);
       await DatabaseService.db.updateRegContact(phoneNumber);
     });
   }
+
 
   //get contacts from device);
   Future<List<MyContact>> getAllContactsFromDevice() async {
@@ -78,7 +103,7 @@ class ContactServices {
   }
 
   //Sync User contacts from server
-  Future<List<MyContact>> getRegisteredContact(List uploadContacts) async {
+  Future<List<MyContact>> getServerRegContacts(List uploadContacts) async {
     List<MyContact> regContacts = [];
     dynamic response = await sendContacts(uploadContacts);
     //print(response);

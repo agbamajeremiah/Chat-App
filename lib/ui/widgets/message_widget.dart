@@ -3,6 +3,7 @@ import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 
 class MessageContainer extends StatelessWidget {
   final String searchquery;
@@ -58,87 +59,96 @@ class MessageContainer extends StatelessWidget {
           ),
           horizontalSpaceSmall,
           Expanded(
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5),
               child: searchquery.isEmpty
-                  ? Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "$name",
-                                  style: textStyle.copyWith(
-                                      color: isNotRead
-                                          ? AppColors.unreadText
-                                          : AppColors.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "$name",
+                                style: textStyle.copyWith(
+                                    color: isNotRead
+                                        ? AppColors.unreadText
+                                        : AppColors.textColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                            ],
                           ),
-                          RichText(
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            maxLines: 1,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "$lastMessage",
-                                  style: textStyle.copyWith(
-                                      color: AppColors.textColor2,
-                                      fontSize: 12.5,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
+                        ),
+                        RichText(
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          maxLines: 1,
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "$lastMessage",
+                                style: textStyle.copyWith(
+                                    color: AppColors.textColor2,
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     )
-                  : Container(
-                      padding: EdgeInsets.symmetric(vertical: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "$name",
-                                  style: textStyle.copyWith(
-                                      color: isNotRead
-                                          ? AppColors.unreadText
-                                          : AppColors.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DynamicTextHighlighting(
+                          text: name,
+                          highlights: [searchquery],
+                          caseSensitive: false,
+                          style: textStyle.copyWith(
+                              color: isNotRead
+                                  ? AppColors.unreadText
+                                  : AppColors.textColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        // RichText(
+                        //   text: TextSpan(
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text: "$name",
+                        //         style: textStyle.copyWith(
+                        //             color: isNotRead
+                        //                 ? AppColors.unreadText
+                        //                 : AppColors.textColor,
+                        //             fontSize: 16,
+                        //             fontWeight: FontWeight.w300),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        RichText(
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
+                          maxLines: 1,
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "$lastMessage",
+                                style: textStyle.copyWith(
+                                    color: AppColors.textColor2,
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                            ],
                           ),
-                          RichText(
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            maxLines: 1,
-                            text: TextSpan(
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "$lastMessage",
-                                  style: textStyle.copyWith(
-                                      color: AppColors.textColor2,
-                                      fontSize: 12.5,
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
           horizontalSpaceTiny,
           Container(
             padding: EdgeInsets.symmetric(vertical: 5.0),

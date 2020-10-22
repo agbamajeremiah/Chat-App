@@ -12,9 +12,8 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   // TextEditingController editNameController = TextEditingController();
-  String newAccountName = "";
 
-  void _showProfileBottonSheet(context) {
+  void _showProfileBottonSheet(BuildContext context, var model) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -41,15 +40,16 @@ class _ProfileViewState extends State<ProfileView> {
                         autofocus: true,
                         style: textStyle.copyWith(
                             color: AppColors.textColor, fontSize: 17),
-                        initialValue: "Jerry Agbama",
+                        initialValue: model.accountName,
                         decoration: InputDecoration(
                           isDense: true,
                           contentPadding: EdgeInsets.only(left: 5, bottom: 2),
                         ),
                         onChanged: (value) {
                           // print(value);
-                          setState(() => newAccountName = value);
-                          print(newAccountName);
+                          model.newAccountName = value;
+
+                          print(model.newAccountName);
                         }
                         // autofocus: true,,
                         ),
@@ -78,8 +78,17 @@ class _ProfileViewState extends State<ProfileView> {
                       Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: FlatButton(
-                            onPressed: () {
-                              print(newAccountName);
+                            onPressed: () async {
+                              if (model.newAccountName == "") {
+                                Navigator.of(context).pop();
+                              } else {
+                                await model
+                                    .updateProfileName(
+                                        name: model.newAccountName)
+                                    .then((value) {
+                                  Navigator.of(context).pop();
+                                });
+                              }
                             },
                             child: Text(
                               "Save".toUpperCase(),
@@ -132,7 +141,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: Align(
                             alignment: Alignment.center,
                             child: Text(
-                              'Jerry Agbama',
+                              model.accountName,
                               style: textStyle.copyWith(
                                 fontSize: 25,
                                 color: Colors.white,
@@ -207,7 +216,7 @@ class _ProfileViewState extends State<ProfileView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Jerry Akem',
+                              model.accountName,
                               style: textStyle.copyWith(
                                 fontSize: 20,
                                 color: AppColors.textColor,
@@ -220,7 +229,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   color: AppColors.textColor2,
                                 ),
                                 onPressed: () {
-                                  _showProfileBottonSheet(context);
+                                  _showProfileBottonSheet(context, model);
                                 })
                           ],
                         ),
@@ -245,7 +254,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ],
                         ),
                         child: Text(
-                          '+2348063753133',
+                          model.userNumber,
                           style: textStyle.copyWith(
                             fontSize: 20,
                             color: AppColors.textColor,
