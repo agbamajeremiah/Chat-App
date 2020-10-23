@@ -5,6 +5,7 @@ class Chat {
   final String lastMessage;
   final String lastMsgTime;
   final String lastMsgStatus;
+  final int unreadMsgCount;
 
   Chat(
       {this.id,
@@ -12,7 +13,8 @@ class Chat {
       this.displayName,
       this.lastMessage,
       this.lastMsgTime,
-      this.lastMsgStatus});
+      this.lastMsgStatus,
+      this.unreadMsgCount});
   factory Chat.fromMap(Map<String, dynamic> map) => Chat(
         id: map['id'],
         displayName:

@@ -8,9 +8,8 @@ import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 class MessageContainer extends StatelessWidget {
   final String searchquery;
   final String name;
-  final bool isNotRead;
   final String lastMessage;
-  static int unreadMessages = 1;
+  final int unreadMessages;
   final String msgTime;
 
   const MessageContainer({
@@ -18,7 +17,7 @@ class MessageContainer extends StatelessWidget {
     @required this.name,
     @required this.msgTime,
     @required this.searchquery,
-    this.isNotRead = false,
+    @required this.unreadMessages,
   });
 
   static final List colors = [
@@ -37,6 +36,8 @@ class MessageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int index = getColorMatch(name != null ? name[0] : '');
+    bool isNotRead = unreadMessages > 0 ? true : false;
+    // final isNotRead = true;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: Row(

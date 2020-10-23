@@ -38,6 +38,7 @@ class ContactServices {
       await DatabaseService.db.updateRegContact(phoneNumber);
     });
   }
+
   //Normal Contact synchronization
   Future syncContacts() async {
     //DatabaseService.db.deleteDb();
@@ -61,7 +62,6 @@ class ContactServices {
       await DatabaseService.db.updateRegContact(phoneNumber);
     });
   }
-
 
   //get contacts from device);
   Future<List<MyContact>> getAllContactsFromDevice() async {

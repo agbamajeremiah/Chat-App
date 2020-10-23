@@ -185,13 +185,13 @@ class _MessagesViewState extends State<MessagesView> {
                                               setState(() => rebuild = refresh);
                                             },
                                             child: MessageContainer(
-                                              searchquery: "",
-                                              name: chat.displayName ??
-                                                  chat.memberPhone,
-                                              lastMessage: chat.lastMessage,
-                                              msgTime: chat.lastMsgTime,
-                                              isNotRead: false,
-                                            ),
+                                                searchquery: "",
+                                                name: chat.displayName ??
+                                                    chat.memberPhone,
+                                                lastMessage: chat.lastMessage,
+                                                msgTime: chat.lastMsgTime,
+                                                unreadMessages:
+                                                    chat.unreadMsgCount),
                                           );
                                         },
                                         separatorBuilder:
@@ -234,7 +234,8 @@ class _MessagesViewState extends State<MessagesView> {
                                                       chat.memberPhone,
                                                   lastMessage: chat.lastMessage,
                                                   msgTime: chat.lastMsgTime,
-                                                  isNotRead: false,
+                                                  unreadMessages:
+                                                      chat.unreadMsgCount,
                                                 ),
                                               );
                                             },

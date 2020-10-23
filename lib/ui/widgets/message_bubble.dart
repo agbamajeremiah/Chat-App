@@ -82,7 +82,7 @@ class MessageBubble extends StatelessWidget {
                   ),
                 ),
                 Material(
-                  elevation: 2,
+                  elevation: 0.0,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(15),
                     bottomLeft: Radius.circular(15),
@@ -129,7 +129,7 @@ class MessageBubble extends StatelessWidget {
                   ),
                 ),
                 Material(
-                  elevation: 2,
+                  elevation: 1.0,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),

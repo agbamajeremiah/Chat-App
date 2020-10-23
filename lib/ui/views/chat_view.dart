@@ -3,6 +3,7 @@ import 'package:MSG/models/messages.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/widgets/message_bubble.dart';
+import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -54,32 +55,7 @@ class _ChatViewState extends State<ChatView> {
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: PopupMenuButton<String>(
-                      onSelected: (value) {
-                        print(value);
-                      },
-                      child: Center(
-                          child: Icon(
-                        Icons.more_vert,
-                        size: 25,
-                        color: AppColors.textColor,
-                      )),
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<String>>[
-                        PopupMenuItem<String>(
-                          value: 'Value1',
-                          child: Text('Profile'),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'Value2',
-                          child: Text('Settings'),
-                        ),
-                        PopupMenuItem<String>(
-                          value: 'Value3',
-                          child: Text('Help'),
-                        ),
-                      ],
-                    ),
+                    child: MyPopupMenu(),
                   )
                 ],
               ),

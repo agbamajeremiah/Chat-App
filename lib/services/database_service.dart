@@ -162,7 +162,7 @@ class DatabaseService {
     return singleContact;
   }
 
-  Future<List<Chat>> getAllChatsFromDb() async {
+  Future<List<Chat>> getAllChatsFromDb(String userNumber) async {
     List<Chat> allChat = [];
     final db = await database;
     List chats = await db.rawQuery(
@@ -198,13 +198,19 @@ class DatabaseService {
         } else {
           displayName = memberPhone;
         }
+        var result = await db.rawQuery(
+            "SELECT COUNT (*) FROM $TABLE_MESSAGE WHERE thread_id = ? AND sender != ? AND status != ?",
+            [threadId, userNumber, "READ"]);
+        final unreadMsgCount = Sqflite.firstIntValue(result);
+        print(unreadMsgCount);
         Chat chat = Chat(
             displayName: displayName,
             id: threadId,
             memberPhone: memberPhone,
             lastMessage: msgContent,
             lastMsgTime: msgTime,
-            lastMsgStatus: lastMsgStatus);
+            lastMsgStatus: lastMsgStatus,
+            unreadMsgCount: unreadMsgCount);
         allChat.add(chat);
       }
     }

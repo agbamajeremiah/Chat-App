@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
+import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/connectivity.dart';
@@ -14,6 +15,11 @@ class MessageViewModel extends BaseModel {
   void rebuildScreen() {
     setBusy(true);
   }
+
+  final AuthenticationSerivice _authenticationSerivice =
+      locator<AuthenticationSerivice>();
+  // String get profileName;
+  String get userNumber => _authenticationSerivice.userNumber;
 
   void initialise() async {
     final internetStatus = await checkInternetConnection();
@@ -35,7 +41,8 @@ class MessageViewModel extends BaseModel {
 
   //Get saved chat/tread from db
   Future<List<Chat>> getAllChats() async {
-    List<Chat> activeChat = await DatabaseService.db.getAllChatsFromDb();
+    List<Chat> activeChat = await DatabaseService.db
+        .getAllChatsFromDb(_authenticationSerivice.userNumber);
     return activeChat;
   }
 

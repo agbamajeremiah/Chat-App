@@ -19,14 +19,6 @@ class _OtpViewState extends State<OtpView> {
   bool otpFailed = false;
   bool verifying = false;
 
-  void _onKeyboardTap(String value) {
-    if (text.length < 4) {
-      setState(() {
-        text = text + value;
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -56,6 +48,36 @@ class _OtpViewState extends State<OtpView> {
     return ViewModelBuilder<OTPViewModel>.reactive(
         viewModelBuilder: () => OTPViewModel(),
         builder: (context, model, child) {
+          void _onKeyboardTap(String value) async {
+            if (text.length < 4) {
+              setState(() {
+                text = text + value;
+              });
+            }
+            print(text.length);
+            if (text.length == 4) {
+              setState(() {
+                otpFailed = false;
+                verifying = true;
+              });
+              await model.verify(code: text).then((value) {
+                if (value != null) {
+                  setState(() {
+                    otpFailed = true;
+                  });
+                }
+                setState(() {
+                  verifying = false;
+                });
+              });
+            } else {
+              //Otp text not 4 digits
+              setState(() {
+                otpFailed = true;
+              });
+            }
+          }
+
           return SafeArea(
             child: Scaffold(
               backgroundColor: Colors.white,
