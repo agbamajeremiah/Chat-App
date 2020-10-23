@@ -32,6 +32,7 @@ class UpdateProvfileViewModel extends BaseModel {
   Future synFirstTime() async {
     try {
       await _authenticationSerivice.setNumber();
+      await _authenticationSerivice.setNewName();
       await _messageService.getSyncChats();
       await _contactService.firstSyncContacts();
     } catch (e) {
