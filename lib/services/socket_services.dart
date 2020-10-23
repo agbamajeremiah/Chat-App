@@ -37,7 +37,7 @@ class SocketServices {
       var newMessage = json.decode(socketMessage);
       Map message = newMessage['message'][0];
       print("Socket message inserted");
-      print(message);
+      // print(message);
       DatabaseService.db.insertNewMessage(Message.fromMap(message));
       rebuild();
     });
