@@ -105,6 +105,7 @@ class MessageContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         DynamicTextHighlighting(
+                          color: AppColors.primaryColor,
                           text: name,
                           highlights: [searchquery],
                           caseSensitive: false,
@@ -129,8 +130,9 @@ class MessageContainer extends StatelessWidget {
                         //       ),
                         //     ],
                         //   ),
-                        // ),
+                        // ),,
                         DynamicTextHighlighting(
+                          color: AppColors.primaryColor,
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
                           maxLines: 1,
