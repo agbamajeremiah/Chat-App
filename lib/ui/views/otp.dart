@@ -70,11 +70,6 @@ class _OtpViewState extends State<OtpView> {
                   verifying = false;
                 });
               });
-            } else {
-              //Otp text not 4 digits
-              setState(() {
-                otpFailed = true;
-              });
             }
           }
 
