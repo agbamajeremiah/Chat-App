@@ -138,9 +138,10 @@ class ChatViewModel extends BaseModel {
     setBusy(true);
     Message newMessage;
     final now = DateTime.now();
+    final String messageId = "dmdmmdmmddmdmmd";
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true && _socketService.socketIO != null) {
-      var response = await sendMsg(threadId, message, isQuote, "");
+      var response = await sendMsg(messageId, message, isQuote, "");
       if (response.statusCode == 200) {
         print("message sent");
       } else {
@@ -173,11 +174,12 @@ class ChatViewModel extends BaseModel {
   }
 
   Future sendMsg(
-      String receiver, String message, bool isQuote, String replyTo) async {
+      String messageId, String message, bool isQuote, String replyTo) async {
     final _userToken = _authService.token;
     try {
       Map<String, dynamic> body = {
         "content": message,
+        "messageId": messageId,
         "threadID": threadId,
         "isQuote": isQuote,
         "msgRepliedTo": replyTo,
