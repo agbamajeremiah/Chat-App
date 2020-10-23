@@ -130,21 +130,17 @@ class MessageContainer extends StatelessWidget {
                         //     ],
                         //   ),
                         // ),
-                        RichText(
+                        DynamicTextHighlighting(
                           overflow: TextOverflow.ellipsis,
                           softWrap: true,
                           maxLines: 1,
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "$lastMessage",
-                                style: textStyle.copyWith(
-                                    color: AppColors.textColor2,
-                                    fontSize: 12.5,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                            ],
-                          ),
+                          text: lastMessage,
+                          highlights: [searchquery],
+                          caseSensitive: false,
+                          style: textStyle.copyWith(
+                              color: AppColors.textColor2,
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w300),
                         ),
                       ],
                     ),
