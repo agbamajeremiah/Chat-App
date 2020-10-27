@@ -37,7 +37,7 @@ class SocketServices {
       var newMessage = json.decode(socketMessage);
       Map message = newMessage['message'][0];
       print("Socket message inserted");
-      // print(message);
+      print(message);
       DatabaseService.db.insertNewMessage(Message.fromMap(message));
       rebuild();
     });
@@ -49,7 +49,7 @@ class SocketServices {
       if (updatedMesssages.length > 0) {
         updatedMesssages.forEach((mes) async {
           await DatabaseService.db
-              .updateReadMessages(mes['_id'], mes['status']);
+              .updateReadMessages(mes['messageId'], mes['status']);
         });
       }
     });

@@ -1,9 +1,9 @@
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
+import 'package:MSG/ui/widgets/search_text.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 
 class MessageContainer extends StatelessWidget {
   final String searchquery;
@@ -92,7 +92,7 @@ class MessageContainer extends StatelessWidget {
                                 text: "$lastMessage",
                                 style: textStyle.copyWith(
                                     color: AppColors.textColor2,
-                                    fontSize: 12.5,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.w300),
                               ),
                             ],
@@ -104,11 +104,10 @@ class MessageContainer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        DynamicTextHighlighting(
-                          color: AppColors.primaryColor,
+                        HighlightedSearchText(
                           text: name,
                           highlights: [searchquery],
-                          caseSensitive: false,
+                          highlightColor: AppColors.primaryColor,
                           style: textStyle.copyWith(
                               color: isNotRead
                                   ? AppColors.unreadText
@@ -116,32 +115,15 @@ class MessageContainer extends StatelessWidget {
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                         ),
-                        // RichText(
-                        //   text: TextSpan(
-                        //     children: <TextSpan>[
-                        //       TextSpan(
-                        //         text: "$name",
-                        //         style: textStyle.copyWith(
-                        //             color: isNotRead
-                        //                 ? AppColors.unreadText
-                        //                 : AppColors.textColor,
-                        //             fontSize: 16,
-                        //             fontWeight: FontWeight.w300),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),,
-                        DynamicTextHighlighting(
-                          color: AppColors.primaryColor,
+                        HighlightedSearchText(
                           overflow: TextOverflow.ellipsis,
-                          softWrap: true,
                           maxLines: 1,
                           text: lastMessage,
                           highlights: [searchquery],
-                          caseSensitive: false,
+                          highlightColor: AppColors.primaryColor,
                           style: textStyle.copyWith(
                               color: AppColors.textColor2,
-                              fontSize: 12.5,
+                              fontSize: 13,
                               fontWeight: FontWeight.w300),
                         ),
                       ],

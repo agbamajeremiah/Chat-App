@@ -135,12 +135,20 @@ class _ChatViewState extends State<ChatView> {
                                       messageTextController.text;
                                   String receiver = chat.memberPhone;
                                   if (messageText.length > 0) {
-                                    await model.sendMessage(
-                                        message: messageText,
-                                        receiver: receiver,
-                                        isQuote: false);
+                                    await model
+                                        .saveNewMessage(
+                                            message: messageText,
+                                            receiver: receiver,
+                                            isQuote: false)
+                                        .then((messageId) async {
+                                      messageTextController.clear();
+                                      await model.sendNewMessage(
+                                          messageId: messageId,
+                                          message: messageText,
+                                          receiver: receiver,
+                                          isQuote: false);
+                                    });
                                   }
-                                  messageTextController.clear();
                                   setState(() => typingMessage = false);
                                 },
                                 child: Icon(

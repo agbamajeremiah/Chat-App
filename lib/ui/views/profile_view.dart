@@ -115,31 +115,31 @@ class _ProfileViewState extends State<ProfileView> {
             backgroundColor: Colors.white,
             appBar: AppBar(
               iconTheme: IconThemeData(
-                color: AppColors.textColor,
+                color: Colors.white,
               ),
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.primaryColor,
               title: Text(
                 "My Profile",
-                style: textStyle.copyWith(
-                    color: AppColors.textColor, fontSize: 20),
+                style: textStyle.copyWith(color: Colors.white, fontSize: 20),
               ),
-              elevation: 4.0,
+              elevation: 0.0,
             ),
             body: Column(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.23,
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
                       Container(
                         margin: EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(color: AppColors.profileBlue),
+                        decoration:
+                            BoxDecoration(color: AppColors.primaryColor),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 45.0),
+                        padding: const EdgeInsets.only(bottom: 45.0, top: 20.0),
                         child: Align(
-                            alignment: Alignment.center,
+                            alignment: Alignment.topCenter,
                             child: Text(
                               model.accountName,
                               style: textStyle.copyWith(
@@ -202,15 +202,15 @@ class _ProfileViewState extends State<ProfileView> {
                           color: Colors.white,
                           // shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset:
-                                  Offset(0, 0), // changes position of shadow
-                            ),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.grey.withOpacity(0.5),
+                          //     spreadRadius: 1,
+                          //     blurRadius: 1,
+                          //     offset:
+                          //         Offset(0, 0), // changes position of shadow
+                          //   ),
+                          // ],
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,15 +243,15 @@ class _ProfileViewState extends State<ProfileView> {
                           color: Colors.white,
                           // shape: BoxShape.rectangle,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              offset:
-                                  Offset(0, 0), // changes position of shadow
-                            ),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.grey.withOpacity(0.5),
+                          //     spreadRadius: 1,
+                          //     blurRadius: 1,
+                          //     offset:
+                          //         Offset(0, 0), // changes position of shadow
+                          //   ),
+                          // ],
                         ),
                         child: Text(
                           model.userNumber,

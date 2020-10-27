@@ -24,7 +24,7 @@ class Message {
   factory Message.fromMap(Map<String, dynamic> json) => Message(
         isQuote: json["isQuote"].toString(),
         createdAt: convertToLocalTime(json["createdAt"]),
-        id: json["_id"],
+        id: json["messageId"],
         sender: json["sender"],
         content: json["content"],
         status: json["status"],

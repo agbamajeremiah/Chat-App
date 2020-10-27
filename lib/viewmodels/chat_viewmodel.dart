@@ -7,6 +7,7 @@ import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/api.dart';
 import 'package:MSG/utils/connectivity.dart';
+import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -131,46 +132,41 @@ class ChatViewModel extends BaseModel {
   }
 
   //send new new nessage
-  Future sendMessage(
+  Future saveNewMessage(
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
     setBusy(true);
-    Message newMessage;
     final now = DateTime.now();
-    final String messageId = "dmdmmdmmddmdmmd";
+    final String messageId = generateMessageId();
+    Message newMessage = Message(
+      id: messageId,
+      content: message,
+      sender: userNumber,
+      threadId: threadId,
+      createdAt: now.toIso8601String(),
+      status: "PENDING",
+      isQuote: isQuote.toString(),
+    );
+    await DatabaseService.db.insertNewMessage(newMessage);
+    setBusy(false);
+    return messageId;
+  }
+
+  Future sendNewMessage(
+      {@required messageId,
+      @required String message,
+      @required String receiver,
+      @required bool isQuote}) async {
+    setBusy(true);
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true && _socketService.socketIO != null) {
       var response = await sendMsg(messageId, message, isQuote, "");
       if (response.statusCode == 200) {
-        print("message sent");
-      } else {
-        newMessage = Message(
-          id: now.toString(),
-          content: message,
-          sender: userNumber,
-          threadId: threadId,
-          createdAt: now.toIso8601String(),
-          status: "PENDING",
-          isQuote: isQuote.toString(),
-        );
-        await DatabaseService.db.insertNewMessage(newMessage);
-        setBusy(false);
+        //  update sent message
       }
-    } else {
-      newMessage = Message(
-        id: now.toString(),
-        content: message,
-        sender: userNumber,
-        threadId: threadId,
-        createdAt: now.toIso8601String(),
-        status: "PENDING",
-        isQuote: isQuote.toString(),
-      );
-      await DatabaseService.db.insertNewMessage(newMessage);
-      setBusy(false);
     }
-    // setBusy(false);
+    setBusy(false);
   }
 
   Future sendMsg(

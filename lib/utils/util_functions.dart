@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:intl/intl.dart';
 
 String convertToTime(String stringTime) {
@@ -95,4 +96,14 @@ String convertToLocalTime(String jsonTime) {
   var newTime = msgTime.toLocal().toIso8601String();
   // print("new time: " + newTime);
   return newTime;
+}
+
+String generateMessageId() {
+  int length = 25;
+  var r = Random();
+  const prefix = '5d';
+  const _chars =
+      '1234567890AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+  return prefix +
+      List.generate(length, (index) => _chars[r.nextInt(_chars.length)]).join();
 }
