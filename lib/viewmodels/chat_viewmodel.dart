@@ -116,7 +116,7 @@ class ChatViewModel extends BaseModel {
           //     threadId: mes.threadId);
           // //update mesage record
           // DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
-          notifyListeners();
+          // notifyListeners();
         }
       });
     }
@@ -126,8 +126,8 @@ class ChatViewModel extends BaseModel {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
       await updateMarkedMessages();
-      // await makeAsRead();
-      // await resendPendingMessages();
+      await makeAsRead();
+      await resendPendingMessages();
     }
   }
 
@@ -163,7 +163,8 @@ class ChatViewModel extends BaseModel {
     if (internetStatus == true && _socketService.socketIO != null) {
       var response = await sendMsg(messageId, message, isQuote, "");
       if (response.statusCode == 200) {
-        //  update sent message
+        //  update sent messag
+        print(response.data['messageID']);
       }
     }
     setBusy(false);
