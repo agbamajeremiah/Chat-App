@@ -104,19 +104,7 @@ class ChatViewModel extends BaseModel {
         var response =
             await sendMsg(threadId, mes.content, mes.isQuote != "false", "");
         if (response.statusCode == 200) {
-          // print(response);
-          // // print(response.data['messageID']);
-          // Message updatedMessage = Message(
-          //     isQuote: mes.isQuote,
-          //     createdAt: mes.createdAt,
-          //     id: response.data['messageID'],
-          //     sender: mes.sender,
-          //     content: mes.content,
-          //     status: "SENT",
-          //     threadId: mes.threadId);
-          // //update mesage record
-          // DatabaseService.db.updateResentMessages(updatedMessage, mes.id);
-          // notifyListeners();
+          print("Sent message successfully");
         }
       });
     }

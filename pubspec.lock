@@ -113,13 +113,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.9"
-  dynamic_text_highlighting:
-    dependency: "direct main"
-    description:
-      name: dynamic_text_highlighting
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.0"
   fake_async:
     dependency: transitive
     description:
@@ -227,7 +220,7 @@ packages:
     source: hosted
     version: "1.0.0"
   observable_ish:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: observable_ish
       url: "https://pub.dartlang.org"
@@ -311,12 +304,12 @@ packages:
     source: hosted
     version: "3.0.13"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.2+2"
   quiver:
     dependency: transitive
     description:

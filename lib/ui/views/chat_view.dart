@@ -22,6 +22,7 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     Chat chat = widget.argument['chat'];
     bool fromContact = widget.argument['fromContact'];
     return ViewModelBuilder<ChatViewModel>.reactive(
@@ -30,7 +31,7 @@ class _ChatViewState extends State<ChatView> {
             phoneNumber: chat.memberPhone,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
-        disposeViewModel: false,
+        disposeViewModel: true,
         builder: (context, model, snapshot) {
           print(model.busy.toString());
           final chatMessages = model.getChatMessages();
@@ -38,19 +39,17 @@ class _ChatViewState extends State<ChatView> {
           return SafeArea(
             child: Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 2.0,
                 leading: IconButton(
                   icon: Icon(
                     Icons.arrow_back,
-                    color: AppColors.textColor,
                   ),
                   onPressed: () => Navigator.pop(context, true),
                 ),
                 title: Text(
                   chat.displayName ?? chat.memberPhone,
-                  style: textStyle.copyWith(
-                      fontSize: 20.5, color: AppColors.textColor),
+                  style: themeData.textTheme.headline6.copyWith(
+                    fontSize: 22.5,
+                  ),
                 ),
                 actions: [
                   Padding(
@@ -110,7 +109,12 @@ class _ChatViewState extends State<ChatView> {
                           }
                         }),
                     Container(
-                      decoration: kMessageContainerDecoration,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                              color: themeData.primaryColor, width: 1.0),
+                        ),
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,6 +124,9 @@ class _ChatViewState extends State<ChatView> {
                               maxLines: 3,
                               minLines: 1,
                               controller: messageTextController,
+                              style: themeData.textTheme.bodyText1.copyWith(
+                                fontSize: 18.0,
+                              ),
                               decoration: kMessageTextFieldDecoration,
                               onTap: () {
                                 setState(() => typingMessage = true);
@@ -151,10 +158,9 @@ class _ChatViewState extends State<ChatView> {
                                   }
                                   setState(() => typingMessage = false);
                                 },
-                                child: Icon(
-                                  Icons.send,
-                                  size: 20,
-                                )),
+                                child: Icon(Icons.send,
+                                    size: 20,
+                                    color: themeData.iconTheme.color)),
                           ),
                         ],
                       ),

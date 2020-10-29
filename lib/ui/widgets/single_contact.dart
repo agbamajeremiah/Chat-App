@@ -1,8 +1,6 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/chat.dart';
-
 import 'package:MSG/ui/shared/app_colors.dart';
-import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +20,7 @@ class SingleContact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
       child: InkWell(
@@ -47,54 +46,44 @@ class SingleContact extends StatelessWidget {
               backgroundColor: Colors.grey,
               child: Icon(
                 Icons.person,
-                color: Colors.white,
+                color: AppColors.darkTextColor,
               ),
             ),
             horizontalSpaceSmall,
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  searching
-                      ? RichText(
-                          text: TextSpan(
-                            style: textStyle.copyWith(
-                                fontSize: 16, fontWeight: FontWeight.normal),
-                            children: <TextSpan>[
-                              TextSpan(
-                                  text: name.substring(0, matchString.length),
-                                  style:
-                                      TextStyle(color: AppColors.unreadText)),
-                              TextSpan(
-                                  text: name.substring(matchString.length),
-                                  style: TextStyle(color: AppColors.textColor)),
-                            ],
-                          ),
-                        )
-                      : RichText(
-                          text: TextSpan(
-                            text: name,
-                            style: textStyle.copyWith(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 3.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    searching
+                        ? RichText(
+                            text: TextSpan(
+                              style: themeData.textTheme.bodyText1.copyWith(
                                 fontSize: 16,
-                                fontWeight: FontWeight.normal,
-                                color: AppColors.textColor),
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: name.substring(0, matchString.length),
+                                    style: themeData.textTheme.headline1),
+                                TextSpan(
+                                    text: name.substring(matchString.length),
+                                    style: themeData.textTheme.bodyText1),
+                              ],
+                            ),
+                          )
+                        : RichText(
+                            text: TextSpan(
+                                text: name,
+                                style: themeData.textTheme.bodyText1),
                           ),
-                        ),
-                  // : Text(
-                  //     name,
-                  //     style: textStyle.copyWith(
-                  //         color: AppColors.textColor,
-                  //         fontSize: 16,
-                  //         fontWeight: FontWeight.bold),
-                  //   ),
-                  Text(
-                    number,
-                    style: textStyle.copyWith(
-                        color: AppColors.textColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
+                    Text(
+                      number,
+                      style: themeData.textTheme.bodyText1
+                          .copyWith(fontSize: 13, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
               ),
             )
           ],

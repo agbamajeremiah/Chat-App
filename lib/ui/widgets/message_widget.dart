@@ -1,9 +1,11 @@
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
+import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/ui/widgets/search_text.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessageContainer extends StatelessWidget {
   final String searchquery;
@@ -32,32 +34,49 @@ class MessageContainer extends StatelessWidget {
     Colors.pinkAccent,
     Colors.purple,
   ];
+  static final List darkColors = [
+    Colors.grey[900],
+    Colors.grey[600],
+    Colors.grey[700],
+    Colors.grey[800],
+    Colors.grey[900],
+    Colors.grey[900],
+    Colors.grey[600],
+    Colors.grey[700],
+    Colors.grey[800],
+    Colors.grey[900],
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     int index = getColorMatch(name != null ? name[0] : '');
     bool isNotRead = unreadMessages > 0 ? true : false;
     // final isNotRead = true;
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 22,
-            backgroundColor: colors[index],
-            child: Center(
-              child: Text(
-                name != null
-                    ? name[0] == "+" || name[0] == '0' ? '0' : name[0]
-                    : '0',
-                style: textStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          Consumer<ThemeNotifier>(builder: (context, notifier, child) {
+            return CircleAvatar(
+              radius: 22,
+              backgroundColor: notifier.darkTheme == true
+                  ? darkColors[index]
+                  : colors[index],
+              child: Center(
+                child: Text(
+                  name != null
+                      ? name[0] == "+" || name[0] == '0' ? '0' : name[0]
+                      : '0',
+                  style: themeData.textTheme.subtitle1.copyWith(
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          }),
           horizontalSpaceSmall,
           Expanded(
             child: Container(
@@ -72,10 +91,10 @@ class MessageContainer extends StatelessWidget {
                             children: <TextSpan>[
                               TextSpan(
                                 text: "$name",
-                                style: textStyle.copyWith(
+                                style: themeData.textTheme.bodyText1.copyWith(
                                     color: isNotRead
                                         ? AppColors.unreadText
-                                        : AppColors.textColor,
+                                        : themeData.textTheme.bodyText1.color,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w300),
                               ),
@@ -89,12 +108,10 @@ class MessageContainer extends StatelessWidget {
                           text: TextSpan(
                             children: <TextSpan>[
                               TextSpan(
-                                text: "$lastMessage",
-                                style: textStyle.copyWith(
-                                    color: AppColors.textColor2,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w300),
-                              ),
+                                  text: "$lastMessage",
+                                  style: themeData.textTheme.bodyText1.copyWith(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w300)),
                             ],
                           ),
                         ),
@@ -108,24 +125,21 @@ class MessageContainer extends StatelessWidget {
                           text: name,
                           highlights: [searchquery],
                           highlightColor: AppColors.primaryColor,
-                          style: textStyle.copyWith(
+                          style: themeData.textTheme.bodyText1.copyWith(
                               color: isNotRead
                                   ? AppColors.unreadText
-                                  : AppColors.textColor,
+                                  : themeData.textTheme.bodyText1.color,
                               fontSize: 16,
                               fontWeight: FontWeight.w300),
                         ),
                         HighlightedSearchText(
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          text: lastMessage,
-                          highlights: [searchquery],
-                          highlightColor: AppColors.primaryColor,
-                          style: textStyle.copyWith(
-                              color: AppColors.textColor2,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w300),
-                        ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: lastMessage,
+                            highlights: [searchquery],
+                            highlightColor: AppColors.primaryColor,
+                            style: themeData.textTheme.bodyText1.copyWith(
+                                fontSize: 13.5, fontWeight: FontWeight.w300)),
                       ],
                     ),
             ),

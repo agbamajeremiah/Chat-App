@@ -66,7 +66,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                           child: Text(
                             "Enter your profile name to continue",
                             style: textStyle.copyWith(
-                                color: AppColors.textColor3,
+                                color: AppColors.textColor2,
                                 fontSize: 17,
                                 fontWeight: FontWeight.w400),
                           ),

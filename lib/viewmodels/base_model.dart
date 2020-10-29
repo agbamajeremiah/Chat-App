@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 
-class BaseModel extends ChangeNotifier {
+class BaseModel with ChangeNotifier {
   bool _busy = false;
   bool get busy => _busy;
 

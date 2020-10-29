@@ -1,7 +1,6 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
-import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -37,6 +36,7 @@ class _AllContactsState extends State<AllContacts>
   // void _refreshContacts() {}
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return ViewModelBuilder<ContactViewModel>.reactive(
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
@@ -46,7 +46,6 @@ class _AllContactsState extends State<AllContacts>
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
-                  color: Colors.white,
                   child: Center(
                       child: CircularProgressIndicator(
                     strokeWidth: 3.0,
@@ -76,13 +75,8 @@ class _AllContactsState extends State<AllContacts>
                 //print(regContacts);
                 return SafeArea(
                   child: Scaffold(
-                    backgroundColor: Colors.white,
                     appBar: (_isSearching)
                         ? AppBar(
-                            iconTheme: IconThemeData(
-                              color: AppColors.textColor,
-                            ),
-                            backgroundColor: Colors.white,
                             leading: IconButton(
                                 onPressed: () {
                                   _searchTextCon.clear();
@@ -101,9 +95,8 @@ class _AllContactsState extends State<AllContacts>
                                 child: TextField(
                                   autofocus: true,
                                   controller: _searchTextCon,
-                                  style: TextStyle(
+                                  style: themeData.textTheme.bodyText1.copyWith(
                                     fontSize: 18.0,
-                                    color: Colors.black,
                                   ),
                                   decoration: InputDecoration(
                                     contentPadding: const EdgeInsets.symmetric(
@@ -115,7 +108,8 @@ class _AllContactsState extends State<AllContacts>
                                     disabledBorder: InputBorder.none,
                                     hintText: "Search...",
                                     suffixIcon: IconButton(
-                                      icon: Icon(Icons.clear),
+                                      icon: Icon(Icons.clear,
+                                          color: themeData.iconTheme.color),
                                       onPressed: () {
                                         _searchTextCon.clear();
                                       },
@@ -126,23 +120,18 @@ class _AllContactsState extends State<AllContacts>
                             ),
                           )
                         : AppBar(
-                            iconTheme: IconThemeData(
-                              color: AppColors.textColor,
-                            ),
-                            elevation: 2,
-                            backgroundColor: Colors.white,
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
                                   "Select Contact",
-                                  style: textStyle.copyWith(
-                                      color: AppColors.textColor, fontSize: 20),
+                                  style: themeData.textTheme.bodyText1
+                                      .copyWith(fontSize: 20),
                                 ),
                                 Text(
                                   "${contactsCount.toString()} Contacts",
-                                  style: textStyle.copyWith(
-                                      color: AppColors.textColor, fontSize: 12),
+                                  style: themeData.textTheme.bodyText1
+                                      .copyWith(fontSize: 12.5),
                                 ),
                               ],
                             ),
@@ -152,7 +141,7 @@ class _AllContactsState extends State<AllContacts>
                                       padding:
                                           const EdgeInsets.only(right: 5.0),
                                       child: SpinKitRing(
-                                        color: AppColors.textColor,
+                                        color: themeData.iconTheme.color,
                                         lineWidth: 2.0,
                                         size: 20.0,
                                         controller: _animationController,
@@ -167,9 +156,10 @@ class _AllContactsState extends State<AllContacts>
                                       icon: Icon(Icons.search),
                                     ),
                               PopupMenuButton<String>(
-                                  //padding: EdgeInsets.symmetric(horizontal: 5),
-                                  icon: Icon(Icons.more_vert,
-                                      color: AppColors.textColor),
+                                  color: themeData.backgroundColor,
+                                  icon: Icon(
+                                    Icons.more_vert,
+                                  ),
                                   onSelected: (option) {
                                     switch (option) {
                                       case "refresh":
@@ -190,24 +180,27 @@ class _AllContactsState extends State<AllContacts>
                                   itemBuilder: (BuildContext context) {
                                     return <PopupMenuEntry<String>>[
                                       PopupMenuItem(
-                                        child: Text("Refresh",
-                                            style: menuTextStyle),
+                                        child: Text("Refresh"),
                                         value: "refresh",
+                                        textStyle: themeData.textTheme.bodyText1
+                                            .copyWith(fontSize: 13.5),
                                       ),
                                       PopupMenuDivider(
                                         height: 2,
                                       ),
                                       PopupMenuItem(
-                                        child: Text("Settings",
-                                            style: menuTextStyle),
+                                        child: Text("Settings"),
                                         value: "settings",
+                                        textStyle: themeData.textTheme.bodyText1
+                                            .copyWith(fontSize: 13.5),
                                       ),
                                       PopupMenuDivider(
                                         height: 2,
                                       ),
                                       PopupMenuItem(
-                                        child:
-                                            Text("Help", style: menuTextStyle),
+                                        child: Text("Help"),
+                                        textStyle: themeData.textTheme.bodyText1
+                                            .copyWith(fontSize: 13.5),
                                         value: "help",
                                       ),
                                     ];
@@ -224,7 +217,9 @@ class _AllContactsState extends State<AllContacts>
                                       padding: EdgeInsets.only(top: 20.0),
                                       child: Align(
                                         alignment: Alignment.topCenter,
-                                        child: Text("No Contact Found!"),
+                                        child: Text("No Contact Found!",
+                                            style: themeData.textTheme.bodyText1
+                                                .copyWith(fontSize: 15)),
                                       ),
                                     )
                                   : Column(
@@ -260,13 +255,15 @@ class _AllContactsState extends State<AllContacts>
                                                                 vertical: 10),
                                                         child: Text(
                                                           "Invite Friends",
-                                                          style: textStyle.copyWith(
-                                                              fontSize: 17,
-                                                              color: AppColors
-                                                                  .textColor2,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                          style: themeData
+                                                              .textTheme
+                                                              .bodyText1
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      17.5,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
                                                         ),
                                                       ),
                                                     )
@@ -310,12 +307,12 @@ class _AllContactsState extends State<AllContacts>
                                                         vertical: 10),
                                                 child: Text(
                                                   "Invite Friends",
-                                                  style: textStyle.copyWith(
-                                                      fontSize: 17,
-                                                      color:
-                                                          AppColors.textColor2,
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                                  style: themeData
+                                                      .textTheme.bodyText1
+                                                      .copyWith(
+                                                          fontSize: 17.5,
+                                                          fontWeight:
+                                                              FontWeight.w500),
                                                 ),
                                               ),
                                             )
@@ -356,20 +353,3 @@ class _AllContactsState extends State<AllContacts>
     super.dispose();
   }
 }
-/*
-  BusyButton(
-                        title: "Continue",
-                        busy: model.busy,
-                        onPressed: () async {
-                          // print(prefix + phoneNumber.text);
-                          await model.login(
-                              phoneNumber: prefix + phoneNumber.text);
-                        },
-                        color: Colors.blue)
-                  ],
-                  
-                  
-                  
-                  
-                  
-*/

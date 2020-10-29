@@ -2,13 +2,13 @@ import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
-//import 'package:MSG/ui/widgets/appbar.dart';
+import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
-// import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
 
 class MessagesView extends StatefulWidget {
@@ -34,7 +34,9 @@ class _MessagesViewState extends State<MessagesView> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return ViewModelBuilder<MessageViewModel>.reactive(
+        disposeViewModel: true,
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
@@ -45,7 +47,7 @@ class _MessagesViewState extends State<MessagesView> {
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return Container(
-                  color: Colors.white,
+                  color: themeData.backgroundColor,
                 );
               } else {
                 List<Chat> allChats = snapshot.data;
@@ -60,54 +62,53 @@ class _MessagesViewState extends State<MessagesView> {
                                 new RegExp(_searchQuery, caseSensitive: false)))
                         .toList();
 
-                return AnnotatedRegion<SystemUiOverlayStyle>(
-                  value: SystemUiOverlayStyle(
-                    systemNavigationBarColor: Colors.white,
-                    statusBarColor: Colors.white,
-                    statusBarIconBrightness: Brightness.dark,
-                    statusBarBrightness: Brightness.light,
-                  ),
-                  child: SafeArea(
-                    child: Scaffold(
-                      backgroundColor: Colors.white,
-                      floatingActionButton: FloatingActionButton(
-                        onPressed: () async {
-                          var refresh = await Navigator.pushNamed(
-                              context, ContactViewRoute);
-                          print("page rebuilt");
-                          setState(() => rebuild = refresh);
-                        },
-                        child: Icon(
-                          Icons.message,
-                          color: Colors.white,
+                return Consumer<ThemeNotifier>(
+                    builder: (context, notifier, child) {
+                  return AnnotatedRegion<SystemUiOverlayStyle>(
+                    value: SystemUiOverlayStyle(
+                        statusBarColor: notifier.darkTheme
+                            ? AppColors.darkBgColor
+                            : Colors.white,
+                        statusBarBrightness: notifier.darkTheme
+                            ? Brightness.dark
+                            : Brightness.light,
+                        statusBarIconBrightness: notifier.darkTheme
+                            ? Brightness.light
+                            : Brightness.dark),
+                    child: SafeArea(
+                      child: Scaffold(
+                        floatingActionButton: FloatingActionButton(
+                          onPressed: () async {
+                            var refresh = await Navigator.pushNamed(
+                                context, ContactViewRoute);
+                            print("page rebuilt");
+                            setState(() => rebuild = refresh);
+                          },
+                          child: Icon(
+                            Icons.message,
+                          ),
                         ),
-                      ),
-                      appBar: (_isSearching)
-                          ? AppBar(
-                              iconTheme: IconThemeData(
-                                color: AppColors.textColor,
-                              ),
-                              backgroundColor: Colors.white,
-                              leading: IconButton(
+                        appBar: (_isSearching)
+                            ? AppBar(
+                                iconTheme: themeData.iconTheme,
+                                backgroundColor: themeData.appBarTheme.color,
+                                leading: IconButton(
                                   onPressed: () {
                                     setState(() {
                                       _searchTextCon.clear();
                                       _isSearching = false;
                                     });
                                   },
-                                  icon: Icon(Icons.arrow_back)),
-                              title: Container(
-                                child: Theme(
-                                  data: Theme.of(context).copyWith(
-                                    // override textfield's icon color when selected
-                                    primaryColor: AppColors.textColor,
-                                  ),
+                                  icon: Icon(Icons.arrow_back),
+                                ),
+                                title: AnimatedContainer(
+                                  duration: Duration(milliseconds: 300),
                                   child: TextField(
                                     autofocus: true,
                                     controller: _searchTextCon,
-                                    style: TextStyle(
+                                    style:
+                                        themeData.textTheme.bodyText1.copyWith(
                                       fontSize: 18.0,
-                                      color: Colors.black,
                                     ),
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -118,9 +119,12 @@ class _MessagesViewState extends State<MessagesView> {
                                       enabledBorder: InputBorder.none,
                                       errorBorder: InputBorder.none,
                                       disabledBorder: InputBorder.none,
+                                      hintStyle: themeData
+                                          .inputDecorationTheme.hintStyle,
                                       hintText: "Search...",
                                       suffixIcon: IconButton(
-                                        icon: Icon(Icons.clear),
+                                        icon: Icon(Icons.clear,
+                                            color: themeData.iconTheme.color),
                                         onPressed: () {
                                           print(_searchTextCon.text);
                                           _searchTextCon.clear();
@@ -129,146 +133,145 @@ class _MessagesViewState extends State<MessagesView> {
                                     ),
                                   ),
                                 ),
+                              )
+                            : AppBar(
+                                backgroundColor: themeData.appBarTheme.color,
+                                title: Text("Messeges",
+                                    style: themeData.textTheme.headline6),
+                                centerTitle: true,
+                                actions: <Widget>[
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _isSearching = true;
+                                      });
+                                    },
+                                    icon: Icon(Icons.search),
+                                  ),
+                                  MyPopupMenu(),
+                                ],
                               ),
-                            )
-                          : AppBar(
-                              elevation: 2,
-                              backgroundColor: Colors.white,
-                              title: Text(
-                                "Messeges",
-                                style: textStyle.copyWith(
-                                    color: AppColors.textColor, fontSize: 22),
-                              ),
-                              centerTitle: true,
-                              actions: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSearching = true;
-                                    });
-                                  },
-                                  icon: Icon(Icons.search),
-                                  color: AppColors.textColor,
-                                ),
-                                MyPopupMenu(),
-                              ],
-                            ),
-                      body: SafeArea(
-                          child: chatCount > 0
-                              ? _searchQuery.isEmpty
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 0.0),
-                                      child: ListView.separated(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 10.0),
-                                        itemCount: chatCount,
-                                        itemBuilder: (context, index) {
-                                          final chat = allChats[index];
-                                          print("member:");
-                                          return InkWell(
-                                            onTap: () async {
-                                              var refresh =
-                                                  await Navigator.pushNamed(
-                                                      context, ChatViewRoute,
-                                                      arguments: {
-                                                    'chat': Chat(
-                                                        id: chat.id,
-                                                        displayName:
-                                                            chat.displayName,
-                                                        memberPhone:
-                                                            chat.memberPhone),
-                                                    'fromContact': false
-                                                  });
-
-                                              // print(refresh);
-                                              setState(() => rebuild = refresh);
-                                            },
-                                            child: MessageContainer(
-                                                searchquery: "",
-                                                name: chat.displayName ??
-                                                    chat.memberPhone,
-                                                lastMessage: chat.lastMessage,
-                                                msgTime: chat.lastMsgTime,
-                                                unreadMessages:
-                                                    chat.unreadMsgCount),
-                                          );
-                                        },
-                                        separatorBuilder:
-                                            (BuildContext context, int index) {
-                                          return Divider(
-                                            thickness: 0.3,
-                                            color: Colors.grey,
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : searchChatList.length > 0
-                                      ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 0.0),
-                                          child: ListView.separated(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10.0),
-                                            itemCount: searchChatList.length,
-                                            itemBuilder: (context, index) {
-                                              final chat =
-                                                  searchChatList[index];
-                                              print("member:");
-                                              return InkWell(
-                                                onTap: () {
-                                                  _searchTextCon.clear();
-                                                  _isSearching = false;
-                                                  Navigator.pushNamed(
-                                                      context, ChatViewRoute,
-                                                      arguments: Chat(
+                        body: SafeArea(
+                            child: chatCount > 0
+                                ? _searchQuery.isEmpty
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 0.0),
+                                        child: ListView.separated(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10.0),
+                                          itemCount: chatCount,
+                                          itemBuilder: (context, index) {
+                                            final chat = allChats[index];
+                                            print("member:");
+                                            return InkWell(
+                                              onTap: () async {
+                                                var refresh =
+                                                    await Navigator.pushNamed(
+                                                        context, ChatViewRoute,
+                                                        arguments: {
+                                                      'chat': Chat(
                                                           id: chat.id,
                                                           displayName:
                                                               chat.displayName,
-                                                          memberPhone: chat
-                                                              .memberPhone));
-                                                },
-                                                child: MessageContainer(
-                                                  searchquery: _searchQuery,
+                                                          memberPhone:
+                                                              chat.memberPhone),
+                                                      'fromContact': false
+                                                    });
+
+                                                // print(refresh);
+                                                setState(
+                                                    () => rebuild = refresh);
+                                              },
+                                              child: MessageContainer(
+                                                  searchquery: "",
                                                   name: chat.displayName ??
                                                       chat.memberPhone,
                                                   lastMessage: chat.lastMessage,
                                                   msgTime: chat.lastMsgTime,
                                                   unreadMessages:
-                                                      chat.unreadMsgCount,
-                                                ),
-                                              );
-                                            },
-                                            separatorBuilder:
-                                                (BuildContext context,
-                                                    int index) {
-                                              return Divider(
-                                                color: Colors.grey,
-                                              );
-                                            },
-                                          ),
-                                        )
-                                      : Padding(
-                                          padding: EdgeInsets.only(top: 20.0),
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Text("No Match Found!"),
-                                          ),
-                                        )
-                              : Padding(
-                                  padding: EdgeInsets.only(top: 15),
-                                  child: Align(
-                                    child: Text(
-                                      "No conversation yet",
-                                      style: textStyle.copyWith(
-                                          color: AppColors.textColor,
-                                          fontSize: 14.0),
+                                                      chat.unreadMsgCount),
+                                            );
+                                          },
+                                          separatorBuilder:
+                                              (BuildContext context,
+                                                  int index) {
+                                            return Divider(
+                                              thickness: 0.4,
+                                              color: themeData.dividerColor,
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    : searchChatList.length > 0
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 0.0),
+                                            child: ListView.separated(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 10.0),
+                                              itemCount: searchChatList.length,
+                                              itemBuilder: (context, index) {
+                                                final chat =
+                                                    searchChatList[index];
+                                                print("member:");
+                                                return InkWell(
+                                                  onTap: () {
+                                                    _searchTextCon.clear();
+                                                    _isSearching = false;
+                                                    Navigator.pushNamed(
+                                                        context, ChatViewRoute,
+                                                        arguments: Chat(
+                                                            id: chat.id,
+                                                            displayName: chat
+                                                                .displayName,
+                                                            memberPhone: chat
+                                                                .memberPhone));
+                                                  },
+                                                  child: MessageContainer(
+                                                    searchquery: _searchQuery,
+                                                    name: chat.displayName ??
+                                                        chat.memberPhone,
+                                                    lastMessage:
+                                                        chat.lastMessage,
+                                                    msgTime: chat.lastMsgTime,
+                                                    unreadMessages:
+                                                        chat.unreadMsgCount,
+                                                  ),
+                                                );
+                                              },
+                                              separatorBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return Divider();
+                                              },
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.only(top: 20.0),
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: Text("No Match Found!",
+                                                  style: themeData
+                                                      .textTheme.bodyText1
+                                                      .copyWith(fontSize: 15)),
+                                            ),
+                                          )
+                                : Padding(
+                                    padding: EdgeInsets.only(top: 15),
+                                    child: Align(
+                                      child: Text(
+                                        "No conversation yet",
+                                        style: textStyle.copyWith(
+                                            color: AppColors.textColor,
+                                            fontSize: 14.0),
+                                      ),
                                     ),
-                                  ),
-                                )),
+                                  )),
+                      ),
                     ),
-                  ),
-                );
+                  );
+                });
               }
             },
           );

@@ -1,6 +1,4 @@
 import 'package:MSG/constant/route_names.dart';
-import 'package:MSG/ui/shared/app_colors.dart';
-import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:flutter/material.dart';
 
 class MyPopupMenu extends StatefulWidget {
@@ -27,31 +25,38 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
+
     return PopupMenuButton<String>(
+        color: themeData.backgroundColor,
+
         //padding: EdgeInsets.symmetric(horizontal: 5),
-        icon: Icon(Icons.more_vert, color: AppColors.textColor),
+        icon: Icon(Icons.more_vert),
         onSelected: (option) {
           _switchMenuScreen(option, context);
         },
         itemBuilder: (BuildContext context) {
           return <PopupMenuEntry<String>>[
             PopupMenuItem(
-              child: Text("Profile", style: menuTextStyle),
+              child: Text("Profile"),
               value: "profile",
+              textStyle: themeData.textTheme.bodyText1.copyWith(fontSize: 13.5),
             ),
             PopupMenuDivider(
               height: 2,
             ),
             PopupMenuItem(
-              child: Text("Settings", style: menuTextStyle),
+              child: Text("Settings"),
               value: "settings",
+              textStyle: themeData.textTheme.bodyText1.copyWith(fontSize: 13.5),
             ),
             PopupMenuDivider(
               height: 2,
             ),
             PopupMenuItem(
-              child: Text("Help", style: menuTextStyle),
+              child: Text("Help"),
               value: "help",
+              textStyle: themeData.textTheme.bodyText1.copyWith(fontSize: 13.5),
             ),
           ];
         });
