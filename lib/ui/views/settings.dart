@@ -57,6 +57,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     notifier.darkTheme ? Brightness.dark : Brightness.light,
                 statusBarIconBrightness:
                     notifier.darkTheme ? Brightness.light : Brightness.dark,
+                systemNavigationBarColor:
+                    notifier.darkTheme ? Colors.black : Colors.white,
               ),
               child: SafeArea(
                 child: Scaffold(
@@ -115,8 +117,8 @@ class _SettingScreenState extends State<SettingScreen> {
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
+                                color: themeData.accentColor.withOpacity(0.5),
+                                spreadRadius: 0.6,
                                 blurRadius: 1,
                                 offset:
                                     Offset(0, 0), // changes position of shadow
@@ -137,7 +139,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
+                                      color: themeData.accentColor
+                                          .withOpacity(0.5),
                                       spreadRadius: 1,
                                       blurRadius: 1,
                                       offset: Offset(
@@ -182,7 +185,8 @@ class _SettingScreenState extends State<SettingScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
+                                      color: themeData.accentColor
+                                          .withOpacity(0.5),
                                       spreadRadius: 1,
                                       blurRadius: 1,
                                       offset: Offset(

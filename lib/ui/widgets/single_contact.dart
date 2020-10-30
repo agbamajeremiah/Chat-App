@@ -46,7 +46,7 @@ class SingleContact extends StatelessWidget {
               backgroundColor: Colors.grey,
               child: Icon(
                 Icons.person,
-                color: AppColors.darkTextColor,
+                color: themeData.accentColor,
               ),
             ),
             horizontalSpaceSmall,
@@ -65,7 +65,8 @@ class SingleContact extends StatelessWidget {
                               children: <TextSpan>[
                                 TextSpan(
                                     text: name.substring(0, matchString.length),
-                                    style: themeData.textTheme.headline1),
+                                    style: themeData.textTheme.bodyText1
+                                        .copyWith(color: AppColors.unreadText)),
                                 TextSpan(
                                     text: name.substring(matchString.length),
                                     style: themeData.textTheme.bodyText1),

@@ -1,7 +1,6 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
-import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
@@ -24,7 +23,6 @@ class _MessagesViewState extends State<MessagesView> {
   @override
   void initState() {
     super.initState();
-    // convertToLocalTime("2020-09-24 17:09:49.661607");
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
@@ -40,8 +38,7 @@ class _MessagesViewState extends State<MessagesView> {
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
-          // model.syncChat();
-          print(model.busy.toString());
+          // print(model.busy.toString());
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
@@ -66,15 +63,18 @@ class _MessagesViewState extends State<MessagesView> {
                     builder: (context, notifier, child) {
                   return AnnotatedRegion<SystemUiOverlayStyle>(
                     value: SystemUiOverlayStyle(
-                        statusBarColor: notifier.darkTheme
-                            ? AppColors.darkBgColor
-                            : Colors.white,
-                        statusBarBrightness: notifier.darkTheme
-                            ? Brightness.dark
-                            : Brightness.light,
-                        statusBarIconBrightness: notifier.darkTheme
-                            ? Brightness.light
-                            : Brightness.dark),
+                      statusBarColor: notifier.darkTheme
+                          ? AppColors.darkBgColor
+                          : Colors.white,
+                      statusBarBrightness: notifier.darkTheme
+                          ? Brightness.dark
+                          : Brightness.light,
+                      statusBarIconBrightness: notifier.darkTheme
+                          ? Brightness.light
+                          : Brightness.dark,
+                      systemNavigationBarColor:
+                          notifier.darkTheme ? Colors.black : Colors.white,
+                    ),
                     child: SafeArea(
                       child: Scaffold(
                         floatingActionButton: FloatingActionButton(
@@ -262,9 +262,8 @@ class _MessagesViewState extends State<MessagesView> {
                                     child: Align(
                                       child: Text(
                                         "No conversation yet",
-                                        style: textStyle.copyWith(
-                                            color: AppColors.textColor,
-                                            fontSize: 14.0),
+                                        style: themeData.textTheme.bodyText1
+                                            .copyWith(fontSize: 15.0),
                                       ),
                                     ),
                                   )),

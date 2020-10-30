@@ -86,7 +86,8 @@ class _AllContactsState extends State<AllContacts>
                                   });
                                 },
                                 icon: Icon(Icons.arrow_back)),
-                            title: Container(
+                            title: AnimatedContainer(
+                              duration: Duration(microseconds: 300),
                               child: Theme(
                                 data: Theme.of(context).copyWith(
                                   // override textfield's icon color when selected

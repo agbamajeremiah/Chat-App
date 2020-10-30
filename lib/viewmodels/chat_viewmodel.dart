@@ -23,7 +23,6 @@ class ChatViewModel extends BaseModel {
       @required this.fromContact});
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
-  bool threadListened = false;
 
   void rebuildScreen() {
     notifyListeners();
@@ -42,7 +41,6 @@ class ChatViewModel extends BaseModel {
           //_socketService.registerSocketId();
           _socketService.subscribeToThread(
               threadId, phoneNumber, rebuildScreen);
-          threadListened = true;
         }
       }
     }
@@ -102,9 +100,11 @@ class ChatViewModel extends BaseModel {
       unsentMessages.forEach((mes) async {
         print(mes.content + mes.status + mes.createdAt + mes.isQuote + mes.id);
         var response =
-            await sendMsg(threadId, mes.content, mes.isQuote != "false", "");
+            await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
         if (response.statusCode == 200) {
           print("Sent message successfully");
+          await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
+          notifyListeners();
         }
       });
     }
@@ -113,9 +113,12 @@ class ChatViewModel extends BaseModel {
   Future synChat() async {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
-      await updateMarkedMessages();
-      await makeAsRead();
-      await resendPendingMessages();
+      try {
+        await makeAsRead();
+        await resendPendingMessages();
+      } catch (e) {
+        print(e.toString());
+      }
     }
   }
 
@@ -137,24 +140,6 @@ class ChatViewModel extends BaseModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
-    setBusy(false);
-    return messageId;
-  }
-
-  Future sendNewMessage(
-      {@required messageId,
-      @required String message,
-      @required String receiver,
-      @required bool isQuote}) async {
-    setBusy(true);
-    final internetStatus = await checkInternetConnection();
-    if (internetStatus == true && _socketService.socketIO != null) {
-      var response = await sendMsg(messageId, message, isQuote, "");
-      if (response.statusCode == 200) {
-        //  update sent messag
-        print(response.data['messageID']);
-      }
-    }
     setBusy(false);
   }
 
@@ -220,10 +205,6 @@ class ChatViewModel extends BaseModel {
       print(e.toString());
       throw e;
     }
-  }
-
-  Future updateMarkedMessages() async {
-    await makeAsRead();
   }
 
   Future makeAsRead() async {

@@ -5,7 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   backgroundColor: Colors.white,
-  primaryColor: Colors.lightBlueAccent,
+  primaryColor: AppColors.primaryColor,
+  accentColor: AppColors.accentColor,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   fontFamily: 'Ubuntu',
   appBarTheme: AppBarTheme(
@@ -55,9 +56,10 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     backgroundColor: AppColors.darkBgColor,
     scaffoldBackgroundColor: AppColors.darkBgColor,
-    primaryColor: Colors.grey[900],
+    primaryColor: AppColors.darkPrimaryColor,
+    accentColor: AppColors.accentColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    fontFamily: 'Georgia',
+    fontFamily: 'Ubuntu',
     appBarTheme: AppBarTheme(
       color: AppColors.darkBgColor,
       iconTheme: IconThemeData(color: AppColors.darkTextColor),

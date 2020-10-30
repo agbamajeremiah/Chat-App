@@ -17,8 +17,8 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final messageTextController = TextEditingController();
-  bool typingMessage = false;
   bool rebuild;
+  bool typingMessage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,8 @@ class _ChatViewState extends State<ChatView> {
             phoneNumber: chat.memberPhone,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
-        disposeViewModel: true,
+        disposeViewModel: false,
         builder: (context, model, snapshot) {
-          print(model.busy.toString());
           final chatMessages = model.getChatMessages();
           model.synChat();
           return SafeArea(
@@ -127,10 +126,10 @@ class _ChatViewState extends State<ChatView> {
                               style: themeData.textTheme.bodyText1.copyWith(
                                 fontSize: 18.0,
                               ),
-                              decoration: kMessageTextFieldDecoration,
                               onTap: () {
                                 setState(() => typingMessage = true);
                               },
+                              decoration: kMessageTextFieldDecoration,
                             ),
                           ),
                           Container(
@@ -142,19 +141,11 @@ class _ChatViewState extends State<ChatView> {
                                       messageTextController.text;
                                   String receiver = chat.memberPhone;
                                   if (messageText.length > 0) {
-                                    await model
-                                        .saveNewMessage(
-                                            message: messageText,
-                                            receiver: receiver,
-                                            isQuote: false)
-                                        .then((messageId) async {
-                                      messageTextController.clear();
-                                      await model.sendNewMessage(
-                                          messageId: messageId,
-                                          message: messageText,
-                                          receiver: receiver,
-                                          isQuote: false);
-                                    });
+                                    await model.saveNewMessage(
+                                        message: messageText,
+                                        receiver: receiver,
+                                        isQuote: false);
+                                    messageTextController.clear();
                                   }
                                   setState(() => typingMessage = false);
                                 },

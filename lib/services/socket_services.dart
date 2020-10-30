@@ -38,20 +38,27 @@ class SocketServices {
       Map message = newMessage['message'][0];
       print("Socket message inserted");
       print(message);
-      DatabaseService.db.insertNewMessage(Message.fromMap(message));
-      rebuild();
+      if (message['sender'] != _authService.userNumber) {
+        print("new message received");
+        DatabaseService.db.insertNewMessage(Message.fromMap(message));
+        rebuild();
+      }
     });
     socketIO.subscribe('mark as read', (dynamic socketMessage) {
       print("Socket Read Message:");
       var update = json.decode(socketMessage);
-      // print(update);RE
-      List updatedMesssages = update['message'];
-      if (updatedMesssages.length > 0) {
-        updatedMesssages.forEach((mes) async {
-          await DatabaseService.db
-              .updateReadMessages(mes['messageId'], mes['status']);
-        });
-      }
+      print(update);
+      // List updatedMesssages = update['message'];
+      // if (updatedMesssages.length > 0) {
+      //   updatedMesssages.forEach((mes) async {
+      //     if (mes['sender'] == _authService.userNumber &&
+      //         mes['status'] == 'READ') {
+      //       await DatabaseService.db
+      //           .updateMessageStatus(mes['messageId'], mes['status']);
+      //     }
+      //   });
+      //   rebuild();
+      // }
     });
   }
 
