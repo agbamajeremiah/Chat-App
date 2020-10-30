@@ -38,6 +38,7 @@ class _AllContactsState extends State<AllContacts>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     return ViewModelBuilder<ContactViewModel>.reactive(
+        disposeViewModel: true,
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
           //model.syncContacts();

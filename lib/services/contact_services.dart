@@ -41,7 +41,6 @@ class ContactServices {
 
   //Normal Contact synchronization
   Future syncContacts() async {
-    //DatabaseService.db.deleteDb();
     List<String> uploadContacts = List<String>();
     List<MyContact> allContacts = await getAllContactsFromDevice();
     print(allContacts);
