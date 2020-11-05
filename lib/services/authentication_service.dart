@@ -1,4 +1,4 @@
-import 'package:MSG/utils/api.dart';
+import 'package:MSG/utils/api_request.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,10 +45,7 @@ class AuthenticationSerivice {
         url: "/register",
         body: body,
       );
-      if (response.statusCode == 200) {
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
-      }
-      // return jsonDecode(response);
+      if (response.statusCode == 200) {}
       return response;
     } catch (e) {
       if (e is DioError) {

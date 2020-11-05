@@ -162,6 +162,18 @@ class DatabaseService {
     return singleContact;
   }
 
+  Future<List<Chat>> getAllUserThreads() async {
+    List<Chat> allChat = [];
+    final db = await database;
+    var threads = await db
+        .query(TABLE_THREAD, columns: [COLUMN_THREAD_ID, COLUMN_MEMBER]);
+    threads.forEach((thd) {
+      allChat.add(Chat(id: thd['id'], memberPhone: thd['members']));
+    });
+    // print(allChat);
+    return allChat;
+  }
+
   Future<List<Chat>> getAllChatsFromDb(String userNumber) async {
     List<Chat> allChat = [];
     final db = await database;
@@ -240,6 +252,21 @@ class DatabaseService {
         where: "$COLUMN_MSG_THREAD_ID = ? AND $COLUMN_STATUS = ?",
         orderBy: "$COLUMN_CREATED_AT DESC",
         whereArgs: [threadId, "PENDING"]);
+    // print(chats);
+    chats.forEach((message) {
+      messages.add(Message.fromDBMap(message));
+    });
+    print(messages);
+    return messages;
+  }
+
+  Future<List<Message>> getAllUnsentFromDb() async {
+    final db = await database;
+    List<Message> messages = List<Message>();
+    var chats = await db.query(TABLE_MESSAGE,
+        where: "$COLUMN_STATUS = ?",
+        orderBy: "$COLUMN_CREATED_AT DESC",
+        whereArgs: ["PENDING"]);
     // print(chats);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));

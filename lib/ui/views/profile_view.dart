@@ -107,6 +107,7 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(),
         builder: (context, model, snapshot) {
@@ -120,7 +121,8 @@ class _ProfileViewState extends State<ProfileView> {
               backgroundColor: AppColors.primaryColor,
               title: Text(
                 "My Profile",
-                style: textStyle.copyWith(color: Colors.white, fontSize: 20),
+                style: themeData.textTheme.headline6
+                    .copyWith(fontSize: 22.5, color: Colors.white),
               ),
               elevation: 0.0,
             ),
@@ -136,19 +138,19 @@ class _ProfileViewState extends State<ProfileView> {
                         decoration:
                             BoxDecoration(color: AppColors.primaryColor),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 45.0, top: 20.0),
-                        child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              model.accountName,
-                              style: textStyle.copyWith(
-                                fontSize: 25,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w100,
-                              ),
-                            )),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(bottom: 45.0, top: 20.0),
+                      //   child: Align(
+                      //       alignment: Alignment.topCenter,
+                      //       child: Text(
+                      //         model.accountName,
+                      //         style: textStyle.copyWith(
+                      //           fontSize: 25,
+                      //           color: Colors.white,
+                      //           fontWeight: FontWeight.w100,
+                      //         ),
+                      //       )),
+                      // ),
                       Positioned(
                           bottom: 0,
                           child: Container(
@@ -215,18 +217,31 @@ class _ProfileViewState extends State<ProfileView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              model.accountName,
-                              style: textStyle.copyWith(
-                                fontSize: 20,
-                                color: AppColors.textColor,
-                                fontWeight: FontWeight.w300,
-                              ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 25.0),
+                                  child: Icon(
+                                    Icons.person,
+                                    color: themeData.iconTheme.color,
+                                    size: 17.5,
+                                  ),
+                                ),
+                                Text(
+                                  model.accountName,
+                                  style: textStyle.copyWith(
+                                    fontSize: 20,
+                                    color: AppColors.textColor,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ],
                             ),
                             IconButton(
                                 icon: Icon(
                                   Icons.edit,
-                                  color: AppColors.textColor2,
+                                  color: themeData.iconTheme.color,
+                                  size: 17.5,
                                 ),
                                 onPressed: () {
                                   _showProfileBottonSheet(context, model);
@@ -253,14 +268,24 @@ class _ProfileViewState extends State<ProfileView> {
                           //   ),
                           // ],
                         ),
-                        child: Text(
-                          model.userNumber,
-                          style: textStyle.copyWith(
-                            fontSize: 20,
-                            color: AppColors.textColor,
-                            fontWeight: FontWeight.w300,
+                        child: Row(children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 25.0),
+                            child: Icon(
+                              Icons.phone,
+                              color: themeData.iconTheme.color,
+                              size: 17.5,
+                            ),
                           ),
-                        ),
+                          Text(
+                            model.userNumber,
+                            style: textStyle.copyWith(
+                              fontSize: 20,
+                              color: AppColors.textColor,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ]),
                       ),
                     ],
                   ),

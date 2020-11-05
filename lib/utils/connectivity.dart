@@ -15,14 +15,14 @@ Future checkInternetConnection() async {
   }
 }
 
-Future internetConnected() async {
-  var connectionResult = await Connectivity().checkConnectivity();
-  if (connectionResult == ConnectivityResult.mobile ||
-      connectionResult == ConnectivityResult.wifi) {
-    print("connected");
-    return true;
-  } else {
-    print(" Not connected");
-    return false;
-  }
-}
+// Future internetConnected() async {
+//   var connectionResult = await Connectivity().checkConnectivity();
+//   if (connectionResult == ConnectivityResult.mobile ||
+//       connectionResult == ConnectivityResult.wifi) {
+//     print("connected");
+//     return true;
+//   } else {
+//     print(" Not connected");
+//     return false;
+//   }
+// }

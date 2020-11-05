@@ -59,6 +59,8 @@ class _SettingScreenState extends State<SettingScreen> {
                     notifier.darkTheme ? Brightness.light : Brightness.dark,
                 systemNavigationBarColor:
                     notifier.darkTheme ? Colors.black : Colors.white,
+                systemNavigationBarIconBrightness:
+                    notifier.darkTheme ? Brightness.light : Brightness.dark,
               ),
               child: SafeArea(
                 child: Scaffold(
@@ -208,18 +210,6 @@ class _SettingScreenState extends State<SettingScreen> {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 10),
-                                      // child: FlutterSwitch(
-                                      //   valueFontSize: 15.0,
-                                      //   toggleSize: 45.0,
-                                      //   value: status,
-                                      //   borderRadius: 30.0,
-                                      //   showOnOff: true,
-                                      //   onToggle: (val) {
-                                      //     setState(() {
-                                      //       status = val;
-                                      //     });
-                                      //   },
-                                      // ),
                                       child: Switch(
                                           activeColor: AppColors.splashBlue,
                                           value: hideStatus,

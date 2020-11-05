@@ -5,7 +5,7 @@ import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
-import 'package:MSG/utils/api.dart';
+import 'package:MSG/utils/api_request.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/base_model.dart';

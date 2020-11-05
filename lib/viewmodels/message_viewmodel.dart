@@ -3,6 +3,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/messaging_sync_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
@@ -11,6 +12,7 @@ class MessageViewModel extends BaseModel {
   @override
   bool get busy => super.busy;
   final SocketServices _socketService = locator<SocketServices>();
+  final MessagingServices _messageService = locator<MessagingServices>();
 
   void rebuildScreen() {
     setBusy(true);
@@ -31,12 +33,17 @@ class MessageViewModel extends BaseModel {
         await Future.delayed(Duration(seconds: 2))
             .whenComplete(() => _socketService.registerSocketId());
       }
-      List<Chat> chat = await getAllChats();
+      List<Chat> chat = await getAllThreads();
       chat.forEach((element) async {
         _socketService.subscribeToThread(
             element.id, element.memberPhone, rebuildScreen);
       });
     }
+  }
+
+  Future<List<Chat>> getAllThreads() async {
+    List<Chat> allThreads = await DatabaseService.db.getAllUserThreads();
+    return allThreads;
   }
 
   //Get saved chat/tread from db
@@ -46,10 +53,11 @@ class MessageViewModel extends BaseModel {
     return activeChat;
   }
 
-  // Future syncChat() async {
-  //   final internetStatus = await checkInternetConnection();
-  //   if (internetStatus == true) {
-  //     await _messageService.getSyncChats();
-  //   }
-  // }
+  Future syncChat() async {
+    // final internetStatus = await checkInternetConnection();
+    // if (internetStatus == true) {
+    //   await _messageService.resendPendindMessages();
+    //   notifyListeners();
+    // }
+  }
 }

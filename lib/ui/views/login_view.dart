@@ -29,10 +29,6 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     phoneNumber.clear();
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.white,
-    //   statusBarIconBrightness: Brightness.dark,
-    // ));
     super.initState();
   }
 
@@ -43,11 +39,11 @@ class _LoginViewState extends State<LoginView> {
         builder: (context, model, child) {
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
-              statusBarColor: Colors.white,
-              statusBarIconBrightness: Brightness.dark,
-              statusBarBrightness: Brightness.light,
-              systemNavigationBarColor: Colors.white,
-            ),
+                statusBarColor: Colors.white,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.light,
+                systemNavigationBarColor: Colors.white,
+                systemNavigationBarIconBrightness: Brightness.dark),
             child: Scaffold(
               backgroundColor: Colors.white,
               body: SafeArea(

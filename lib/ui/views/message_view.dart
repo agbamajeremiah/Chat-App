@@ -74,6 +74,9 @@ class _MessagesViewState extends State<MessagesView> {
                           : Brightness.dark,
                       systemNavigationBarColor:
                           notifier.darkTheme ? Colors.black : Colors.white,
+                      systemNavigationBarIconBrightness: notifier.darkTheme
+                          ? Brightness.light
+                          : Brightness.dark,
                     ),
                     child: SafeArea(
                       child: Scaffold(

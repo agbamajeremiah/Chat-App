@@ -100,7 +100,7 @@ ThemeData darkTheme = ThemeData(
     ),
     dividerColor: AppColors.darkDividerColor);
 
-class ThemeNotifier with ChangeNotifier {
+class ThemeNotifier extends ChangeNotifier {
   final String themeKey = 'theme';
   SharedPreferences _prefs;
   bool _darkTheme;
