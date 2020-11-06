@@ -312,6 +312,14 @@ class DatabaseService {
     ''', [1]);
   }
 
+  Future<void> updateReadMessages(threadId, userNumber) async {
+    final db = await database;
+    await db.update(TABLE_MESSAGE, {'status': 'READ'},
+        where: "thread_id = ? AND sender != ? AND status != ?",
+        whereArgs: [threadId, userNumber, "READ"]);
+    print('success');
+  }
+
   Future<void> updateMessageStatus(String msgId, String status) async {
     final db = await database;
     await db.rawUpdate('''

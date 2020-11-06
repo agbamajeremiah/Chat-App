@@ -32,6 +32,7 @@ class ChatViewModel extends BaseModel {
   Timer timer;
   void initialise() async {
     await thread;
+    updateReadMessages();
     //Subscribe to new threed two
     if (true) {
       //fromContact == true
@@ -90,6 +91,11 @@ class ChatViewModel extends BaseModel {
       return [];
   }
 
+  Future<void> updateReadMessages() async {
+    await DatabaseService.db
+        .updateReadMessages(threadId, _authService.userNumber);
+  }
+
   Future resendPendingMessages() async {
     final internetStatus = await checkInternetConnection();
     if (internetStatus == true) {
@@ -102,7 +108,6 @@ class ChatViewModel extends BaseModel {
         var response =
             await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
         if (response.statusCode == 200) {
-          print("Sent message successfully");
           await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
           notifyListeners();
         }

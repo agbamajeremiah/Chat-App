@@ -3,7 +3,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/services/messaging_sync_service.dart';
+// import 'package:MSG/services/messaging_sync_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
@@ -12,7 +12,7 @@ class MessageViewModel extends BaseModel {
   @override
   bool get busy => super.busy;
   final SocketServices _socketService = locator<SocketServices>();
-  final MessagingServices _messageService = locator<MessagingServices>();
+  // final MessagingServices _messageService = locator<MessagingServices>();
 
   void rebuildScreen() {
     setBusy(true);
@@ -51,13 +51,5 @@ class MessageViewModel extends BaseModel {
     List<Chat> activeChat = await DatabaseService.db
         .getAllChatsFromDb(_authenticationSerivice.userNumber);
     return activeChat;
-  }
-
-  Future syncChat() async {
-    // final internetStatus = await checkInternetConnection();
-    // if (internetStatus == true) {
-    //   await _messageService.resendPendindMessages();
-    //   notifyListeners();
-    // }
   }
 }
