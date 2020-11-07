@@ -2,7 +2,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/utils/api.dart';
+import 'package:MSG/utils/api_request.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -126,7 +126,7 @@ class ContactServices {
         "Content-Type": "application/x-www-form-urlencoded",
         "authorization": "Bearer $_userToken",
       };
-      var response = await postResquest(
+      var response = await postFormResquest(
         url: "/registercontact",
         headers: headers,
         body: body,

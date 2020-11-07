@@ -21,6 +21,28 @@ Future postResquest({
   return response;
 }
 
+Future postFormResquest({
+  @required String url,
+  Map headers,
+  @required dynamic body,
+  Map queryParam,
+}) async {
+  final dio = Dio();
+  String route = BasedUrl + url;
+  print("Body: ");
+  print(body);
+  dio.options.contentType = Headers.formUrlEncodedContentType;
+  Response response = await dio.post(
+    route,
+    data: body,
+    queryParameters: queryParam,
+    options: Options(
+      headers: headers,
+    ),
+  );
+  return response;
+}
+
 Future getResquest({
   @required String url,
   Map headers,

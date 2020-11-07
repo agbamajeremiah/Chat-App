@@ -7,10 +7,12 @@ import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/viewmodels/base_model.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 
 class MessageViewModel extends BaseModel {
   @override
   bool get busy => super.busy;
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final SocketServices _socketService = locator<SocketServices>();
   // final MessagingServices _messageService = locator<MessagingServices>();
 

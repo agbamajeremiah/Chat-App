@@ -5,6 +5,7 @@ import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -17,17 +18,44 @@ class MessagesView extends StatefulWidget {
 
 class _MessagesViewState extends State<MessagesView> {
   final _searchTextCon = TextEditingController();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool _isSearching = false;
   String _searchQuery = "";
   bool rebuild = false;
+
+  _getToken() async {
+    await _firebaseMessaging
+        .getToken()
+        .then((token) => print("Device Token: $token"));
+  }
+
+  _configureFirebaseListeners() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print(message);
+        // _setMessage(message);
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print(message);
+        // _setMessage(message);
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("Resume Message: $message");
+        // _setMessage(message);
+      },
+    );
+  }
+
   @override
   void initState() {
-    super.initState();
+    _getToken();
+    _configureFirebaseListeners();
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;
       });
     });
+    super.initState();
   }
 
   @override
