@@ -95,7 +95,7 @@ class MessageBubble extends StatelessWidget {
                         minWidth: 100.0,
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 7.5, horizontal: 20),
+                        vertical: 7.5, horizontal: 15),
                     child: Text(
                       text,
                       style: themeData.textTheme.bodyText2
@@ -143,7 +143,7 @@ class MessageBubble extends StatelessWidget {
                         minWidth: 100.0,
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 7.5, horizontal: 20),
+                        vertical: 7.5, horizontal: 15),
                     child: Text(text,
                         style: themeData.textTheme.bodyText1
                             .copyWith(fontSize: 16)),

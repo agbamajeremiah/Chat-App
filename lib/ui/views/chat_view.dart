@@ -16,9 +16,30 @@ class ChatView extends StatefulWidget {
 }
 
 class _ChatViewState extends State<ChatView> {
-  final messageTextController = TextEditingController();
+  ScrollController _chatListController = ScrollController();
+  final TextEditingController _messageTextController = TextEditingController();
   bool rebuild;
   bool typingMessage = false;
+  int _chatListCount = 1;
+  void _scrollListener() {
+    if (_chatListController.position.maxScrollExtent ==
+        _chatListController.position.pixels) {
+      setState(() => _chatListCount++);
+      print(_chatListCount);
+    }
+  }
+
+  @override
+  void initState() {
+    _chatListController.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _chatListController.removeListener(_scrollListener);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +54,7 @@ class _ChatViewState extends State<ChatView> {
         onModelReady: (model) => model.initialise(),
         disposeViewModel: false,
         builder: (context, model, snapshot) {
-          final chatMessages = model.getChatMessages();
+          final getChatMessages = model.getChatMessages();
           model.synChat();
           return SafeArea(
             child: Scaffold(
@@ -61,7 +82,7 @@ class _ChatViewState extends State<ChatView> {
                 child: Column(
                   children: [
                     FutureBuilder(
-                        future: chatMessages,
+                        future: getChatMessages,
                         builder: (context, snapshot) {
                           // print(snapshot.data);
                           if (!snapshot.hasData) {
@@ -69,11 +90,12 @@ class _ChatViewState extends State<ChatView> {
                               child: Container(),
                             );
                           } else {
-                            List<Message> allMessages = snapshot.data;
+                            List<Message> allMessages = model.chatMessages;
                             final messageCount = allMessages.length;
                             return messageCount > 0
                                 ? Expanded(
                                     child: ListView.builder(
+                                      controller: _chatListController,
                                       reverse: true,
                                       itemCount: messageCount,
                                       padding: EdgeInsets.symmetric(
@@ -122,7 +144,7 @@ class _ChatViewState extends State<ChatView> {
                             child: TextField(
                               maxLines: 3,
                               minLines: 1,
-                              controller: messageTextController,
+                              controller: _messageTextController,
                               style: themeData.textTheme.bodyText1.copyWith(
                                 fontSize: 18.0,
                               ),
@@ -138,14 +160,14 @@ class _ChatViewState extends State<ChatView> {
                             child: FlatButton(
                                 onPressed: () async {
                                   String messageText =
-                                      messageTextController.text;
+                                      _messageTextController.text;
                                   String receiver = chat.memberPhone;
                                   if (messageText.length > 0) {
                                     await model.saveNewMessage(
                                         message: messageText,
                                         receiver: receiver,
                                         isQuote: false);
-                                    messageTextController.clear();
+                                    _messageTextController.clear();
                                   }
                                   setState(() => typingMessage = false);
                                 },

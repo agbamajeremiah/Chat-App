@@ -32,11 +32,11 @@ class _MessagesViewState extends State<MessagesView> {
   _configureFirebaseListeners() {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print(message);
+        print("Active message: $message");
         // _setMessage(message);
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print(message);
+        print("Launch Message: $message");
         // _setMessage(message);
       },
       onResume: (Map<String, dynamic> message) async {

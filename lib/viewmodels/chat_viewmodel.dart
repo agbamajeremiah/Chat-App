@@ -17,6 +17,8 @@ class ChatViewModel extends BaseModel {
   String phoneNumber;
   String userNumber;
   bool fromContact;
+  List<Message> chatMessages = [];
+  final int _chatFetchMax = 15;
   ChatViewModel(
       {@required this.threadId,
       @required this.phoneNumber,
@@ -78,17 +80,20 @@ class ChatViewModel extends BaseModel {
     }
   }
 
-  Future<List<Message>> getChatMessages() async {
+  Future<bool> getChatMessages() async {
     if (threadId == null) {
       await thread;
     }
     userNumber = _authService.userNumber;
     if (threadId != null) {
-      List<Message> messages =
-          await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      return messages;
-    } else
-      return [];
+      int _fetchedChat = chatMessages.length;
+      List<Message> messages = await DatabaseService.db
+          .getSingleChatMessageFromDb(threadId, _fetchedChat, _chatFetchMax);
+      chatMessages.addAll(messages);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> updateReadMessages() async {
@@ -105,12 +110,12 @@ class ChatViewModel extends BaseModel {
       print(unsentMessages);
       unsentMessages.forEach((mes) async {
         print(mes.content + mes.status + mes.createdAt + mes.isQuote + mes.id);
-        var response =
-            await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
-        if (response.statusCode == 200) {
-          await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
-          notifyListeners();
-        }
+        // var response =
+        //     await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
+        // if (response.statusCode == 200) {
+        //   await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
+        // }
+        // notifyListeners();
       });
     }
   }
@@ -145,6 +150,7 @@ class ChatViewModel extends BaseModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
+    chatMessages.insert(0, newMessage);
     setBusy(false);
   }
 

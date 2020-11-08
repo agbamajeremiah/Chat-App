@@ -5,6 +5,7 @@ import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/messaging_sync_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'package:MSG/viewmodels/base_model.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 class UpdateProvfileViewModel extends BaseModel {
@@ -13,13 +14,21 @@ class UpdateProvfileViewModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final ContactServices _contactService = locator<ContactServices>();
   final MessagingServices _messageService = locator<MessagingServices>();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  Future _getDeviceToken() async {
+    String token = await _firebaseMessaging.getToken();
+    return token;
+  }
 
   Future updateProfile({
     @required String name,
   }) async {
+    String token = await _getDeviceToken();
     setBusy(true);
     try {
-      var resposnse = await _authenticationSerivice.updateProfile(name: name);
+      var resposnse =
+          await _authenticationSerivice.updateProfile(name: name, token: token);
       print(resposnse);
       await synFirstTime().then((value) =>
           _navigationService.removeAllAndNavigateTo(MessageViewRoute));
