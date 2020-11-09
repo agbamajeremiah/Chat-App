@@ -241,7 +241,6 @@ class DatabaseService {
         offset: offset,
         limit: limit,
         whereArgs: [threadId]);
-    print(chats);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));
     });

@@ -109,13 +109,18 @@ class ChatViewModel extends BaseModel {
       print("unsent Messages");
       print(unsentMessages);
       unsentMessages.forEach((mes) async {
-        print(mes.content + mes.status + mes.createdAt + mes.isQuote + mes.id);
-        // var response =
-        //     await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
-        // if (response.statusCode == 200) {
-        //   await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
-        // }
-        // notifyListeners();
+        print(mes.content +
+            mes.status +
+            mes.createdAt +
+            mes.isQuote +
+            mes.id +
+            phoneNumber);
+        var response =
+            await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
+        if (response.statusCode == 200) {
+          await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
+        }
+        notifyListeners();
       });
     }
   }
@@ -164,6 +169,7 @@ class ChatViewModel extends BaseModel {
         "threadID": threadId,
         "isQuote": isQuote,
         "msgRepliedTo": replyTo,
+        "reciver": phoneNumber
       };
 
       Map<String, String> headers = {

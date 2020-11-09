@@ -4,6 +4,7 @@ import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/widgets/message_bubble.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
+import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -91,42 +92,79 @@ class _ChatViewState extends State<ChatView> {
                             );
                           } else {
                             List<Message> allMessages = model.chatMessages;
-                            final messageCount = allMessages.length;
-                            return messageCount > 0
-                                ? Expanded(
-                                    child: ListView.builder(
-                                      controller: _chatListController,
-                                      reverse: true,
-                                      itemCount: messageCount,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 20),
-                                      itemBuilder: (context, index) {
-                                        final message = allMessages[index];
-                                        return MessageBubble(
-                                          sender: message.sender,
-                                          text: message.content.toString(),
-                                          isMe: message.sender ==
-                                              model.userNumber,
-                                          messageTime: message.createdAt,
-                                          status: message.status,
-                                        );
-                                      },
+                            final int messageCount = allMessages.length;
+                            if (messageCount > 0) {
+                              List messageWithTime = [];
+                              for (int i = 0; i < messageCount; i++) {
+                                if (i != 0 &&
+                                    (DateTime.parse(allMessages[i - 1]
+                                                    .createdAt)
+                                                .day -
+                                            DateTime.parse(
+                                                    allMessages[i].createdAt)
+                                                .day) >
+                                        0) {
+                                  messageWithTime.add(getDisplayDate(
+                                      allMessages[i - 1].createdAt));
+                                }
+                                messageWithTime.add(allMessages[i]);
+                              }
+                              messageWithTime.add(
+                                  getDisplayDate(allMessages.last.createdAt));
+
+                              return Expanded(
+                                child: ListView.builder(
+                                  controller: _chatListController,
+                                  reverse: true,
+                                  itemCount: messageWithTime.length,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 20),
+                                  itemBuilder: (context, index) {
+                                    final item = messageWithTime[index];
+                                    return (item is String)
+                                        ? Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                item,
+                                                style: themeData
+                                                    .textTheme.bodyText1,
+                                              ),
+                                              //   decoration: BoxDecoration(
+                                              //       color: Colors.grey,
+                                              //       borderRadius:
+                                              //           BorderRadius.circular(5)),
+                                            ),
+                                          )
+                                        : MessageBubble(
+                                            sender: item.sender,
+                                            text: item.content.toString(),
+                                            isMe:
+                                                item.sender == model.userNumber,
+                                            messageTime: item.createdAt,
+                                            status: item.status,
+                                          );
+                                  },
+                                ),
+                              );
+                            } else {
+                              return Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 15.0),
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Text(
+                                      "No Messages",
+                                      style: textStyle.copyWith(
+                                          color: AppColors.textColor,
+                                          fontSize: 15.0),
                                     ),
-                                  )
-                                : Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 15.0),
-                                      child: Align(
-                                        alignment: Alignment.topCenter,
-                                        child: Text(
-                                          "No Messages",
-                                          style: textStyle.copyWith(
-                                              color: AppColors.textColor,
-                                              fontSize: 15.0),
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                                  ),
+                                ),
+                              );
+                            }
                           }
                         }),
                     Container(

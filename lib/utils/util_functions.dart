@@ -33,6 +33,36 @@ String getFullTime(String stringTime) {
   return returnTime;
 }
 
+String getDisplayDate(String stringTime) {
+  var returnTime;
+  DateTime curTime = DateTime.now();
+  print(curTime);
+  DateTime msgTime = DateTime.parse(stringTime);
+  print(msgTime);
+  int dayDiff = curTime.day - msgTime.day;
+  print(dayDiff);
+  switch (dayDiff) {
+    case 0:
+      returnTime = "Today";
+      break;
+    case 1:
+      returnTime = "Yesterday";
+      break;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      returnTime =
+          DateFormat.d().add_yMMMM().format(DateTime.parse(stringTime));
+      break;
+    default:
+      returnTime =
+          DateFormat.d().add_yMMMM().format(DateTime.parse(stringTime));
+  }
+  return returnTime;
+}
+
 int getColorMatch(String firstLetter) {
   int colorIndex;
   if (firstLetter == "") {
