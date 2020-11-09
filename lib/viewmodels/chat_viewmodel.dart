@@ -130,7 +130,6 @@ class ChatViewModel extends BaseModel {
     if (internetStatus == true) {
       try {
         await makeAsRead();
-        await resendPendingMessages();
       } catch (e) {
         print(e.toString());
       }
@@ -169,7 +168,7 @@ class ChatViewModel extends BaseModel {
         "threadID": threadId,
         "isQuote": isQuote,
         "msgRepliedTo": replyTo,
-        "reciver": phoneNumber
+        "receiver": phoneNumber
       };
 
       Map<String, String> headers = {
