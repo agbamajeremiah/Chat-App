@@ -10,6 +10,7 @@ Future postResquest({
 }) async {
   Dio dio = Dio();
   String route = BasedUrl + url;
+  dio.options.contentType = Headers.formUrlEncodedContentType;
   Response response = await dio.post(
     route,
     data: body,
@@ -29,8 +30,6 @@ Future postFormResquest({
 }) async {
   final dio = Dio();
   String route = BasedUrl + url;
-  print("Body: ");
-  print(body);
   dio.options.contentType = Headers.formUrlEncodedContentType;
   Response response = await dio.post(
     route,
@@ -50,6 +49,7 @@ Future getResquest({
 }) async {
   Dio dio = Dio();
   String route = BasedUrl + url;
+  dio.options.contentType = Headers.formUrlEncodedContentType;
   Response response = await dio.get(
     route,
     queryParameters: queryParam,
@@ -68,6 +68,7 @@ Future patchResquest({
 }) async {
   Dio dio = Dio();
   String route = BasedUrl + url;
+  dio.options.contentType = Headers.formUrlEncodedContentType;
   Response response = await dio.patch(
     route,
     data: body,

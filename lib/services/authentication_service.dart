@@ -121,11 +121,12 @@ class AuthenticationSerivice {
     }
   }
 
-  Future<Response> updateProfile({@required String name, String token}) async {
+  Future<Response> updateProfile(
+      {@required String name, String deviceId}) async {
     try {
       Map<String, String> body = {
         "name": name,
-        "token": token,
+        "deviceID": deviceId,
       };
       Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",

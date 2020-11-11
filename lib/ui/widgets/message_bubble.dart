@@ -27,14 +27,6 @@ class MessageBubble extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Text(
-                          convertToTime(messageTime),
-                          style:
-                              textStyle.copyWith(color: AppColors.textColor2),
-                        ),
-                      ),
-                      Padding(
                         padding: const EdgeInsets.only(
                           left: 5,
                         ),
@@ -96,11 +88,48 @@ class MessageBubble extends StatelessWidget {
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
                     padding: const EdgeInsets.symmetric(
                         vertical: 7.5, horizontal: 15),
-                    child: Text(
-                      text,
-                      style: themeData.textTheme.bodyText2
-                          .copyWith(fontSize: 16, color: Colors.white),
+
+                    child: RichText(
+                      overflow: TextOverflow.visible,
+                      text: TextSpan(children: <TextSpan>[
+                        TextSpan(
+                          text: text,
+                          style: themeData.textTheme.bodyText2
+                              .copyWith(fontSize: 15, color: Colors.white),
+                        ),
+                        TextSpan(text: "       "),
+                        TextSpan(
+                          text: convertToTime(messageTime),
+                          style: themeData.textTheme.bodyText2.copyWith(
+                            fontSize: 13,
+                          ),
+                        )
+                      ]),
                     ),
+
+                    // child: Stack(
+                    //   children: [
+                    //     Align(
+                    //       alignment: Alignment.topLeft,
+                    //       child: Text(
+                    //         text,
+                    //         style: themeData.textTheme.bodyText2
+                    //             .copyWith(fontSize: 16, color: Colors.white),
+                    //       ),
+                    //     ),
+                    //     Positioned(
+                    //       right: 0,
+                    //       bottom: 0,
+                    //       child: Padding(
+                    //         padding: const EdgeInsets.symmetric(),
+                    //         child: Text(
+                    //           convertToTime(messageTime),
+                    //           style: textStyle.copyWith(color: Colors.white),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ),
                 ),
               ],

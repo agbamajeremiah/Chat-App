@@ -18,13 +18,10 @@ class _AllContactsState extends State<AllContacts>
   //GlobalKey<RefreshIndicatorState> _refreshKey;
   bool _isSearching = false;
   String _searchQuery = "";
-  AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(duration: const Duration(seconds: 1), vsync: this);
     // _refreshKey = GlobalKey<RefreshIndicatorState>();
     _searchTextCon.addListener(() {
       setState(() {
@@ -146,7 +143,6 @@ class _AllContactsState extends State<AllContacts>
                                         color: themeData.iconTheme.color,
                                         lineWidth: 2.0,
                                         size: 20.0,
-                                        controller: _animationController,
                                       ),
                                     )
                                   : IconButton(
@@ -352,6 +348,7 @@ class _AllContactsState extends State<AllContacts>
   @override
   void dispose() {
     _searchTextCon.dispose();
+    // _animationController.dispose();
     super.dispose();
   }
 }

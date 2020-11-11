@@ -71,7 +71,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text(
                               "Cancel".toUpperCase(),
                               style: textStyle.copyWith(
-                                  color: AppColors.lightBlue, fontSize: 15),
+                                  color: AppColors.primaryColor, fontSize: 15),
                             )),
                       ),
                       horizontalSpaceSmall,
@@ -93,7 +93,7 @@ class _ProfileViewState extends State<ProfileView> {
                             child: Text(
                               "Save".toUpperCase(),
                               style: textStyle.copyWith(
-                                  color: AppColors.lightBlue, fontSize: 15),
+                                  color: AppColors.primaryColor, fontSize: 15),
                             )),
                       )
                     ],

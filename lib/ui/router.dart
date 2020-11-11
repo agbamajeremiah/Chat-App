@@ -8,6 +8,7 @@ import 'package:MSG/ui/views/settings.dart';
 import 'package:MSG/ui/views/splash_view.dart';
 import 'package:MSG/ui/views/update_profile.dart';
 import 'package:MSG/ui/views/welcome.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:MSG/constant/route_names.dart';
 
@@ -76,8 +77,28 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
+// PageRoute _getPageRoute({String routeName, Widget viewToShow}) {
+//   return PageRouteBuilder(
+//     pageBuilder: (context, animation, secondaryAnimation) => viewToShow,
+//     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+//       var begin = Offset(0.0, 1.0);
+//       var end = Offset.zero;
+//       var curve = Curves.ease;
+//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+//       var offsetAnimation = animation.drive(tween);
+//       return SlideTransition(
+//         position: offsetAnimation,
+//         child: child,
+//       );
+//     },
+//     settings: RouteSettings(
+//       name: routeName,
+//     ),
+//   );
+// }
+
 PageRoute _getPageRoute({String routeName, Widget viewToShow}) {
-  return MaterialPageRoute(
+  return CupertinoPageRoute(
       settings: RouteSettings(
         name: routeName,
       ),

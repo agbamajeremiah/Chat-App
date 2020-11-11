@@ -27,8 +27,8 @@ class UpdateProvfileViewModel extends BaseModel {
     String token = await _getDeviceToken();
     setBusy(true);
     try {
-      var resposnse =
-          await _authenticationSerivice.updateProfile(name: name, token: token);
+      var resposnse = await _authenticationSerivice.updateProfile(
+          name: name, deviceId: token);
       print(resposnse);
       await synFirstTime().then((value) =>
           _navigationService.removeAllAndNavigateTo(MessageViewRoute));

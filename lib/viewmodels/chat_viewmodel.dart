@@ -30,8 +30,6 @@ class ChatViewModel extends BaseModel {
     notifyListeners();
   }
 
-  //first run
-  Timer timer;
   void initialise() async {
     await thread;
     updateReadMessages();
@@ -54,7 +52,7 @@ class ChatViewModel extends BaseModel {
     print("Thread getter called");
     if (threadId == null) {
       String result = await DatabaseService.db.getContactThread(phoneNumber);
-      // print("thread id: " + result);
+      print("thread id: " + result);
       if (result != null) {
         threadId = result;
       } else {
@@ -103,7 +101,7 @@ class ChatViewModel extends BaseModel {
 
   Future resendPendingMessages() async {
     final internetStatus = await checkInternetConnection();
-    if (internetStatus == true) {
+    if (internetStatus == true && threadId != null) {
       List<Message> unsentMessages =
           await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
       print("unsent Messages");
@@ -120,7 +118,7 @@ class ChatViewModel extends BaseModel {
         if (response.statusCode == 200) {
           await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
         }
-        notifyListeners();
+        // notifyListeners();
       });
     }
   }

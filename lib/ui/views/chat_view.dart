@@ -6,7 +6,7 @@ import 'package:MSG/ui/widgets/message_bubble.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; //08060305025
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StatefulWidget {
@@ -127,7 +127,7 @@ class _ChatViewState extends State<ChatView> {
                                             alignment: Alignment.center,
                                             child: Container(
                                               padding:
-                                                  const EdgeInsets.all(5.0),
+                                                  const EdgeInsets.all(15.0),
                                               child: Text(
                                                 item,
                                                 style: themeData

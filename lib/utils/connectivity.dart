@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
-
 Future checkInternetConnection() async {
   try {
     final result = await InternetAddress.lookup('google.com');
