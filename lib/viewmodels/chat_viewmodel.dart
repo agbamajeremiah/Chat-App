@@ -17,7 +17,7 @@ class ChatViewModel extends BaseModel {
   String phoneNumber;
   String userNumber;
   bool fromContact;
-  List<Message> chatMessages = [];
+  // List<Message> chatMessages = [];
   final int _chatFetchMax = 15;
   ChatViewModel(
       {@required this.threadId,
@@ -78,19 +78,20 @@ class ChatViewModel extends BaseModel {
     }
   }
 
-  Future<bool> getChatMessages() async {
+  Future<List<Message>> getChatMessages() async {
+    List<Message> chatMessages = [];
     if (threadId == null) {
       await thread;
     }
     userNumber = _authService.userNumber;
     if (threadId != null) {
       int _fetchedChat = chatMessages.length;
-      List<Message> messages = await DatabaseService.db
-          .getSingleChatMessageFromDb(threadId, _fetchedChat, _chatFetchMax);
+      List<Message> messages =
+          await DatabaseService.db.getSingleChatMessageFromDb(threadId);
       chatMessages.addAll(messages);
-      return true;
+      return chatMessages;
     } else {
-      return false;
+      return [];
     }
   }
 
@@ -118,7 +119,7 @@ class ChatViewModel extends BaseModel {
         if (response.statusCode == 200) {
           await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
         }
-        // notifyListeners();
+        notifyListeners();
       });
     }
   }
@@ -152,7 +153,7 @@ class ChatViewModel extends BaseModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
-    chatMessages.insert(0, newMessage);
+    // chatMessages.insert(0, newMessage);
     setBusy(false);
   }
 

@@ -92,7 +92,7 @@ class _ChatViewState extends State<ChatView> {
                               child: Container(),
                             );
                           } else {
-                            List<Message> allMessages = model.chatMessages;
+                            List<Message> allMessages = snapshot.data;
                             final int messageCount = allMessages.length;
                             if (messageCount > 0) {
                               List messageWithTime = [];

@@ -230,16 +230,28 @@ class DatabaseService {
     return allChat;
   }
 
-  Future<List<Message>> getSingleChatMessageFromDb(
-      String threadId, int offset, int limit) async {
-    print(threadId);
+  // Future<List<Message>> getSingleChatMessageFromDb(
+  //     String threadId, int offset, int limit) async {
+  //   print(threadId);
+  //   final db = await database;
+  //   List<Message> messages = List<Message>();
+  //   var chats = await db.query(TABLE_MESSAGE,
+  //       where: "$COLUMN_MSG_THREAD_ID = ?",
+  //       orderBy: "$COLUMN_CREATED_AT DESC",
+  //       offset: offset,
+  //       limit: limit,
+  //       whereArgs: [threadId]);
+  //   chats.forEach((message) {
+  //     messages.add(Message.fromDBMap(message));
+  //   });
+  //   return messages;
+  // }
+  Future<List<Message>> getSingleChatMessageFromDb(threadId) async {
     final db = await database;
     List<Message> messages = List<Message>();
     var chats = await db.query(TABLE_MESSAGE,
         where: "$COLUMN_MSG_THREAD_ID = ?",
         orderBy: "$COLUMN_CREATED_AT DESC",
-        offset: offset,
-        limit: limit,
         whereArgs: [threadId]);
     chats.forEach((message) {
       messages.add(Message.fromDBMap(message));
