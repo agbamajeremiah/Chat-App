@@ -85,7 +85,7 @@ class ChatViewModel extends BaseModel {
     }
     userNumber = _authService.userNumber;
     if (threadId != null) {
-      int _fetchedChat = chatMessages.length;
+      // int _fetchedChat = chatMessages.length;
       List<Message> messages =
           await DatabaseService.db.getSingleChatMessageFromDb(threadId);
       chatMessages.addAll(messages);
