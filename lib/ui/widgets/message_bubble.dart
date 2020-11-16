@@ -21,11 +21,59 @@ class MessageBubble extends StatelessWidget {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
+                Material(
+                  elevation: 0.0,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                    bottomLeft: Radius.circular(20),
+                  ),
+                  color: themeData.primaryColor,
+                  child: Column(
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                            minWidth: 100.0,
+                            maxWidth: MediaQuery.of(context).size.width * 0.6),
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, left: 15, right: 15),
+                        child: Text(
+                          text,
+                          style: themeData.textTheme.bodyText2
+                              .copyWith(fontSize: 16, color: Colors.white),
+                        ),
+                      ),
+                      // Container(
+                      //   constraints: BoxConstraints(
+                      //       minWidth: 100,
+                      //       maxWidth: MediaQuery.of(context).size.width * 0.6),
+                      //   child: Align(
+                      //     alignment: Alignment.bottomRight,
+                      //     child: Padding(
+                      //       padding:
+                      //           const EdgeInsets.only(right: 10, bottom: 5),
+                      //       child: Text(
+                      //         convertToTime(messageTime),
+                      //         style: textStyle.copyWith(color: Colors.white),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      Container(
+                        child: Text(
+                          convertToTime(messageTime),
+                          style: themeData.textTheme.bodyText1
+                              .copyWith(fontSize: 13.5),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(
                           left: 5,
@@ -74,72 +122,11 @@ class MessageBubble extends StatelessWidget {
                     ],
                   ),
                 ),
-                Material(
-                  elevation: 0.0,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                  ),
-                  color: themeData.primaryColor,
-                  child: Column(
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                            minWidth: 100.0,
-                            maxWidth: MediaQuery.of(context).size.width * 0.6),
-                        padding: const EdgeInsets.only(
-                            top: 7.5, left: 15, right: 15),
-                        child: Text(
-                          text,
-                          style: themeData.textTheme.bodyText2
-                              .copyWith(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(right: 10, bottom: 5),
-                            child: Text(
-                              convertToTime(messageTime),
-                              style: textStyle.copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: SizedBox(
-                            width: 20,
-                          )),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 5, bottom: 1),
-                        child: Text(
-                          convertToTime(messageTime),
-                          style:
-                              textStyle.copyWith(color: AppColors.textColor2),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Material(
                   elevation: 1.0,
                   borderRadius: BorderRadius.only(
@@ -157,6 +144,28 @@ class MessageBubble extends StatelessWidget {
                     child: Text(text,
                         style: themeData.textTheme.bodyText1
                             .copyWith(fontSize: 16)),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: SizedBox(
+                            width: 20,
+                          )),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 5, right: 5, bottom: 1),
+                        child: Text(
+                          convertToTime(messageTime),
+                          style: themeData.textTheme.bodyText1
+                              .copyWith(fontSize: 13.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
