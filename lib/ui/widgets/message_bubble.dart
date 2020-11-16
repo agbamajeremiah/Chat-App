@@ -71,7 +71,7 @@ class MessageBubble extends StatelessWidget {
                         child: Text(
                           convertToTime(messageTime),
                           style: themeData.textTheme.bodyText1
-                              .copyWith(fontSize: 13.5),
+                              .copyWith(fontSize: 13),
                         ),
                       ),
                       Padding(
@@ -162,7 +162,7 @@ class MessageBubble extends StatelessWidget {
                         child: Text(
                           convertToTime(messageTime),
                           style: themeData.textTheme.bodyText1
-                              .copyWith(fontSize: 13.5),
+                              .copyWith(fontSize: 13),
                         ),
                       ),
                     ],
