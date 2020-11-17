@@ -1,6 +1,5 @@
-import 'package:MSG/ui/shared/app_colors.dart';
-import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/utils/util_functions.dart';
+import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -21,45 +20,20 @@ class MessageBubble extends StatelessWidget {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Material(
-                  elevation: 0.0,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                    bottomLeft: Radius.circular(20),
-                  ),
+                Bubble(
+                  margin: BubbleEdges.only(top: 10),
+                  nip: BubbleNip.rightTop,
                   color: themeData.primaryColor,
-                  child: Column(
-                    children: [
-                      Container(
-                        constraints: BoxConstraints(
-                            minWidth: 100.0,
-                            maxWidth: MediaQuery.of(context).size.width * 0.6),
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, left: 15, right: 15),
-                        child: Text(
-                          text,
-                          style: themeData.textTheme.bodyText2
-                              .copyWith(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                      // Container(
-                      //   constraints: BoxConstraints(
-                      //       minWidth: 100,
-                      //       maxWidth: MediaQuery.of(context).size.width * 0.6),
-                      //   child: Align(
-                      //     alignment: Alignment.bottomRight,
-                      //     child: Padding(
-                      //       padding:
-                      //           const EdgeInsets.only(right: 10, bottom: 5),
-                      //       child: Text(
-                      //         convertToTime(messageTime),
-                      //         style: textStyle.copyWith(color: Colors.white),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    constraints: BoxConstraints(
+                        minWidth: 75.0,
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
+                    child: Text(
+                      text,
+                      style: themeData.textTheme.bodyText2
+                          .copyWith(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
                 Align(
@@ -67,16 +41,14 @@ class MessageBubble extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        child: Text(
-                          convertToTime(messageTime),
-                          style: themeData.textTheme.bodyText1
-                              .copyWith(fontSize: 13),
-                        ),
+                      Text(
+                        convertToTime(messageTime),
+                        style: themeData.textTheme.bodyText1
+                            .copyWith(fontSize: 13),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 5,
+                          right: 10,
                         ),
                         child: status == 'SENT'
                             ? Row(
@@ -127,23 +99,21 @@ class MessageBubble extends StatelessWidget {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Material(
+                Bubble(
                   elevation: 1.0,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  color: themeData.backgroundColor,
+                  margin: BubbleEdges.only(top: 10),
+                  nip: BubbleNip.leftTop,
+                  color: themeData.primaryColor,
                   child: Container(
+                    padding: EdgeInsets.all(2),
                     constraints: BoxConstraints(
-                        minWidth: 100.0,
+                        minWidth: 75.0,
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 7.5, horizontal: 15),
-                    child: Text(text,
-                        style: themeData.textTheme.bodyText1
-                            .copyWith(fontSize: 16)),
+                    child: Text(
+                      text,
+                      style: themeData.textTheme.bodyText2
+                          .copyWith(fontSize: 16, color: Colors.white),
+                    ),
                   ),
                 ),
                 Align(

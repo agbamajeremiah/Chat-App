@@ -73,6 +73,10 @@ class _MessagesViewState extends State<MessagesView> {
               if (!snapshot.hasData) {
                 return Container(
                   color: themeData.backgroundColor,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    strokeWidth: 2.0,
+                  )),
                 );
               } else {
                 List<Chat> allChats = snapshot.data;
