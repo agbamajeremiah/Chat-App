@@ -56,7 +56,7 @@ class _ChatViewState extends State<ChatView> {
         disposeViewModel: false,
         builder: (context, model, snapshot) {
           final getChatMessages = model.getChatMessages();
-          model.resendPendingMessages();
+          // model.resendPendingMessages();
           model.synChat();
           return SafeArea(
             child: Scaffold(
@@ -202,7 +202,7 @@ class _ChatViewState extends State<ChatView> {
                                       _messageTextController.text;
                                   String receiver = chat.memberPhone;
                                   if (messageText.length > 0) {
-                                    await model.saveNewMessage(
+                                    model.saveNewMessage(
                                         message: messageText,
                                         receiver: receiver,
                                         isQuote: false);

@@ -100,43 +100,40 @@ class ChatViewModel extends BaseModel {
         .updateReadMessages(threadId, _authService.userNumber);
   }
 
-  Future resendPendingMessages() async {
-    final internetStatus = await checkInternetConnection();
-    if (internetStatus == true && threadId != null) {
-      List<Message> unsentMessages =
-          await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
-      print("unsent Messages");
-      print(unsentMessages);
-      unsentMessages.forEach((mes) async {
-        print(mes.content +
-            mes.status +
-            mes.createdAt +
-            mes.isQuote +
-            mes.id +
-            phoneNumber);
-        var response =
-            await sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
-        if (response.statusCode == 200) {
-          await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
-        }
-        notifyListeners();
-      });
-    }
-  }
+  // Future resendPendingMessages() async {
+  //   final internetStatus = await checkInternetConnection();
+  //   if (internetStatus == true && threadId != null) {
+  //     List<Message> unsentMessages =
+  //         await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
+  //     print("unsent Messages");
+  //     print(unsentMessages);
+  //     unsentMessages.forEach((mes) async {
+  //       print(mes.content +
+  //           mes.status +
+  //           mes.createdAt +
+  //           mes.isQuote +
+  //           mes.id +
+  //           phoneNumber);
+  //       var response =
+  //           await _sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
+  //       if (response.statusCode == 200) {
+  //         await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
+  //       }
+  //       notifyListeners();
+  //     });
+  //   }
+  // }
 
   Future synChat() async {
-    final internetStatus = await checkInternetConnection();
-    if (internetStatus == true) {
-      try {
-        await makeAsRead();
-      } catch (e) {
-        print(e.toString());
-      }
+    try {
+      await makeAsRead();
+    } catch (e) {
+      print(e.toString());
     }
   }
 
   //send new new nessage
-  Future saveNewMessage(
+  void saveNewMessage(
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
@@ -153,11 +150,25 @@ class ChatViewModel extends BaseModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
-    // chatMessages.insert(0, newMessage);
+    setBusy(false);
+    await _sendNewMessage(
+        messageId: messageId, message: message, isQuote: isQuote);
+  }
+
+  Future _sendNewMessage({
+    @required String messageId,
+    @required String message,
+    @required bool isQuote,
+  }) async {
+    setBusy(true);
+    var response = await _sendMsg(messageId, message, isQuote, "");
+    if (response.statusCode == 200) {
+      await DatabaseService.db.updateMessageStatus(messageId, "SENT");
+    }
     setBusy(false);
   }
 
-  Future sendMsg(
+  Future _sendMsg(
       String messageId, String message, bool isQuote, String replyTo) async {
     final _userToken = _authService.token;
     try {
@@ -195,7 +206,6 @@ class ChatViewModel extends BaseModel {
   //initiate thread
   Future initiateThread(String contact) async {
     final _userToken = _authService.token;
-    print(_userToken);
     try {
       Map<String, dynamic> body = {"receiver": contact};
 
@@ -208,7 +218,6 @@ class ChatViewModel extends BaseModel {
         headers: headers,
         body: body,
       );
-      print(response);
       return response;
     } catch (e) {
       if (e is DioError) {
