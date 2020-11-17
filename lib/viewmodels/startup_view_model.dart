@@ -17,7 +17,7 @@ class StartUpViewModel extends BaseModel {
   Future handleStartUpLogic() async {
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
     if (hasLoggedInUser) {
-      await Future.delayed(Duration(seconds: 1)).whenComplete(
+      await Future.delayed(Duration(milliseconds: 500)).whenComplete(
           () => _navigationService.clearLastAndNavigateTo(MessageViewRoute));
     } else {
       _contactService.fetchContactFromDevice();
