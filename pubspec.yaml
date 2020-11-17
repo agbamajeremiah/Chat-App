@@ -29,7 +29,7 @@ dependencies:
   path: ^1.6.4
   flutter_spinkit: ^4.1.2+1  
   firebase_messaging: ^7.0.3
-  flutter_launcher_icons: ^0.8.1
+  flutter_launcher_icons: ^0.8.0
   url_launcher: ^5.7.10
 
 dev_dependencies:
@@ -37,10 +37,9 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons: 
-  android: true
+  android: "launcher_icon"
   ios: true
   image_path: "assets/icon/icon.png"
-  adaptive_icon_background: "#ffffff"
 
 # The following section is specific to Flutter.
 flutter:

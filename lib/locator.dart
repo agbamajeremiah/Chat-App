@@ -1,7 +1,6 @@
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/services/messaging_sync_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:get_it/get_it.dart';
@@ -12,6 +11,5 @@ void setupLocator() {
   locator.registerLazySingleton(() => DatabaseService);
   locator.registerLazySingleton(() => AuthenticationSerivice());
   locator.registerLazySingleton(() => ContactServices());
-  locator.registerLazySingleton(() => MessagingServices());
   locator.registerLazySingleton(() => SocketServices());
 }
