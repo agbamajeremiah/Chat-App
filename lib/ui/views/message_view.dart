@@ -62,11 +62,12 @@ class _MessagesViewState extends State<MessagesView> {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     return ViewModelBuilder<MessageViewModel>.reactive(
-        disposeViewModel: true,
+        // disposeViewModel: false,
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
-          // print(model.busy.toString());
+          print("Message Page rebuilt");
+
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
@@ -113,15 +114,20 @@ class _MessagesViewState extends State<MessagesView> {
                     child: SafeArea(
                       child: Scaffold(
                         floatingActionButton: FloatingActionButton(
-                          onPressed: () async {
-                            var refresh = await Navigator.pushNamed(
-                                context, ContactViewRoute);
-                            print("page rebuilt");
-                            setState(() => rebuild = refresh);
+                          onPressed: () {
+                            model.incrementCount();
                           },
-                          child: Icon(
-                            Icons.message,
-                          ),
+                          child: Icon(Icons.add),
+
+                          //   onPressed: () async {
+                          //     var refresh = await Navigator.pushNamed(
+                          //         context, ContactViewRoute);
+                          //     print("page rebuilt");
+                          //     setState(() => rebuild = refresh);
+                          //   },
+                          //   child: Icon(
+                          //     Icons.message,
+                          //   ),
                         ),
                         appBar: (_isSearching)
                             ? AppBar(
@@ -186,122 +192,129 @@ class _MessagesViewState extends State<MessagesView> {
                                   MyPopupMenu(),
                                 ],
                               ),
-                        body: SafeArea(
-                            child: chatCount > 0
-                                ? _searchQuery.isEmpty
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 0.0),
-                                        child: ListView.separated(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          itemCount: chatCount,
-                                          itemBuilder: (context, index) {
-                                            final chat = allChats[index];
-                                            print("member:");
-                                            return InkWell(
-                                              onTap: () async {
-                                                var refresh =
-                                                    await Navigator.pushNamed(
-                                                        context, ChatViewRoute,
-                                                        arguments: {
-                                                      'chat': Chat(
-                                                          id: chat.id,
-                                                          displayName:
-                                                              chat.displayName,
-                                                          memberPhone:
-                                                              chat.memberPhone),
-                                                      'fromContact': false
-                                                    });
+                        body: Container(
+                          child: Center(
+                            child: Text(
+                              "Counter: ${model.count}",
+                              style: themeData.textTheme.bodyText1,
+                            ),
+                          ),
+                          // child: chatCount > 0
+                          //     ? _searchQuery.isEmpty
+                          //         ? Padding(
+                          //             padding: const EdgeInsets.symmetric(
+                          //                 vertical: 0.0),
+                          //             child: ListView.separated(
+                          //               padding: EdgeInsets.symmetric(
+                          //                   vertical: 10.0),
+                          //               itemCount: chatCount,
+                          //               itemBuilder: (context, index) {
+                          //                 final chat = allChats[index];
+                          //                 print("member:");
+                          //                 return InkWell(
+                          //                   onTap: () async {
+                          //                     var refresh =
+                          //                         await Navigator.pushNamed(
+                          //                             context, ChatViewRoute,
+                          //                             arguments: {
+                          //                           'chat': Chat(
+                          //                               id: chat.id,
+                          //                               displayName:
+                          //                                   chat.displayName,
+                          //                               memberPhone:
+                          //                                   chat.memberPhone),
+                          //                           'fromContact': false
+                          //                         });
 
-                                                // print(refresh);
-                                                setState(
-                                                    () => rebuild = refresh);
-                                              },
-                                              child: MessageContainer(
-                                                  searchquery: "",
-                                                  name: chat.displayName ??
-                                                      chat.memberPhone,
-                                                  lastMessage: chat.lastMessage,
-                                                  msgTime: chat.lastMsgTime,
-                                                  unreadMessages:
-                                                      chat.unreadMsgCount),
-                                            );
-                                          },
-                                          separatorBuilder:
-                                              (BuildContext context,
-                                                  int index) {
-                                            return Divider(
-                                              thickness: 0.4,
-                                              color: themeData.dividerColor,
-                                            );
-                                          },
-                                        ),
-                                      )
-                                    : searchChatList.length > 0
-                                        ? Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 0.0),
-                                            child: ListView.separated(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10.0),
-                                              itemCount: searchChatList.length,
-                                              itemBuilder: (context, index) {
-                                                final chat =
-                                                    searchChatList[index];
-                                                print("member:");
-                                                return InkWell(
-                                                  onTap: () {
-                                                    _searchTextCon.clear();
-                                                    _isSearching = false;
-                                                    Navigator.pushNamed(
-                                                        context, ChatViewRoute,
-                                                        arguments: Chat(
-                                                            id: chat.id,
-                                                            displayName: chat
-                                                                .displayName,
-                                                            memberPhone: chat
-                                                                .memberPhone));
-                                                  },
-                                                  child: MessageContainer(
-                                                    searchquery: _searchQuery,
-                                                    name: chat.displayName ??
-                                                        chat.memberPhone,
-                                                    lastMessage:
-                                                        chat.lastMessage,
-                                                    msgTime: chat.lastMsgTime,
-                                                    unreadMessages:
-                                                        chat.unreadMsgCount,
-                                                  ),
-                                                );
-                                              },
-                                              separatorBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Divider();
-                                              },
-                                            ),
-                                          )
-                                        : Padding(
-                                            padding: EdgeInsets.only(top: 20.0),
-                                            child: Align(
-                                              alignment: Alignment.topCenter,
-                                              child: Text("No Match Found!",
-                                                  style: themeData
-                                                      .textTheme.bodyText1
-                                                      .copyWith(fontSize: 15)),
-                                            ),
-                                          )
-                                : Padding(
-                                    padding: EdgeInsets.only(top: 15),
-                                    child: Align(
-                                      child: Text(
-                                        "No conversation yet",
-                                        style: themeData.textTheme.bodyText1
-                                            .copyWith(fontSize: 15.0),
-                                      ),
-                                    ),
-                                  )),
+                          //                     // print(refresh);
+                          //                     setState(
+                          //                         () => rebuild = refresh);
+                          //                   },
+                          //                   child: MessageContainer(
+                          //                       searchquery: "",
+                          //                       name: chat.displayName ??
+                          //                           chat.memberPhone,
+                          //                       lastMessage: chat.lastMessage,
+                          //                       msgTime: chat.lastMsgTime,
+                          //                       unreadMessages:
+                          //                           chat.unreadMsgCount),
+                          //                 );
+                          //               },
+                          //               separatorBuilder:
+                          //                   (BuildContext context,
+                          //                       int index) {
+                          //                 return Divider(
+                          //                   thickness: 0.4,
+                          //                   color: themeData.dividerColor,
+                          //                 );
+                          //               },
+                          //             ),
+                          //           )
+                          //         : searchChatList.length > 0
+                          //             ? Padding(
+                          //                 padding: const EdgeInsets.symmetric(
+                          //                     vertical: 0.0),
+                          //                 child: ListView.separated(
+                          //                   padding: EdgeInsets.symmetric(
+                          //                       vertical: 10.0),
+                          //                   itemCount: searchChatList.length,
+                          //                   itemBuilder: (context, index) {
+                          //                     final chat =
+                          //                         searchChatList[index];
+                          //                     print("member:");
+                          //                     return InkWell(
+                          //                       onTap: () {
+                          //                         _searchTextCon.clear();
+                          //                         _isSearching = false;
+                          //                         Navigator.pushNamed(
+                          //                             context, ChatViewRoute,
+                          //                             arguments: Chat(
+                          //                                 id: chat.id,
+                          //                                 displayName: chat
+                          //                                     .displayName,
+                          //                                 memberPhone: chat
+                          //                                     .memberPhone));
+                          //                       },
+                          //                       child: MessageContainer(
+                          //                         searchquery: _searchQuery,
+                          //                         name: chat.displayName ??
+                          //                             chat.memberPhone,
+                          //                         lastMessage:
+                          //                             chat.lastMessage,
+                          //                         msgTime: chat.lastMsgTime,
+                          //                         unreadMessages:
+                          //                             chat.unreadMsgCount,
+                          //                       ),
+                          //                     );
+                          //                   },
+                          //                   separatorBuilder:
+                          //                       (BuildContext context,
+                          //                           int index) {
+                          //                     return Divider();
+                          //                   },
+                          //                 ),
+                          //               )
+                          //             : Padding(
+                          //                 padding: EdgeInsets.only(top: 20.0),
+                          //                 child: Align(
+                          //                   alignment: Alignment.topCenter,
+                          //                   child: Text("No Match Found!",
+                          //                       style: themeData
+                          //                           .textTheme.bodyText1
+                          //                           .copyWith(fontSize: 15)),
+                          //                 ),
+                          //               )
+                          //     : Padding(
+                          //         padding: EdgeInsets.only(top: 15),
+                          //         child: Align(
+                          //           child: Text(
+                          //             "No conversation yet",
+                          //             style: themeData.textTheme.bodyText1
+                          //                 .copyWith(fontSize: 15.0),
+                          //           ),
+                          //         ),
+                          //       ),
+                        ),
                       ),
                     ),
                   );

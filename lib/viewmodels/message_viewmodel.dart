@@ -2,17 +2,19 @@ import 'dart:async';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/authentication_service.dart';
+import 'package:MSG/services/counter_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
-import 'package:MSG/viewmodels/base_model.dart';
+// import 'package:MSG/viewmodels/base_model.dart';
+import 'package:stacked/stacked.dart';
 
-class MessageViewModel extends BaseModel {
-  @override
-  bool get busy => super.busy;
+class MessageViewModel extends BaseViewModel {
   final SocketServices _socketService = locator<SocketServices>();
   void rebuildScreen() {
     setBusy(true);
   }
+
+  final _counterService = locator<CounterService>();
 
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
@@ -48,5 +50,11 @@ class MessageViewModel extends BaseModel {
     List<Chat> activeChat = await DatabaseService.db
         .getAllChatsFromDb(_authenticationSerivice.userNumber);
     return activeChat;
+  }
+
+  int get count => _counterService.counter;
+  void incrementCount() {
+    _counterService.singleIncrementCounter();
+    notifyListeners();
   }
 }

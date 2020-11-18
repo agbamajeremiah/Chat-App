@@ -42,10 +42,13 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("page Rebuilt");
     final themeData = Theme.of(context);
     return ViewModelBuilder<SettingsViewModel>.reactive(
         viewModelBuilder: () => SettingsViewModel(),
         builder: (context, model, snapshot) {
+          print("page Rebuilt");
+
           int index = getColorMatch(
               model.accountName != null ? model.accountName[0] : '');
           return Consumer<ThemeNotifier>(builder: (context, notifier, child) {
@@ -70,6 +73,13 @@ class _SettingScreenState extends State<SettingScreen> {
                         style: themeData.textTheme.headline6
                             .copyWith(fontSize: 22.5),
                       ),
+                    ),
+                    floatingActionButton: FloatingActionButton(
+                      onPressed: () {
+                        model.doubleIncrementCount();
+                        print(model.count);
+                      },
+                      child: Icon(Icons.add),
                     ),
                     body: Column(
                       children: [
@@ -221,9 +231,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                     )
                                   ],
                                 ),
-                              )
+                              ),
                             ],
                           ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.all(20),
+                          color: Colors.black,
+                          child: Text("Counter: ${model.count}"),
                         )
                       ],
                     )),
