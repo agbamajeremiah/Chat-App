@@ -7,6 +7,52 @@ class MyPopupMenu extends StatefulWidget {
 }
 
 class _MyPopupMenuState extends State<MyPopupMenu> {
+  void _openHelpDialog(BuildContext context) {
+    final themeData = Theme.of(context);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              content: Container(
+                constraints: BoxConstraints(maxHeight: 100),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        "MSG Messenger",
+                        style: themeData.textTheme.subtitle2
+                            .copyWith(fontSize: 22.5),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Text(
+                        " Version: 1.0",
+                        style: themeData.textTheme.subtitle2,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Text(
+                        " Developed by 525System",
+                        style: themeData.textTheme.subtitle2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FlatButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text("Close"),
+                  ),
+                )
+              ],
+            ));
+  }
+
   void _switchMenuScreen(String option, BuildContext cxt) {
     switch (option) {
       case "profile":
@@ -16,8 +62,8 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
         print("Switch to Settings");
         Navigator.pushNamed(context, SettingsViewRoute);
         break;
-      case "help":
-        print("Switch to Help Screen");
+      case "info":
+        _openHelpDialog(context);
         break;
       default:
     }
@@ -54,8 +100,8 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
               height: 2,
             ),
             PopupMenuItem(
-              child: Text("Help"),
-              value: "help",
+              child: Text("Info"),
+              value: "info",
               textStyle: themeData.textTheme.bodyText1.copyWith(fontSize: 13.5),
             ),
           ];

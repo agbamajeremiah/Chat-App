@@ -37,6 +37,12 @@ ThemeData lightTheme = ThemeData(
         fontSize: 15,
         fontStyle: FontStyle.normal,
         fontWeight: FontWeight.w400),
+    subtitle2: TextStyle(
+        color: AppColors.textColor,
+        fontFamily: 'Ubuntu',
+        fontSize: 15,
+        fontStyle: FontStyle.normal,
+        fontWeight: FontWeight.w400),
     bodyText1: TextStyle(
         color: AppColors.textColor,
         fontFamily: 'Ubuntu',
@@ -81,6 +87,12 @@ ThemeData darkTheme = ThemeData(
           fontWeight: FontWeight.w500),
       subtitle1: TextStyle(
           color: AppColors.darkTextColor,
+          fontFamily: 'Ubuntu',
+          fontSize: 15,
+          fontStyle: FontStyle.normal,
+          fontWeight: FontWeight.w400),
+      subtitle2: TextStyle(
+          color: AppColors.greyColor,
           fontFamily: 'Ubuntu',
           fontSize: 15,
           fontStyle: FontStyle.normal,
