@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   stacked : ^1.7.6
+  observable_ish: ^2.1.4
   provider: ^4.3.2+2
   get_it: ^4.0.1
   google_fonts: ^0.3.2

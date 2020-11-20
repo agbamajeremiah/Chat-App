@@ -130,7 +130,7 @@ class _UpdateProfileViewState extends State<UpdateProfileView> {
                         width: MediaQuery.of(context).size.width * 0.35,
                         child: BusyButton(
                             title: "Continue",
-                            busy: model.busy,
+                            busy: model.isBusy,
                             onPressed: () async {
                               if (nameController.text != "") {
                                 await model.updateProfile(

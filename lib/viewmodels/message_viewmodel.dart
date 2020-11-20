@@ -2,19 +2,14 @@ import 'dart:async';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/authentication_service.dart';
-import 'package:MSG/services/counter_service.dart';
+import 'package:MSG/services/state_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
-// import 'package:MSG/viewmodels/base_model.dart';
 import 'package:stacked/stacked.dart';
 
-class MessageViewModel extends BaseViewModel {
+class MessageViewModel extends ReactiveViewModel {
   final SocketServices _socketService = locator<SocketServices>();
-  void rebuildScreen() {
-    setBusy(true);
-  }
-
-  final _counterService = locator<CounterService>();
+  final StateService _stateService = locator<StateService>();
 
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
@@ -33,7 +28,7 @@ class MessageViewModel extends BaseViewModel {
       List<Chat> chat = await getAllThreads();
       chat.forEach((element) async {
         _socketService.subscribeToThread(
-            element.id, element.memberPhone, rebuildScreen);
+            element.id, element.memberPhone, rebuildScreens);
       });
     } catch (e) {
       print(e.toString);
@@ -52,9 +47,12 @@ class MessageViewModel extends BaseViewModel {
     return activeChat;
   }
 
-  int get count => _counterService.counter;
-  void incrementCount() {
-    _counterService.singleIncrementCounter();
+  bool get rebuild => _stateService.rebuildPage;
+  void rebuildScreens() {
+    _stateService.updatePages();
     notifyListeners();
   }
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
 }

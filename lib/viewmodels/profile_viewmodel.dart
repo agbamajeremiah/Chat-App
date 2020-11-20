@@ -1,9 +1,9 @@
 import 'package:MSG/locator.dart';
 import 'package:MSG/services/authentication_service.dart';
-import 'package:MSG/viewmodels/base_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:stacked/stacked.dart';
 
-class ProfileViewModel extends BaseModel {
+class ProfileViewModel extends BaseViewModel {
   String newAccountName = "";
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();

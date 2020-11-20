@@ -3,9 +3,9 @@ import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/connectivity.dart';
-import 'package:MSG/viewmodels/base_model.dart';
+import 'package:stacked/stacked.dart';
 
-class ContactViewModel extends BaseModel {
+class ContactViewModel extends BaseViewModel {
   final ContactServices _contactService = locator<ContactServices>();
   bool refreshingContacts = false;
   //Fetch all registered contacts from database

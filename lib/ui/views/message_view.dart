@@ -21,7 +21,6 @@ class _MessagesViewState extends State<MessagesView> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool _isSearching = false;
   String _searchQuery = "";
-  bool rebuild = false;
 
   _getToken() async {
     await _firebaseMessaging
@@ -65,8 +64,6 @@ class _MessagesViewState extends State<MessagesView> {
         viewModelBuilder: () => MessageViewModel(),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
-          print("Message Page rebuilt");
-
           return FutureBuilder(
             future: model.getAllChats(),
             builder: (context, snapshot) {
@@ -113,17 +110,8 @@ class _MessagesViewState extends State<MessagesView> {
                     child: SafeArea(
                       child: Scaffold(
                         floatingActionButton: FloatingActionButton(
-                          // onPressed: () {
-                          //   model.incrementCount();
-                          // },
-                          // child: Icon(Icons.add),
-
-                          onPressed: () async {
-                            var refresh = await Navigator.pushNamed(
-                                context, ContactViewRoute);
-                            print("page rebuilt");
-                            setState(() => rebuild = refresh);
-                          },
+                          onPressed: (() =>
+                              Navigator.pushNamed(context, ContactViewRoute)),
                           child: Icon(
                             Icons.message,
                           ),
@@ -192,12 +180,6 @@ class _MessagesViewState extends State<MessagesView> {
                                 ],
                               ),
                         body: Container(
-                          // child: Center(
-                          //   child: Text(
-                          //     "Counter: ${model.count}",
-                          //     style: themeData.textTheme.bodyText1,
-                          //   ),
-                          // ),
                           child: chatCount > 0
                               ? _searchQuery.isEmpty
                                   ? Padding(
@@ -211,11 +193,10 @@ class _MessagesViewState extends State<MessagesView> {
                                           final chat = allChats[index];
                                           print("member:");
                                           return InkWell(
-                                            onTap: () async {
-                                              var refresh =
-                                                  await Navigator.pushNamed(
-                                                      context, ChatViewRoute,
-                                                      arguments: {
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                  context, ChatViewRoute,
+                                                  arguments: {
                                                     'chat': Chat(
                                                         id: chat.id,
                                                         displayName:
@@ -224,9 +205,21 @@ class _MessagesViewState extends State<MessagesView> {
                                                             chat.memberPhone),
                                                     'fromContact': false
                                                   });
+                                              // var refresh =
+                                              //     await Navigator.pushNamed(
+                                              //         context, ChatViewRoute,
+                                              //         arguments: {
+                                              //       'chat': Chat(
+                                              //           id: chat.id,
+                                              //           displayName:
+                                              //               chat.displayName,
+                                              //           memberPhone:
+                                              //               chat.memberPhone),
+                                              //       'fromContact': false
+                                              //     });
 
-                                              // print(refresh);
-                                              setState(() => rebuild = refresh);
+                                              // // print(refresh);
+                                              // setState(() => rebuild = refresh);
                                             },
                                             child: MessageContainer(
                                                 searchquery: "",

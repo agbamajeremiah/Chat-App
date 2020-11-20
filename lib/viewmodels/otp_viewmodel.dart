@@ -2,10 +2,10 @@ import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
-import 'package:MSG/viewmodels/base_model.dart';
+import 'package:stacked/stacked.dart';
 import 'package:flutter/foundation.dart';
 
-class OTPViewModel extends BaseModel {
+class OTPViewModel extends BaseViewModel {
   String verifyMessage;
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();

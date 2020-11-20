@@ -7,12 +7,13 @@ import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'package:MSG/utils/api_request.dart';
-import 'package:MSG/viewmodels/base_model.dart';
+
+import 'package:stacked/stacked.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
-class UpdateProvfileViewModel extends BaseModel {
+class UpdateProvfileViewModel extends BaseViewModel {
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
   final NavigationService _navigationService = locator<NavigationService>();

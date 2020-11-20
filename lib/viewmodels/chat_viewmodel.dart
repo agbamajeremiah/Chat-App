@@ -4,15 +4,16 @@ import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/state_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/utils/api_request.dart';
 import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/utils/util_functions.dart';
-import 'package:MSG/viewmodels/base_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:stacked/stacked.dart';
 
-class ChatViewModel extends BaseModel {
+class ChatViewModel extends ReactiveViewModel {
   String threadId;
   String phoneNumber;
   String userNumber;
@@ -23,12 +24,9 @@ class ChatViewModel extends BaseModel {
       {@required this.threadId,
       @required this.phoneNumber,
       @required this.fromContact});
+  final StateService _stateService = locator<StateService>();
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
-
-  void rebuildScreen() {
-    notifyListeners();
-  }
 
   void initialise() async {
     await thread;
@@ -40,8 +38,7 @@ class ChatViewModel extends BaseModel {
       if (internetStatus == true) {
         if (_socketService.socketIO != null) {
           //_socketService.registerSocketId();
-          _socketService.subscribeToThread(
-              threadId, phoneNumber, rebuildScreen);
+          _socketService.subscribeToThread(threadId, phoneNumber, rebuidPages);
         }
       }
     }
@@ -137,7 +134,6 @@ class ChatViewModel extends BaseModel {
       {@required String message,
       @required String receiver,
       @required bool isQuote}) async {
-    setBusy(true);
     final now = DateTime.now();
     final String messageId = generateMessageId();
     Message newMessage = Message(
@@ -150,7 +146,7 @@ class ChatViewModel extends BaseModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
-    setBusy(false);
+    rebuidPages();
     await _sendNewMessage(
         messageId: messageId, message: message, isQuote: isQuote);
   }
@@ -165,7 +161,7 @@ class ChatViewModel extends BaseModel {
     if (response.statusCode == 200) {
       await DatabaseService.db.updateMessageStatus(messageId, "SENT");
     }
-    setBusy(false);
+    notifyListeners();
   }
 
   Future _sendMsg(
@@ -260,4 +256,14 @@ class ChatViewModel extends BaseModel {
       throw e;
     }
   }
+
+  //For Rebuilding screens
+  bool get rebuild => _stateService.rebuildPage;
+  void rebuidPages() {
+    _stateService.updatePages();
+    notifyListeners();
+  }
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
 }
