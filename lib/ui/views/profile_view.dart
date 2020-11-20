@@ -13,7 +13,7 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   // TextEditingController editNameController = TextEditingController();
 
-  void _showProfileBottonSheet(BuildContext context, var model) {
+  void _showProfileBottomSheet(BuildContext context, var model) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -244,7 +244,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   size: 17.5,
                                 ),
                                 onPressed: () {
-                                  _showProfileBottonSheet(context, model);
+                                  _showProfileBottomSheet(context, model);
                                 })
                           ],
                         ),

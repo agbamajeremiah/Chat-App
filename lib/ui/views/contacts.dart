@@ -4,6 +4,7 @@ import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -251,17 +252,40 @@ class _AllContactsState extends State<AllContacts>
                                                                     .symmetric(
                                                                 horizontal: 15,
                                                                 vertical: 10),
-                                                        child: Text(
-                                                          "Invite Friends",
-                                                          style: themeData
-                                                              .textTheme
-                                                              .bodyText1
-                                                              .copyWith(
-                                                                  fontSize:
-                                                                      17.5,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(2.0),
+                                                              child: Icon(
+                                                                Icons.share,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            // FaIcon(
+                                                            //   FontAwesomeIcons
+                                                            //       .gamepad,
+                                                            //   size: 20,
+                                                            // ),
+                                                            Container(
+                                                              child: Text(
+                                                                "Invite Friends",
+                                                                style: themeData
+                                                                    .textTheme
+                                                                    .bodyText1
+                                                                    .copyWith(
+                                                                        fontSize:
+                                                                            17.5,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     )
