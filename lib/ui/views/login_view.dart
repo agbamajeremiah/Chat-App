@@ -159,7 +159,7 @@ class _LoginViewState extends State<LoginView> {
                                   placeholder: 'Enter Number',
                                   textInputType: TextInputType.number,
                                   formatter:
-                                      WhitelistingTextInputFormatter.digitsOnly,
+                                      FilteringTextInputFormatter.digitsOnly,
                                 ),
                               )
                             ],
@@ -184,11 +184,16 @@ class _LoginViewState extends State<LoginView> {
                                 setState(() => isRegistering = true);
                                 if (phoneNumber.text != "" && prefix != "") {
                                   setState(() => errorMessage = "");
-                                  print(prefix + phoneNumber.text);
+                                  String fullNumber = prefix + phoneNumber.text;
+                                  if (prefix == "+234" &&
+                                      phoneNumber.text.length == 11 &&
+                                      phoneNumber.text[0] == "0") {
+                                    fullNumber =
+                                        prefix + phoneNumber.text.substring(1);
+                                  }
+                                  print(fullNumber);
                                   await model
-                                      .login(
-                                          phoneNumber:
-                                              prefix + phoneNumber.text)
+                                      .login(phoneNumber: fullNumber)
                                       .then((value) {
                                     setState(() {
                                       isRegistering = false;
