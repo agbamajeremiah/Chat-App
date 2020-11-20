@@ -4,7 +4,6 @@ import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/widgets/single_contact.dart';
 import 'package:MSG/viewmodels/contact_viewmodel.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
