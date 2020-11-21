@@ -5,6 +5,7 @@ import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/state_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:stacked/stacked.dart';
 
 class MessageViewModel extends ReactiveViewModel {
@@ -26,6 +27,7 @@ class MessageViewModel extends ReactiveViewModel {
   String get userNumber => _authenticationSerivice.userNumber;
 
   void initialise() async {
+    //Subscribe threads to message sockets
     try {
       if (_socketService.socketIO != null) {
         _socketService.registerSocketId();
@@ -42,6 +44,11 @@ class MessageViewModel extends ReactiveViewModel {
     } catch (e) {
       print(e.toString);
     }
+
+    //setup listener for connection stream
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      print(result.toString());
+    });
   }
 
   Future<List<Chat>> getAllThreads() async {

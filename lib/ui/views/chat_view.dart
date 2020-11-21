@@ -200,7 +200,7 @@ class _ChatViewState extends State<ChatView> {
                             child: FlatButton(
                                 onPressed: () async {
                                   String messageText =
-                                      _messageTextController.text;
+                                      _messageTextController.text.trim();
                                   String receiver = chat.memberPhone;
                                   if (messageText.length > 0) {
                                     model.saveNewMessage(
