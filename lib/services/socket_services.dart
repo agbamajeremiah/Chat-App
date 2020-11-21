@@ -10,6 +10,8 @@ import 'package:MSG/locator.dart';
 class SocketServices {
   SocketIO socketIO;
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
+  List<String> _subscribedNumbers = [];
+  List get subscribedNumbers => _subscribedNumbers;
 
   void connectSockets() {
     socketIO = SocketIOManager()
@@ -30,8 +32,6 @@ class SocketServices {
       String threadId, String phoneNumber, Function rebuild) {
     socketIO.sendMessage('subscribe',
         json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
-    print(phoneNumber);
-    print("subscribed to :" + threadId);
     socketIO.subscribe('new message', (dynamic socketMessage) {
       print("Socket Message:");
       var newMessage = json.decode(socketMessage);
@@ -44,6 +44,7 @@ class SocketServices {
         rebuild();
       }
     });
+    _subscribedNumbers.add(phoneNumber);
     socketIO.subscribe('mark as read', (dynamic socketMessage) {
       print("Socket Read Message:");
       var update = json.decode(socketMessage);

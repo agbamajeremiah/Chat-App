@@ -24,6 +24,7 @@ class ChatViewModel extends ReactiveViewModel {
       {@required this.threadId,
       @required this.phoneNumber,
       @required this.fromContact});
+
   final StateService _stateService = locator<StateService>();
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
@@ -32,13 +33,14 @@ class ChatViewModel extends ReactiveViewModel {
     await thread;
     updateReadMessages();
     //Subscribe to new threed two
-    if (true) {
-      //fromContact == true
+    if (!_socketService.subscribedNumbers.contains(phoneNumber)) {
+      print("yeah");
       final internetStatus = await checkInternetConnection();
       if (internetStatus == true) {
         if (_socketService.socketIO != null) {
           //_socketService.registerSocketId();
-          _socketService.subscribeToThread(threadId, phoneNumber, _rebuildScreens);
+          _socketService.subscribeToThread(
+              threadId, phoneNumber, _rebuildScreens);
         }
       }
     }

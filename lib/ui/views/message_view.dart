@@ -205,21 +205,6 @@ class _MessagesViewState extends State<MessagesView> {
                                                             chat.memberPhone),
                                                     'fromContact': false
                                                   });
-                                              // var refresh =
-                                              //     await Navigator.pushNamed(
-                                              //         context, ChatViewRoute,
-                                              //         arguments: {
-                                              //       'chat': Chat(
-                                              //           id: chat.id,
-                                              //           displayName:
-                                              //               chat.displayName,
-                                              //           memberPhone:
-                                              //               chat.memberPhone),
-                                              //       'fromContact': false
-                                              //     });
-
-                                              // // print(refresh);
-                                              // setState(() => rebuild = refresh);
                                             },
                                             child: MessageContainer(
                                                 searchquery: "",
