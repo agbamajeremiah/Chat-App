@@ -184,8 +184,8 @@ class DatabaseService {
         ORDER BY lastMsgTime ASC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
     // print(chats);
-    //   var threads = await db.query(TABLE_THREAD);
-    //   print(threads);
+    // var threads = await db.query(TABLE_THREAD);
+    // print(threads);
 
     for (int i = 0; i < chats.length; i++) {
       String threadId = chats[i]['id'];

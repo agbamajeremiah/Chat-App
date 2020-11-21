@@ -103,7 +103,7 @@ class MessageBubble extends StatelessWidget {
                   elevation: 1.0,
                   margin: BubbleEdges.only(top: 10),
                   nip: BubbleNip.leftTop,
-                  color: themeData.primaryColor,
+                  color: themeData.backgroundColor,
                   child: Container(
                     padding: EdgeInsets.all(2),
                     constraints: BoxConstraints(
@@ -111,24 +111,20 @@ class MessageBubble extends StatelessWidget {
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
                     child: Text(
                       text,
-                      style: themeData.textTheme.bodyText2
-                          .copyWith(fontSize: 16, color: Colors.white),
+                      style: themeData.textTheme.bodyText1
+                          .copyWith(fontSize: 16),
                     ),
                   ),
                 ),
                 Align(
-                  alignment: Alignment.bottomLeft,
+                  alignment: Alignment.bottomRight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: SizedBox(
-                            width: 20,
-                          )),
+                      SizedBox(width: 35),
                       Padding(
                         padding:
-                            const EdgeInsets.only(left: 5, right: 5, bottom: 1),
+                            const EdgeInsets.only(left: 5, right: 5, bottom: 1, top:2),
                         child: Text(
                           convertToTime(messageTime),
                           style: themeData.textTheme.bodyText1

@@ -6,7 +6,7 @@ import 'package:MSG/ui/widgets/message_bubble.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:MSG/viewmodels/chat_viewmodel.dart';
-import 'package:flutter/material.dart'; //08060305025
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StatefulWidget {
@@ -53,10 +53,8 @@ class _ChatViewState extends State<ChatView> {
             phoneNumber: chat.memberPhone,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
-        disposeViewModel: false,
         builder: (context, model, snapshot) {
           final getChatMessages = model.getChatMessages();
-          model.synChat();
           print("Rebuild chat Page");
           return SafeArea(
             child: Scaffold(

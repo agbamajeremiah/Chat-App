@@ -38,7 +38,7 @@ class ChatViewModel extends ReactiveViewModel {
       if (internetStatus == true) {
         if (_socketService.socketIO != null) {
           //_socketService.registerSocketId();
-          _socketService.subscribeToThread(threadId, phoneNumber, rebuidPages);
+          _socketService.subscribeToThread(threadId, phoneNumber, _rebuildScreens);
         }
       }
     }
@@ -63,10 +63,10 @@ class ChatViewModel extends ReactiveViewModel {
             String otherMember = threadMembers[0] == _authService.userNumber &&
                     threadMembers[1] != null
                 ? threadMembers[1]
-                : '';
+                : threadMembers[0];
             Thread newThread =
                 Thread(id: res.data['thread']['_id'], members: otherMember);
-            // print(newThread.toMap());
+            print(newThread.toMap());
             await DatabaseService.db.insertThread(newThread);
             threadId = res.data['thread']['_id'];
           }
@@ -95,6 +95,7 @@ class ChatViewModel extends ReactiveViewModel {
   Future<void> updateReadMessages() async {
     await DatabaseService.db
         .updateReadMessages(threadId, _authService.userNumber);
+    _rebuildScreens();
   }
 
   // Future resendPendingMessages() async {
@@ -122,11 +123,11 @@ class ChatViewModel extends ReactiveViewModel {
   // }
 
   Future synChat() async {
-    try {
-      await makeAsRead();
-    } catch (e) {
-      print(e.toString());
-    }
+    // try {
+    //   await makeAsRead();
+    // } catch (e) {
+    //   print(e.toString());
+    // }
   }
 
   //send new new nessage
@@ -146,7 +147,7 @@ class ChatViewModel extends ReactiveViewModel {
       isQuote: isQuote.toString(),
     );
     await DatabaseService.db.insertNewMessage(newMessage);
-    rebuidPages();
+    _rebuildScreens();
     await _sendNewMessage(
         messageId: messageId, message: message, isQuote: isQuote);
   }
@@ -259,7 +260,7 @@ class ChatViewModel extends ReactiveViewModel {
 
   //For Rebuilding screens
   bool get rebuild => _stateService.rebuildPage;
-  void rebuidPages() {
+  void _rebuildScreens() {
     _stateService.updatePages();
     notifyListeners();
   }
