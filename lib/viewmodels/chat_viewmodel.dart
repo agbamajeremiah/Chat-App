@@ -29,6 +29,16 @@ class ChatViewModel extends ReactiveViewModel {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
   final SocketServices _socketService = locator<SocketServices>();
 
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
+
+  //For Rebuilding screens
+  bool get rebuild => _stateService.rebuildPage;
+  void _rebuildScreens() {
+    _stateService.updatePages();
+    notifyListeners();
+  }
+
   void initialise() async {
     await thread;
     updateReadMessages();
@@ -264,14 +274,4 @@ class ChatViewModel extends ReactiveViewModel {
       throw e;
     }
   }
-
-  //For Rebuilding screens
-  bool get rebuild => _stateService.rebuildPage;
-  void _rebuildScreens() {
-    _stateService.updatePages();
-    notifyListeners();
-  }
-
-  @override
-  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
 }

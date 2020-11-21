@@ -10,9 +10,18 @@ import 'package:stacked/stacked.dart';
 class MessageViewModel extends ReactiveViewModel {
   final SocketServices _socketService = locator<SocketServices>();
   final StateService _stateService = locator<StateService>();
-
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
+
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
+  //Function to rebuild all screens
+  bool get rebuild => _stateService.rebuildPage;
+  void rebuildScreens() {
+    _stateService.updatePages();
+    notifyListeners();
+  }
+
   // String get profileName;
   String get userNumber => _authenticationSerivice.userNumber;
 
@@ -46,13 +55,4 @@ class MessageViewModel extends ReactiveViewModel {
         .getAllChatsFromDb(_authenticationSerivice.userNumber);
     return activeChat;
   }
-
-  bool get rebuild => _stateService.rebuildPage;
-  void rebuildScreens() {
-    _stateService.updatePages();
-    notifyListeners();
-  }
-
-  @override
-  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
 }
