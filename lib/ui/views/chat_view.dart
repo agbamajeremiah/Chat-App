@@ -54,6 +54,7 @@ class _ChatViewState extends State<ChatView> {
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
+          model.updateReadMessageWithoutRebuild();
           final getChatMessages = model.getChatMessages();
           print("Rebuild chat Page");
           return SafeArea(
@@ -63,7 +64,9 @@ class _ChatViewState extends State<ChatView> {
                   icon: Icon(
                     Icons.arrow_back,
                   ),
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: () {
+                    Navigator.pop(context, true);
+                  },
                 ),
                 title: Text(
                   chat.displayName ?? chat.memberPhone,

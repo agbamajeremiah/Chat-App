@@ -100,6 +100,11 @@ class ChatViewModel extends ReactiveViewModel {
     _rebuildScreens();
   }
 
+  Future<void> updateReadMessageWithoutRebuild() async {
+    await DatabaseService.db
+        .updateReadMessages(threadId, _authService.userNumber);
+  }
+
   // Future resendPendingMessages() async {
   //   final internetStatus = await checkInternetConnection();
   //   if (internetStatus == true && threadId != null) {
