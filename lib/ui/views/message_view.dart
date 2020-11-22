@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
+import 'dart:convert';
 
 class MessagesView extends StatefulWidget {
   @override
@@ -32,16 +33,18 @@ class _MessagesViewState extends State<MessagesView> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("Active message: $message");
-        // _setMessage(message);
+        var singleMessage = jsonDecode(message['data']['data']);
+        Map<String, dynamic> newMessage = singleMessage[0];
+        print(newMessage);
       },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("Launch Message: $message");
-        // _setMessage(message);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("Resume Message: $message");
-        // _setMessage(message);
-      },
+      // onLaunch: (Map<String, dynamic>    message) async {
+      //   print("Launch Message: $message");
+      //   // _setMessage(message);
+      // },
+      // onResume: (Map<String, dynamic> message) async {
+      //   print("Resume Message: $message");
+      //   // _setMessage(message);
+      // },
     );
   }
 
