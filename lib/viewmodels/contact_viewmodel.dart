@@ -22,7 +22,7 @@ class ContactViewModel extends BaseViewModel {
     return contacts;
   }
 
-  Future syncContacts() async {
+  Future synContacts() async {
     refreshingContacts = true;
     setBusy(true);
     final internetStatus = await checkInternetConnection();

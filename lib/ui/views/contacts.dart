@@ -38,7 +38,6 @@ class _AllContactsState extends State<AllContacts>
         disposeViewModel: true,
         viewModelBuilder: () => ContactViewModel(),
         builder: (context, model, snapshot) {
-          //model.syncContacts();
           return FutureBuilder(
             future: model.getContactsFromDb(),
             builder: (context, snapshot) {
@@ -162,7 +161,7 @@ class _AllContactsState extends State<AllContacts>
                                     switch (option) {
                                       case "refresh":
                                         print("refresh contacts");
-                                        model.syncContacts();
+                                        model.synContacts();
                                         break;
                                       case "settings":
                                         print("Switch to Settings");
@@ -371,7 +370,6 @@ class _AllContactsState extends State<AllContacts>
   @override
   void dispose() {
     _searchTextCon.dispose();
-    // _animationController.dispose();
     super.dispose();
   }
 }
