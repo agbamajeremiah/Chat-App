@@ -15,7 +15,7 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
       child: isMe
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -111,8 +111,8 @@ class MessageBubble extends StatelessWidget {
                         maxWidth: MediaQuery.of(context).size.width * 0.6),
                     child: Text(
                       text,
-                      style: themeData.textTheme.bodyText1
-                          .copyWith(fontSize: 16),
+                      style:
+                          themeData.textTheme.bodyText1.copyWith(fontSize: 16),
                     ),
                   ),
                 ),
@@ -123,8 +123,8 @@ class MessageBubble extends StatelessWidget {
                     children: [
                       SizedBox(width: 35),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(left: 5, right: 5, bottom: 1, top:2),
+                        padding: const EdgeInsets.only(
+                            left: 5, right: 5, bottom: 1, top: 2),
                         child: Text(
                           convertToTime(messageTime),
                           style: themeData.textTheme.bodyText1

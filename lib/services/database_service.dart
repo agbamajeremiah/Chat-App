@@ -259,18 +259,19 @@ class DatabaseService {
     return messages;
   }
 
-  Future<List<Message>> getUnsentChatMessageFromDb(String threadId) async {
+  Future<List<Message>> getUnsentChatMessageFromDb(String userNumber) async {
     final db = await database;
     List<Message> messages = List<Message>();
-    var chats = await db.query(TABLE_MESSAGE,
-        where: "$COLUMN_MSG_THREAD_ID = ? AND $COLUMN_STATUS = ?",
-        orderBy: "$COLUMN_CREATED_AT DESC",
-        whereArgs: [threadId, "PENDING"]);
-    // print(chats);
-    chats.forEach((message) {
-      messages.add(Message.fromDBMap(message));
-    });
-    print(messages);
+    List unsentMessages = await db.rawQuery('''SELECT msg.*, thd.members 
+        FROM messages AS msg
+        JOIN threads AS thd ON msg.thread_id = thd.id  WHERE $COLUMN_STATUS = ?
+        ''', ['PENDING']);
+    if (unsentMessages.length > 0) {
+      unsentMessages.forEach((message) {
+        messages.add(Message.fromDBMap(message));
+      });
+      // print(messages);
+    }
     return messages;
   }
 

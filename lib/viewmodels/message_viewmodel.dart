@@ -5,7 +5,12 @@ import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/state_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/socket_services.dart';
+import 'package:MSG/models/messages.dart';
+import 'package:MSG/utils/api_request.dart';
+import 'package:MSG/utils/connectivity.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
 
 class MessageViewModel extends ReactiveViewModel {
@@ -23,11 +28,9 @@ class MessageViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
-  // String get profileName;
-  String get userNumber => _authenticationSerivice.userNumber;
-
   void initialise() async {
     //Subscribe threads to message sockets
+
     try {
       if (_socketService.socketIO != null) {
         _socketService.registerSocketId();
@@ -44,13 +47,78 @@ class MessageViewModel extends ReactiveViewModel {
     } catch (e) {
       print(e.toString);
     }
-
-    //setup listener for connection stream
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print(result.toString());
+    //Register stream to listen to network changes
+    Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi) {
+        await _resendPendingMessages();
+      }
     });
   }
 
+  //Resend unsent messages
+  Future _resendPendingMessages() async {
+    final internetStatus = await checkInternetConnection();
+    if (internetStatus == true) {
+      List<Message> unsentMessages = await DatabaseService.db
+          .getUnsentChatMessageFromDb(_authenticationSerivice.userNumber);
+      print("unsent Messages");
+      print(unsentMessages);
+      unsentMessages.forEach((mes) async {
+        print(mes.content +
+            mes.status +
+            mes.createdAt +
+            mes.isQuote +
+            mes.id +
+            mes.receiver);
+        var response = await _sendMsg(mes.id, mes.threadId, mes.receiver,
+            mes.content, mes.isQuote != "false", "");
+        if (response.statusCode == 200) {
+          await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
+        }
+      });
+      notifyListeners();
+    }
+  }
+
+  Future _sendMsg(String messageId, String threadId, String receiver,
+      String message, bool isQuote, String replyTo) async {
+    final _userToken = _authenticationSerivice.token;
+    try {
+      Map<String, dynamic> body = {
+        "content": message,
+        "messageId": messageId,
+        "threadID": threadId,
+        "isQuote": isQuote,
+        "msgRepliedTo": replyTo,
+        "receiver": receiver
+      };
+
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_userToken",
+      };
+      var response = await postResquest(
+        url: "/sendmessage",
+        headers: headers,
+        body: body,
+      );
+      return response;
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.statusCode.toString(),
+        );
+      }
+      print(e.runtimeType);
+      print(e.toString());
+      throw e;
+    }
+  }
+
+  //Get all threads for socket subscribtion
   Future<List<Chat>> getAllThreads() async {
     List<Chat> allThreads = await DatabaseService.db.getAllUserThreads();
     return allThreads;

@@ -115,30 +115,6 @@ class ChatViewModel extends ReactiveViewModel {
         .updateReadMessages(threadId, _authService.userNumber);
   }
 
-  // Future resendPendingMessages() async {
-  //   final internetStatus = await checkInternetConnection();
-  //   if (internetStatus == true && threadId != null) {
-  //     List<Message> unsentMessages =
-  //         await DatabaseService.db.getUnsentChatMessageFromDb(threadId);
-  //     print("unsent Messages");
-  //     print(unsentMessages);
-  //     unsentMessages.forEach((mes) async {
-  //       print(mes.content +
-  //           mes.status +
-  //           mes.createdAt +
-  //           mes.isQuote +
-  //           mes.id +
-  //           phoneNumber);
-  //       var response =
-  //           await _sendMsg(mes.id, mes.content, mes.isQuote != "false", "");
-  //       if (response.statusCode == 200) {
-  //         await DatabaseService.db.updateMessageStatus(mes.id, "SENT");
-  //       }
-  //       notifyListeners();
-  //     });
-  //   }
-  // }
-
   Future synChat() async {
     // try {
     //   await makeAsRead();
@@ -208,7 +184,7 @@ class ChatViewModel extends ReactiveViewModel {
     } catch (e) {
       if (e is DioError) {
         debugPrint(
-          e.response.data,
+          e.response.statusCode.toString(),
         );
       }
       print(e.runtimeType);

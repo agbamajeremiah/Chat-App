@@ -10,6 +10,7 @@ class Message {
   String content;
   String status;
   String threadId;
+  String receiver;
 
   Message({
     @required this.isQuote,
@@ -48,14 +49,6 @@ class Message {
     threadId = map[DatabaseService.COLUMN_MSG_THREAD_ID];
     createdAt = map[DatabaseService.COLUMN_CREATED_AT];
     isQuote = map[DatabaseService.COLUMN_QUOTE];
+    receiver = map[DatabaseService.COLUMN_MEMBER];
   }
-  /*Map<String, dynamic> toMap() => {
-        "isQuote": isQuote,
-        "createdAt": createdAt,
-        "_id": id,
-        "sender": sender,
-        "content": content,
-        "status": status,
-        "threadID": threadId,
-    };*/
 }
