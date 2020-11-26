@@ -46,7 +46,6 @@ class ChatViewModel extends ReactiveViewModel {
     updateReadMessages();
     //Subscribe to new threed two
     if (!_socketService.subscribedNumbers.contains(phoneNumber)) {
-      print("yeah");
       final internetStatus = await checkInternetConnection();
       if (internetStatus == true) {
         if (_socketService.socketIO != null) {
