@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:MSG/constant/route_names.dart';
 
 class NavigationService {
   GlobalKey<NavigatorState> _navigationKey = GlobalKey<NavigatorState>();
@@ -26,5 +27,13 @@ class NavigationService {
         //.pushNamed(routeName, arguments: arguments);
         //.pushAndRemoveUntil();
         .pushNamedAndRemoveUntil(routeName, (r) => false, arguments: arguments);
+  }
+
+//For Notification on click
+  Future<dynamic> clearAllExceptHomeAndNavigateTo(String routeName,
+      {dynamic arguments}) {
+    return _navigationKey.currentState.pushNamedAndRemoveUntil(
+        routeName, ModalRoute.withName(MessageViewRoute),
+        arguments: arguments);
   }
 }

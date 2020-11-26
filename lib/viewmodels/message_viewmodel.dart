@@ -68,7 +68,7 @@ class MessageViewModel extends ReactiveViewModel {
           });
         }
         Map<String, dynamic> singleMessage = messages[0];
-        _navigationService.clearLastAndNavigateTo(
+        _navigationService.clearAllExceptHomeAndNavigateTo(
           ChatViewRoute,
           arguments: {
             'chat': Chat(
