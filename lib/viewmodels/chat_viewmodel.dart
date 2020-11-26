@@ -17,13 +17,15 @@ class ChatViewModel extends ReactiveViewModel {
   String threadId;
   String phoneNumber;
   String userNumber;
+  String displayName;
   bool fromContact;
   // List<Message> chatMessages = [];
   final int _chatFetchMax = 15;
   ChatViewModel(
       {@required this.threadId,
       @required this.phoneNumber,
-      @required this.fromContact});
+      @required this.fromContact,
+      @required this.displayName});
 
   final StateService _stateService = locator<StateService>();
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
@@ -83,6 +85,12 @@ class ChatViewModel extends ReactiveViewModel {
             threadId = res.data['thread']['_id'];
           }
         }
+      }
+    } else if (phoneNumber == null || displayName == null) {
+      Map contactDetails = await DatabaseService.db.getContactDetails(threadId);
+      if (contactDetails != null) {
+        phoneNumber = contactDetails['phoneNumber'];
+        displayName = contactDetails['displayName'];
       }
     }
   }

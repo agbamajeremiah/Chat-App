@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/chat.dart';
 import 'package:MSG/services/authentication_service.dart';
@@ -12,12 +13,17 @@ import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:stacked/stacked.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:MSG/services/navigtion_service.dart';
+import 'dart:convert';
 
 class MessageViewModel extends ReactiveViewModel {
   final SocketServices _socketService = locator<SocketServices>();
   final StateService _stateService = locator<StateService>();
   final AuthenticationSerivice _authenticationSerivice =
       locator<AuthenticationSerivice>();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final NavigationService _navigationService = locator<NavigationService>();
 
   @override
   List<ReactiveServiceMixin> get reactiveServices => [_stateService];
@@ -28,8 +34,58 @@ class MessageViewModel extends ReactiveViewModel {
     notifyListeners();
   }
 
+  void _configureFirebaseListeners() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("Active message: $message");
+        List messages = jsonDecode(message['data']['data']);
+        if (messages.length > 0) {
+          messages.forEach((singleMessage) {
+            print(singleMessage);
+            DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
+          });
+        }
+        rebuildScreens();
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("Launch Message: $message");
+        List messages = jsonDecode(message['data']['data']);
+        if (messages.length > 0) {
+          messages.forEach((singleMessage) {
+            print(singleMessage);
+            DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
+          });
+        }
+        notifyListeners();
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("Resume Message: $message");
+        List messages = jsonDecode(message['data']['data']);
+        if (messages.length > 0) {
+          messages.forEach((singleMessage) {
+            print(singleMessage);
+            DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
+          });
+        }
+        Map<String, dynamic> singleMessage = messages[0];
+        _navigationService.clearLastAndNavigateTo(
+          ChatViewRoute,
+          arguments: {
+            'chat': Chat(
+              id: singleMessage['threadID'],
+              displayName: null,
+              memberPhone: null,
+            ),
+            'fromContact': false
+          },
+        );
+      },
+    );
+  }
+
   void initialise() async {
     //Subscribe threads to message sockets
+    _configureFirebaseListeners();
 
     try {
       if (_socketService.socketIO != null) {

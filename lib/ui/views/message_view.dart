@@ -8,101 +8,28 @@ import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:stacked/stacked.dart';
-import 'dart:convert';
 
 class MessagesView extends StatefulWidget {
   @override
   _MessagesViewState createState() => _MessagesViewState();
 }
 
-//Handle background message
-Future<dynamic> _myBackgroundHandler(Map<String, dynamic> message) async {
-  return _MessagesViewState()._showNotification(message);
-}
-
 class _MessagesViewState extends State<MessagesView> {
   final _searchTextCon = TextEditingController();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
   bool _isSearching = false;
   String _searchQuery = "";
 
-  _getToken() async {
-    await _firebaseMessaging
-        .getToken()
-        .then((token) => print("Device Token: $token"));
-  }
-
-  Future _showNotification(Map<String, dynamic> message) async {
-    var androidPlatformSpecifics = AndroidNotificationDetails(
-        "channelId", "channelName", "channelDescription",
-        importance: Importance.max, priority: Priority.high);
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-        0, "title", "body", platformChannelSpecifics,
-        payload: 'Default sound');
-  }
-
-  Future selectNotification(String payload) async {
-    if (payload != null) {
-      debugPrint('notification payload: $payload');
-    }
-    Navigator.pushNamed(context, ChatViewRoute, arguments: {
-      'chat':
-          Chat(id: "1", displayName: "000", memberPhone: "chat.memberPhone"),
-      'fromContact': false
-    });
-    // await flutterLocalNotificationsPlugin.cancelAll();
-  }
-
-  _configureMessageNotification() async {
-// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
-  }
-
-  _configureFirebaseListeners() {
-    _firebaseMessaging.configure(
-      onBackgroundMessage: _myBackgroundHandler,
-      onMessage: (Map<String, dynamic> message) async {
-        print("Active message: $message");
-        var singleMessage = jsonDecode(message['data']['data']);
-        Map<String, dynamic> newMessage = singleMessage[0];
-        print(newMessage);
-        // DatabaseService.db.insertNewMessage(Message.fromMap(message));
-      },
-      // onLaunch: (Map<String, dynamic>    message) async {
-      //   print("Launch Message: $message");
-      //   // _setMessage(message);
-      // },
-      // onResume: (Map<String, dynamic> message) async {
-      //   print("Resume Message: $message");
-      //   // _setMessage(message);
-      // },
-    );
-  }
-
   @override
   void initState() {
-    _getToken();
-    _configureFirebaseListeners();
-    _configureMessageNotification();
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;

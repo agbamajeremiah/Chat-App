@@ -147,6 +147,33 @@ class DatabaseService {
     }
   }
 
+  Future<Map<String, dynamic>> getContactDetails(String threadId) async {
+    Map<String, dynamic> contactDetails = Map();
+    final db = await database;
+    var phoneNumberResult = await db.query(TABLE_THREAD,
+        columns: [COLUMN_MEMBER],
+        where: '$COLUMN_ID = ?',
+        whereArgs: [threadId],
+        limit: 1);
+    contactDetails['phoneNumber'] = phoneNumberResult[0][COLUMN_MEMBER];
+    String subMemberPhone;
+    if (contactDetails['phoneNumber'].startsWith("+")) {
+      subMemberPhone = contactDetails['phoneNumber'].substring(4);
+    } else {
+      subMemberPhone = contactDetails['phoneNumber'].substring(1);
+    }
+    var memberDetails = await db.query(TABLE_CONTACT,
+        where: "$COLUMN_NUMBER LIKE ? AND $COLUMN_REG_STATUS = ?",
+        whereArgs: ["%$subMemberPhone", 1],
+        limit: 1);
+    if (memberDetails.isNotEmpty) {
+      contactDetails['displayName'] = memberDetails[0]['displayName'];
+    } else {
+      contactDetails['displayName'] = contactDetails['phoneNumber'];
+    }
+    return contactDetails;
+  }
+
   Future<List<MyContact>> getSingleContactFromDb(String number) async {
     final db = await database;
     List<MyContact> singleContact = List<MyContact>();

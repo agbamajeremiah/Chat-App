@@ -34,15 +34,15 @@ class SocketServices {
         json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
     socketIO.subscribe('new message', (dynamic socketMessage) {
       print("Socket Message:");
-      var newMessage = json.decode(socketMessage);
-      Map message = newMessage['message'][0];
-      print("Socket message inserted");
-      print(message);
-      if (message['sender'] != _authService.userNumber) {
-        print("new message received");
-        DatabaseService.db.insertNewMessage(Message.fromMap(message));
-        rebuild();
-      }
+      // var newMessage = json.decode(socketMessage);
+      // Map message = newMessage['message'][0];
+      // print("Socket message inserted");
+      // print(message);
+      // if (message['sender'] != _authService.userNumber) {
+      //   print("new message received");
+      //   DatabaseService.db.insertNewMessage(Message.fromMap(message));
+      //   rebuild();
+      // }
     });
     _subscribedNumbers.add(phoneNumber);
     socketIO.subscribe('mark as read', (dynamic socketMessage) {

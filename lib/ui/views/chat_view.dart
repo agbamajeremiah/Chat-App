@@ -51,6 +51,7 @@ class _ChatViewState extends State<ChatView> {
         viewModelBuilder: () => ChatViewModel(
             threadId: chat.id,
             phoneNumber: chat.memberPhone,
+            displayName: chat.displayName,
             fromContact: fromContact),
         onModelReady: (model) => model.initialise(),
         builder: (context, model, snapshot) {
@@ -69,7 +70,7 @@ class _ChatViewState extends State<ChatView> {
                   },
                 ),
                 title: Text(
-                  chat.displayName ?? chat.memberPhone,
+                  model.displayName ?? model.phoneNumber ?? "",
                   style: themeData.textTheme.headline6.copyWith(
                     fontSize: 22.5,
                   ),
