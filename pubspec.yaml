@@ -32,6 +32,7 @@ dependencies:
   url_launcher: ^5.7.10
   bubble: ^1.1.9+1
   connectivity: ^2.0.2
+  flutter_beep: ^0.2.0
   flutter_local_notifications: ^3.0.1+5
 
 dev_dependencies:
