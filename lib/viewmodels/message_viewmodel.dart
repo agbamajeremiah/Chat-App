@@ -12,6 +12,7 @@ import 'package:MSG/utils/connectivity.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:stacked/stacked.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:MSG/services/navigtion_service.dart';
@@ -43,6 +44,7 @@ class MessageViewModel extends ReactiveViewModel {
           messages.forEach((singleMessage) {
             print(singleMessage);
             DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
+            FlutterBeep.beep();
           });
         }
         rebuildScreens();

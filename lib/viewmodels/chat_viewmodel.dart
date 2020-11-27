@@ -11,6 +11,7 @@ import 'package:MSG/utils/connectivity.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_beep/flutter_beep.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatViewModel extends ReactiveViewModel {
@@ -160,9 +161,12 @@ class ChatViewModel extends ReactiveViewModel {
     setBusy(true);
     var response = await _sendMsg(messageId, message, isQuote, "");
     if (response.statusCode == 200) {
-      await DatabaseService.db.updateMessageStatus(messageId, "SENT");
+      await DatabaseService.db.updateMessageStatus(messageId, "SENT").then(
+          (_) =>
+              FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_SIGNAL_OFF));
+
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   Future _sendMsg(
