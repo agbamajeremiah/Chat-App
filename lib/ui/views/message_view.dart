@@ -8,7 +8,7 @@ import 'package:MSG/ui/shared/theme.dart';
 import 'package:MSG/ui/widgets/message_widget.dart';
 import 'package:MSG/ui/widgets/popup_menu.dart';
 import 'package:MSG/viewmodels/message_viewmodel.dart';
-// import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,9 +20,15 @@ class MessagesView extends StatefulWidget {
   _MessagesViewState createState() => _MessagesViewState();
 }
 
+Future<dynamic> _onBackgroundMessage(Map<String, dynamic> message) async {
+  debugPrint('On background message $message');
+  print('On background message $message');
+  return Future<void>.value();
+}
+
 class _MessagesViewState extends State<MessagesView> {
   final _searchTextCon = TextEditingController();
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   //     FlutterLocalNotificationsPlugin();
   bool _isSearching = false;
@@ -30,6 +36,10 @@ class _MessagesViewState extends State<MessagesView> {
 
   @override
   void initState() {
+    _firebaseMessaging.configure(
+      onBackgroundMessage: _onBackgroundMessage,
+      // ...
+    );
     _searchTextCon.addListener(() {
       setState(() {
         _searchQuery = _searchTextCon.text;

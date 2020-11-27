@@ -11,7 +11,7 @@
      <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
      
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name=".Application"
         android:label="MSG"
         android:icon="@mipmap/ic_launcher">
         <activity

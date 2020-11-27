@@ -62,10 +62,8 @@ class MessageViewModel extends ReactiveViewModel {
         print("Resume Message: $message");
         List messages = jsonDecode(message['data']['data']);
         if (messages.length > 0) {
-          messages.forEach((singleMessage) {
-            print(singleMessage);
-            DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
-          });
+          Map singleMessage = messages[0];
+          DatabaseService.db.insertNewMessage(Message.fromMap(singleMessage));
         }
         Map<String, dynamic> singleMessage = messages[0];
         _navigationService.clearAllExceptHomeAndNavigateTo(

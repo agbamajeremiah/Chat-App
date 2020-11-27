@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:MSG/constant/base_url.dart';
-import 'package:MSG/models/messages.dart';
-import 'package:MSG/services/database_service.dart';
+// import 'package:MSG/models/messages.dart';
+// import 'package:MSG/services/database_service.dart';
 import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:flutter_socket_io/socket_io_manager.dart';
 import 'package:MSG/services/authentication_service.dart';
@@ -33,7 +33,7 @@ class SocketServices {
     socketIO.sendMessage('subscribe',
         json.encode({'threadId': threadId, 'otherUserId': phoneNumber}));
     socketIO.subscribe('new message', (dynamic socketMessage) {
-      print("Socket Message:");
+      // print("Socket Message:");
       // var newMessage = json.decode(socketMessage);
       // Map message = newMessage['message'][0];
       // print("Socket message inserted");
