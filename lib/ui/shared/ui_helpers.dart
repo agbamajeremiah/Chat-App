@@ -10,6 +10,8 @@ const Widget verticalSpaceMedium = SizedBox(height: 25.0);
 const Widget verticalSpaceLarge = SizedBox(height: 50.0);
 const Widget verticalSpaceMassive = SizedBox(height: 120.0);
 
+//Auth Screen top margin
+double authTopMargin = 0.075;
 Widget spacedDivider = Column(
   children: const <Widget>[
     verticalSpaceMedium,

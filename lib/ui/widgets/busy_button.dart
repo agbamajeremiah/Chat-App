@@ -34,7 +34,7 @@ class _BusyButtonState extends State<BusyButton> {
           padding: EdgeInsets.symmetric(horizontal: 13, vertical: 13),
           decoration: BoxDecoration(
             color: widget.color,
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: !widget.busy
               ? Text(widget.title,

@@ -2,6 +2,7 @@ import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/widgets/busy_button.dart';
 import 'package:MSG/ui/widgets/input_field.dart';
+import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/viewmodels/register_viewModel.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return ViewModelBuilder<RegisterViewModel>.reactive(
         viewModelBuilder: () => RegisterViewModel(),
         builder: (context, model, child) {
@@ -47,70 +49,70 @@ class _LoginViewState extends State<LoginView> {
             child: Scaffold(
               backgroundColor: Colors.white,
               body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.075,
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 10.0, bottom: 40),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  "Hello there!",
-                                  style: textStyle.copyWith(
-                                    fontSize: 35,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height *
+                              authTopMargin,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 10.0, bottom: 40),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Hello there!",
+                                    style:
+                                        themeData.textTheme.bodyText1.copyWith(
+                                      fontSize: 35,
+                                      // color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              width: 210,
-                              child: Text(
-                                "Register your mobile number to continue!",
-                                style: textStyle.copyWith(
-                                  fontSize: 14.5,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.normal,
+                              Container(
+                                alignment: Alignment.bottomLeft,
+                                width: 210,
+                                child: Text(
+                                  "Register your mobile number to continue!",
+                                  style: themeData.textTheme.bodyText1.copyWith(
+                                    fontSize: 14.5,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: _checkKeyboardOpen(context)
-                            ? MediaQuery.of(context).size.height * 0.02
-                            : MediaQuery.of(context).size.height * 0.125,
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(bottom: 15),
-                        alignment: Alignment.center,
-                        child: errorMessage != ""
-                            ? Text(errorMessage,
-                                style: textStyle.copyWith(
-                                    color: Colors.red,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold))
-                            : Text(""),
-                      ),
-                      Container(
-                        constraints: BoxConstraints(maxWidth: 500),
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        SizedBox(
+                          height: _checkKeyboardOpen(context)
+                              ? MediaQuery.of(context).size.height * 0.1
+                              : MediaQuery.of(context).size.height * 0.25,
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 15),
+                          alignment: Alignment.center,
+                          child: errorMessage != ""
+                              ? Text(errorMessage,
+                                  style: textStyle.copyWith(
+                                      color: Colors.red,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold))
+                              : Text(""),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(0),
                               color: Colors.white,
@@ -133,10 +135,10 @@ class _LoginViewState extends State<LoginView> {
                                 child: CountryCodePicker(
                                   padding:
                                       EdgeInsets.only(left: 5, right: 10.0),
-                                  textStyle: textStyle.copyWith(
-                                      fontSize: 18,
-                                      color: AppColors.textColor,
-                                      fontWeight: FontWeight.w500),
+                                  textStyle: themeData.textTheme.bodyText1
+                                      .copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
                                   onChanged: (val) {
                                     setState(() => prefix = val.toString());
                                   },
@@ -165,52 +167,53 @@ class _LoginViewState extends State<LoginView> {
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: _checkKeyboardOpen(context)
-                            ? MediaQuery.of(context).size.height * 0.1
-                            : MediaQuery.of(context).size.height * 0.2,
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          constraints: BoxConstraints(maxWidth: 500),
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: BusyButton(
-                              busy: isRegistering ? true : false,
-                              title: "Continue",
-                              onPressed: () async {
-                                setState(() => isRegistering = true);
-                                if (phoneNumber.text != "" && prefix != "") {
-                                  setState(() => errorMessage = "");
-                                  String fullNumber = prefix + phoneNumber.text;
-                                  if (prefix == "+234" &&
-                                      phoneNumber.text.length == 11 &&
-                                      phoneNumber.text[0] == "0") {
-                                    fullNumber =
-                                        prefix + phoneNumber.text.substring(1);
-                                  }
-                                  print(fullNumber);
-                                  await model
-                                      .login(phoneNumber: fullNumber)
-                                      .then((value) {
+                        SizedBox(
+                          height: _checkKeyboardOpen(context)
+                              ? MediaQuery.of(context).size.height * 0.1
+                              : MediaQuery.of(context).size.height * 0.25,
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            constraints: BoxConstraints(maxWidth: 500),
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            child: BusyButton(
+                                busy: isRegistering ? true : false,
+                                title: "Continue",
+                                onPressed: () async {
+                                  setState(() => isRegistering = true);
+                                  if (phoneNumber.text != "" && prefix != "") {
+                                    setState(() => errorMessage = "");
+                                    String fullNumber =
+                                        prefix + phoneNumber.text;
+                                    if (prefix == "+234" &&
+                                        phoneNumber.text.length == 11 &&
+                                        phoneNumber.text[0] == "0") {
+                                      fullNumber = prefix +
+                                          phoneNumber.text.substring(1);
+                                    }
+                                    print(fullNumber);
+                                    await model
+                                        .login(phoneNumber: fullNumber)
+                                        .then((value) {
+                                      setState(() {
+                                        isRegistering = false;
+                                      });
+                                    });
+                                    phoneNumber.clear();
+                                  } else {
                                     setState(() {
                                       isRegistering = false;
+                                      errorMessage = "Invalid Number!";
                                     });
-                                  });
-                                  phoneNumber.clear();
-                                } else {
-                                  setState(() {
-                                    isRegistering = false;
-                                    errorMessage = "Invalid Number!";
-                                  });
-                                }
-                              },
-                              color: Colors.blue),
-                        ),
-                      )
-                    ],
+                                  }
+                                },
+                                color: Colors.blue),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
