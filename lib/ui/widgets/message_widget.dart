@@ -67,7 +67,9 @@ class MessageContainer extends StatelessWidget {
               child: Center(
                 child: Text(
                   name != null
-                      ? name[0] == "+" || name[0] == '0' ? '0' : name[0]
+                      ? name[0] == "+" || name[0] == '0'
+                          ? '0'
+                          : name[0]
                       : '0',
                   style: themeData.textTheme.subtitle1.copyWith(
                     fontSize: 20,
@@ -157,7 +159,7 @@ class MessageContainer extends StatelessWidget {
                         ? SizedBox(
                             height: 14,
                             child: CircleAvatar(
-                              radius: 7,
+                              radius: 7.5,
                               backgroundColor: AppColors.unreadText,
                               child: Center(
                                 child: Text(
