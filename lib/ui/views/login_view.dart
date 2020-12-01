@@ -49,8 +49,7 @@ class _LoginViewState extends State<LoginView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height * authTopMargin,
+                        height: MediaQuery.of(context).size.height * 0.12,
                       ),
                       Container(
                         child: Column(
