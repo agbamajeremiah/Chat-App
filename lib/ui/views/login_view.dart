@@ -49,7 +49,8 @@ class _LoginViewState extends State<LoginView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.12,
+                        height:
+                            MediaQuery.of(context).size.height * authTopMargin,
                       ),
                       Container(
                         child: Column(
@@ -148,6 +149,34 @@ class _LoginViewState extends State<LoginView> {
                             ),
                             Expanded(
                               child: InputField(
+                                enterPressed: () async {
+                                  setState(() => isRegistering = true);
+                                  if (phoneNumber.text != "" && prefix != "") {
+                                    setState(() => errorMessage = "");
+                                    String fullNumber =
+                                        prefix + phoneNumber.text;
+                                    if (prefix == "+234" &&
+                                        phoneNumber.text.length == 11 &&
+                                        phoneNumber.text[0] == "0") {
+                                      fullNumber = prefix +
+                                          phoneNumber.text.substring(1);
+                                    }
+                                    print(fullNumber);
+                                    await model
+                                        .login(phoneNumber: fullNumber)
+                                        .then((value) {
+                                      setState(() {
+                                        isRegistering = false;
+                                      });
+                                    });
+                                    phoneNumber.clear();
+                                  } else {
+                                    setState(() {
+                                      isRegistering = false;
+                                      errorMessage = "Invalid Number!";
+                                    });
+                                  }
+                                },
                                 smallVersion: true,
                                 controller: phoneNumber,
                                 placeholder: 'Enter Number',
