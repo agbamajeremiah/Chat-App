@@ -12,6 +12,23 @@ const Widget verticalSpaceMassive = SizedBox(height: 120.0);
 
 //Auth Screen top margin
 double authTopMargin = 0.075;
+
+//check phone orientation
+bool checkPhonePortrait(BuildContext context) {
+  if (MediaQuery.of(context).orientation == Orientation.portrait) {
+    return true;
+  } else
+    return false;
+}
+
+//Check keyboard open
+bool checkKeyboardOpen(BuildContext context) {
+  if (MediaQuery.of(context).viewInsets.bottom != 0.0) {
+    return true;
+  } else
+    return false;
+}
+
 Widget spacedDivider = Column(
   children: const <Widget>[
     verticalSpaceMedium,
