@@ -208,7 +208,7 @@ class DatabaseService {
         '''SELECT * FROM (SELECT t.id, t.members, msg.content as lastMessage, msg.created_at as lastMsgTime, msg.status as status
         FROM threads AS t
         JOIN messages AS msg ON t.id = msg.thread_id
-        ORDER BY lastMsgTime DESC) AS chat  
+        ORDER BY lastMsgTime ASC) AS chat  
         GROUP BY id ORDER BY chat.lastMsgTime DESC''');
     // print(chats);
     // var threads = await db.query(TABLE_THREAD);
