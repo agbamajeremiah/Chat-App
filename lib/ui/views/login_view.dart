@@ -91,7 +91,7 @@ class _LoginViewState extends State<LoginView> {
                                 : MediaQuery.of(context).size.height * 0.05
                             : checkPhonePortrait(context)
                                 ? MediaQuery.of(context).size.height * 0.25
-                                : MediaQuery.of(context).size.height * 0.075,
+                                : MediaQuery.of(context).size.height * 0.1,
                       ),
                       Container(
                         padding: EdgeInsets.only(bottom: 15),
@@ -195,7 +195,7 @@ class _LoginViewState extends State<LoginView> {
                                 : MediaQuery.of(context).size.height * 0.05
                             : checkPhonePortrait(context)
                                 ? MediaQuery.of(context).size.height * 0.25
-                                : MediaQuery.of(context).size.height * 0.075,
+                                : MediaQuery.of(context).size.height * 0.125,
                       ),
                       Align(
                         alignment: Alignment.center,

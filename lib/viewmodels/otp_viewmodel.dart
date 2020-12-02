@@ -15,12 +15,12 @@ class OTPViewModel extends BaseViewModel {
     @required String code,
   }) async {
     setBusy(true);
-    var response = await _authenticationSerivice.verifyOTP(otp: code);
-    if (response == 200) {
-      _navigationService.navigateTo(UpdateProfileRoute);
-    } else {
-      return response;
-    }
+    // var response = await _authenticationSerivice.verifyOTP(otp: code);
+    // if (response == 200) {
+    _navigationService.navigateTo(UpdateProfileRoute);
+    // } else {
+    //   return response;
+    // }
     setBusy(false);
   }
 
