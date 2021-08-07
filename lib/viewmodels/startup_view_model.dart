@@ -7,7 +7,6 @@ import 'package:flutter_socket_io/flutter_socket_io.dart';
 import 'package:stacked/stacked.dart';
 
 class StartUpViewModel extends BaseViewModel {
-  //4978328
   SocketIO socketIO;
   final AuthenticationSerivice _authenticationService =
       locator<AuthenticationSerivice>();
@@ -15,12 +14,15 @@ class StartUpViewModel extends BaseViewModel {
   final ContactServices _contactService = locator<ContactServices>();
 
   Future handleStartUpLogic() async {
+    // DatabaseService.db.deleteDb();
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
     if (hasLoggedInUser) {
-      await Future.delayed(Duration(milliseconds: 300)).whenComplete(
-          () => _navigationService.clearLastAndNavigateTo(MessageViewRoute));
+      await Future.delayed(Duration(milliseconds: 200)).whenComplete(() =>
+          _navigationService.clearLastAndNavigateTo(MessageViewRoute,
+              arguments: false));
     } else {
-      _contactService.fetchContactFromDevice();
+      await Future.delayed(Duration(milliseconds: 300))
+          .whenComplete(() => _contactService.fetchContactFromDevice());
       _navigationService.clearLastAndNavigateTo(LoginViewRoute);
     }
   }

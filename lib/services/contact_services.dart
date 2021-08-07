@@ -2,7 +2,7 @@ import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/utils/api_request.dart';
+import 'package:MSG/core/network/api_request.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,94 +10,112 @@ import 'package:contacts_service/contacts_service.dart';
 
 class ContactServices {
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
-  // Fetch Contacts
+  // Fetch all contacts from device
   Future fetchContactFromDevice() async {
     List<MyContact> allContacts = await getAllContactsFromDevice();
-    // print("All Contacts: " + allContacts.toString());
     allContacts.forEach((con) async {
-      await DatabaseService.db.insertContact(con);
+      var isContactSaved =
+          await DatabaseService.db.checkIfContactExist(con.phoneNumber);
+      if (isContactSaved != true) {
+        await DatabaseService.db.insertContact(con);
+      } else {
+        Map<String, dynamic> contactData = {
+          DatabaseService.COLUMN_NAME: con.fullName,
+          DatabaseService.COLUMN_SAVED_PHONE: 1
+        };
+        await DatabaseService.db.updateRegContact(contactData, con.phoneNumber);
+      }
     });
+    return allContacts;
   }
 
   //Start of contact synchronization
   Future firstSyncContacts() async {
-    List<String> uploadContacts = List<String>();
+    List<String> uploadContacts = [];
     List<MyContact> unSyncContacts =
-        await DatabaseService.db.getUnRegContactsFromDb();
+        await DatabaseService.db.geContactsForSyncFromDb();
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
-    print(uploadContacts);
     List<MyContact> regContacts = await getServerRegContacts(uploadContacts);
-    print("reg Contacts:");
-    print(regContacts);
     regContacts.forEach((cont) async {
-      print(cont.toMap());
-      String phoneNumber =
-          cont.phoneNumber.substring(5, cont.phoneNumber.length);
-      await DatabaseService.db.updateRegContact(phoneNumber);
+      Map<String, dynamic> contactData = {
+        DatabaseService.COLUMN_CHAT_ID: cont.chatId,
+        DatabaseService.COLUMN_PROFILE_PICTURE_URL: cont.profilePictureUrl,
+        DatabaseService.COLUMN_REG_STATUS: 1,
+      };
+      await DatabaseService.db.updateRegContact(contactData, cont.phoneNumber);
     });
   }
 
   //Normal Contact synchronization
   Future syncContacts() async {
-    List<String> uploadContacts = List<String>();
-    List<MyContact> allContacts = await getAllContactsFromDevice();
-    print(allContacts);
+    List<String> uploadContacts = [];
+    List<MyContact> allContacts = await fetchContactFromDevice();
     allContacts.forEach((con) async {
-      //uploadContacts.add(con.phoneNumber);
-      await DatabaseService.db.insertContact(con);
+      uploadContacts.add(con.phoneNumber);
     });
     List<MyContact> unSyncContacts =
-        await DatabaseService.db.getUnRegContactsFromDb();
-
+        await DatabaseService.db.geContactsForSyncFromDb();
     unSyncContacts.forEach((contact) {
       uploadContacts.add(contact.phoneNumber);
     });
+    // print("Upload contacts: $uploadContacts");
     List<MyContact> regContacts = await getServerRegContacts(uploadContacts);
     regContacts.forEach((cont) async {
-      String phoneNumber =
-          cont.phoneNumber.substring(5, cont.phoneNumber.length);
-      await DatabaseService.db.updateRegContact(phoneNumber);
+      // print(cont);
+      Map<String, dynamic> contactData = {
+        DatabaseService.COLUMN_CHAT_ID: cont.chatId,
+        DatabaseService.COLUMN_REG_STATUS: 1,
+        DatabaseService.COLUMN_PROFILE_PICTURE_URL: cont.profilePictureUrl,
+      };
+      await DatabaseService.db.updateRegContact(contactData, cont.phoneNumber);
     });
   }
 
   //get contacts from device);
   Future<List<MyContact>> getAllContactsFromDevice() async {
-    List<MyContact> contactsAll = List<MyContact>();
-    final PermissionStatus permissionStatus = await _getPermission();
-    print(permissionStatus);
+    List<MyContact> contactsAll = [];
+    final PermissionStatus permissionStatus = await _getPhonePermission();
     if (permissionStatus == PermissionStatus.granted) {
       //We can now access our contacts here
       Iterable<Contact> contacts =
           await ContactsService.getContacts(withThumbnails: false);
-      print(contacts);
+      // print(contacts);
       if (contacts.length > 0) {
         contacts.forEach((con) {
-          print(con.phones.toList());
+          // print(con.phones.toList());
           contactsAll.add(MyContact(
-              contactId: con.identifier,
-              fullName: con.displayName ?? "",
-              phoneNumber: con.phones.length == 0
-                  ? ""
-                  : con.phones.toList()[0].value.replaceAll(
-                      " ", ""), //con.phones.toList()[0].value ?? "",
-              regStatus: 0));
+            fullName: con.displayName,
+            phoneNumber: con.phones.length == 0
+                ? ""
+                : con.phones.toList()[0].value.replaceAll(" ", ""),
+            regStatus: 0,
+            pictureDownloaded: 0,
+            savedPhone: 1,
+          ));
         });
       }
     }
     return contactsAll;
   }
 
-  //Check contacts permission
-  Future<PermissionStatus> _getPermission() async {
-    var permission = await Permission.contacts.status;
-    if (permission.isUndetermined || permission.isDenied) {
-      //await Permission.contacts.request();
-      final permissionStatus = await Permission.contacts.request();
-      return permissionStatus;
+  //Check contacts, storage permission
+  Future<PermissionStatus> _getPhonePermission() async {
+    var notificationPermission = await Permission.notification.status;
+    if (!notificationPermission.isGranted || notificationPermission.isDenied) {
+      await Permission.notification.request();
+    }
+    var storagePermission = await Permission.storage.status;
+    if (!storagePermission.isGranted || storagePermission.isDenied) {
+      await Permission.storage.request();
+    }
+    var contactPermission = await Permission.contacts.status;
+    if (!contactPermission.isGranted || contactPermission.isDenied) {
+      final contactPermissionStatus = await Permission.contacts.request();
+      return contactPermissionStatus;
     } else {
-      return permission;
+      return contactPermission;
     }
   }
 
@@ -105,7 +123,6 @@ class ContactServices {
   Future<List<MyContact>> getServerRegContacts(List uploadContacts) async {
     List<MyContact> regContacts = [];
     dynamic response = await sendContacts(uploadContacts);
-    //print(response);
     List<dynamic> contactsData = response.data['contacts'];
     contactsData.forEach((contact) {
       regContacts.add(MyContact.fromSyncMap(contact));
@@ -116,8 +133,6 @@ class ContactServices {
   //send contact list to server
   Future sendContacts(contacts) async {
     final _userToken = _authService.token;
-    print(_userToken);
-    print(contacts);
     try {
       Map<String, List> body = {
         "contacts": contacts,
@@ -131,6 +146,7 @@ class ContactServices {
         headers: headers,
         body: body,
       );
+      // print(response);
       return response;
     } catch (e) {
       if (e is DioError) {
@@ -138,8 +154,7 @@ class ContactServices {
           e.response.data,
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
       throw e;
     }
   }

@@ -8,11 +8,8 @@ String convertToTime(String stringTime) {
 String getFullTime(String stringTime) {
   var returnTime;
   DateTime curTime = DateTime.now();
-  print(curTime);
   DateTime msgTime = DateTime.parse(stringTime);
-  print(msgTime);
   int dayDiff = curTime.day - msgTime.day;
-  print(dayDiff);
   switch (dayDiff) {
     case 0:
       returnTime = DateFormat.jm().format(DateTime.parse(stringTime));
@@ -36,11 +33,8 @@ String getFullTime(String stringTime) {
 String getDisplayDate(String stringTime) {
   var returnTime;
   DateTime curTime = DateTime.now();
-  print(curTime);
   DateTime msgTime = DateTime.parse(stringTime);
-  print(msgTime);
   int dayDiff = curTime.day - msgTime.day;
-  print(dayDiff);
   switch (dayDiff) {
     case 0:
       returnTime = "Today";
@@ -136,4 +130,10 @@ String generateMessageId() {
       '1234567890AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
   return prefix +
       List.generate(length, (index) => _chars[r.nextInt(_chars.length)]).join();
+}
+
+String escapeSpecial(String query) {
+  return query.replaceAllMapped(RegExp(r'[.*+?^${}()|[\]\\]'), (x) {
+    return "\\${x[0]}";
+  });
 }

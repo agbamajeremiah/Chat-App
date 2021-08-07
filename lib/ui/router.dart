@@ -1,16 +1,17 @@
-import 'package:MSG/ui/views/chat_view.dart';
-import 'package:MSG/ui/views/contacts.dart';
-import 'package:MSG/ui/views/login_view.dart';
-import 'package:MSG/ui/views/message_view.dart';
-import 'package:MSG/ui/views/otp.dart';
-import 'package:MSG/ui/views/profile_view.dart';
-import 'package:MSG/ui/views/settings.dart';
+import 'package:MSG/ui/views/chat/chat_view.dart';
+import 'package:MSG/ui/views/contact/contacts.dart';
+import 'package:MSG/ui/views/auth/login_view.dart';
+import 'package:MSG/ui/views/chat/message_view.dart';
+import 'package:MSG/ui/views/auth/otp.dart';
+import 'package:MSG/ui/views/profile/profile_view.dart';
+import 'package:MSG/ui/views/settings/settings.dart';
 import 'package:MSG/ui/views/splash_view.dart';
-import 'package:MSG/ui/views/update_profile.dart';
-import 'package:MSG/ui/views/welcome.dart';
+import 'package:MSG/ui/views/auth/update_profile.dart';
+import 'package:MSG/ui/views/auth/welcome.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/ui/shared/custom_page_route.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -20,9 +21,11 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         viewToShow: SplashView(),
       );
     case MessageViewRoute:
-      return _getPageRoute(
+      return _noTransitionPageRoute(
         routeName: settings.name,
-        viewToShow: MessagesView(),
+        viewToShow: MessagesView(
+          firstTime: settings.arguments,
+        ),
       );
     case ChatViewRoute:
       return _getPageRoute(
@@ -63,6 +66,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         routeName: settings.name,
         viewToShow: UpdateProfileView(),
       );
+   
     case WelcomeViewRoute:
       return _getPageRoute(
         routeName: settings.name,
@@ -77,28 +81,16 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
-// PageRoute _getPageRoute({String routeName, Widget viewToShow}) {
-//   return PageRouteBuilder(
-//     pageBuilder: (context, animation, secondaryAnimation) => viewToShow,
-//     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//       var begin = Offset(0.0, 1.0);
-//       var end = Offset.zero;
-//       var curve = Curves.ease;
-//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-//       var offsetAnimation = animation.drive(tween);
-//       return SlideTransition(
-//         position: offsetAnimation,
-//         child: child,
-//       );
-//     },
-//     settings: RouteSettings(
-//       name: routeName,
-//     ),
-//   );
-// }
-
 PageRoute _getPageRoute({String routeName, Widget viewToShow}) {
   return CupertinoPageRoute(
+      settings: RouteSettings(
+        name: routeName,
+      ),
+      builder: (_) => viewToShow);
+}
+
+PageRoute _noTransitionPageRoute({String routeName, Widget viewToShow}) {
+  return CustomPageRoute(
       settings: RouteSettings(
         name: routeName,
       ),

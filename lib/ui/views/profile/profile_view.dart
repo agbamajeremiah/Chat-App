@@ -1,8 +1,11 @@
+import 'dart:io';
+import 'package:MSG/constant/assets.dart';
 import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/ui/shared/shared_styles.dart';
 import 'package:MSG/ui/shared/ui_helpers.dart';
 import 'package:MSG/viewmodels/profile_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileView extends StatefulWidget {
@@ -11,99 +14,194 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  // TextEditingController editNameController = TextEditingController();
+  File _imageFile;
+  final picker = ImagePicker();
+
+  Future<bool> _getImage(bool camara) async {
+    var pickedFile;
+    try {
+      if (camara == true) {
+        pickedFile = await picker.getImage(source: ImageSource.camera);
+      } else {
+        pickedFile = await picker.getImage(source: ImageSource.gallery);
+      }
+      if (pickedFile != null) {
+        setState(() {
+          _imageFile = File(pickedFile.path);
+        });
+      }
+      Navigator.pop(context);
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
   void _showProfileBottomSheet(BuildContext context, var model) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (BuildContext context) {
-          return Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: Container(
-              height: 170,
-              padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 0),
-                    child: Text(
-                      "Enter you name here",
+          return Container(
+            padding: EdgeInsets.only(
+              top: 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: Text(
+                    "Enter you name here",
+                    style: textStyle.copyWith(
+                        color: AppColors.textColor, fontSize: 17.5),
+                  ),
+                ),
+                verticalSpace(30),
+                Container(
+                  child: TextFormField(
+                      autofocus: true,
                       style: textStyle.copyWith(
                           color: AppColors.textColor, fontSize: 17),
-                    ),
-                  ),
-                  verticalSpace(30),
-                  Container(
-                    child: TextFormField(
-                        autofocus: true,
-                        style: textStyle.copyWith(
-                            color: AppColors.textColor, fontSize: 17),
-                        initialValue: model.accountName,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.only(left: 5, bottom: 2),
-                        ),
-                        onChanged: (value) {
-                          // print(value);
-                          model.newAccountName = value;
-
-                          print(model.newAccountName);
-                        }
-                        // autofocus: true,,
-                        ),
-                  ),
-                  verticalSpace(20),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: FlatButton(
-                            // materialTapTargetSize:
-                            // MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.zero,
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(
-                              "Cancel".toUpperCase(),
-                              style: textStyle.copyWith(
-                                  color: AppColors.primaryColor, fontSize: 15),
-                            )),
+                      initialValue: model.accountName,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.only(left: 5, bottom: 2),
                       ),
-                      horizontalSpaceSmall,
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: FlatButton(
-                            onPressed: () async {
-                              if (model.newAccountName == "") {
+                      onChanged: (value) {
+                        // print(value);
+                        model.newAccountName = value;
+
+                        print(model.newAccountName);
+                      }
+                      // autofocus: true,,
+                      ),
+                ),
+                verticalSpace(20),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            "Cancel".toUpperCase(),
+                            style: textStyle.copyWith(
+                                color: AppColors.primaryColor, fontSize: 15),
+                          )),
+                    ),
+                    horizontalSpaceSmall,
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: TextButton(
+                          onPressed: () async {
+                            if (model.newAccountName == "") {
+                              Navigator.of(context).pop();
+                            } else {
+                              await model
+                                  .updateProfileName(name: model.newAccountName)
+                                  .then((value) {
                                 Navigator.of(context).pop();
-                              } else {
-                                await model
-                                    .updateProfileName(
-                                        name: model.newAccountName)
-                                    .then((value) {
-                                  Navigator.of(context).pop();
-                                });
-                              }
-                            },
-                            child: Text(
-                              "Save".toUpperCase(),
-                              style: textStyle.copyWith(
-                                  color: AppColors.primaryColor, fontSize: 15),
-                            )),
-                      )
+                              });
+                            }
+                          },
+                          child: Text(
+                            "Save".toUpperCase(),
+                            style: textStyle.copyWith(
+                                color: AppColors.primaryColor, fontSize: 15),
+                          )),
+                    )
+                  ],
+                ),
+                verticalSpace(20),
+              ],
+            ),
+          );
+        });
+  }
+
+  void _showUploadPictureBottomSheet(BuildContext context, var model) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          print(model.userNumber);
+          return Container(
+            height: 150,
+            padding: EdgeInsets.only(
+              top: 50,
+              left: 20,
+              right: 20,
+            ),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    await _getImage(true);
+                    await model
+                        .updateProfilePicture(_imageFile)
+                        .then((value) {});
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset(
+                          AppAssets.camera_icon,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Camera',
+                            style: textStyle.copyWith(
+                                color: AppColors.primaryColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ))
                     ],
-                  )
-                ],
-              ),
+                  ),
+                ),
+                horizontalSpaceMedium,
+                InkWell(
+                  onTap: () async {
+                    await _getImage(false);
+                    await model
+                        .updateProfilePicture(_imageFile)
+                        .then((value) {});
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 30,
+                        width: 30,
+                        child: Image.asset(
+                          AppAssets.gallery_icon,
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Gallery',
+                            style: textStyle.copyWith(
+                                color: AppColors.primaryColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold),
+                          ))
+                    ],
+                  ),
+                ),
+              ],
             ),
           );
         });
@@ -115,18 +213,30 @@ class _ProfileViewState extends State<ProfileView> {
     return ViewModelBuilder<ProfileViewModel>.reactive(
         viewModelBuilder: () => ProfileViewModel(),
         builder: (context, model, snapshot) {
-          return SafeArea(
-              child: Scaffold(
+          print("image path: ${model.profileImagePath}");
+          return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
               iconTheme: IconThemeData(
                 color: Colors.white,
               ),
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 25.0,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              ),
               backgroundColor: AppColors.primaryColor,
               title: Text(
                 "Profile",
-                style: themeData.textTheme.headline6
-                    .copyWith(fontSize: 22.5, color: Colors.white),
+                style: themeData.textTheme.headline6.copyWith(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
               elevation: 0.0,
             ),
@@ -139,7 +249,7 @@ class _ProfileViewState extends State<ProfileView> {
                       alignment: Alignment.topCenter,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 25),
+                          margin: EdgeInsets.only(bottom: 20),
                           decoration:
                               BoxDecoration(color: AppColors.primaryColor),
                         ),
@@ -150,28 +260,30 @@ class _ProfileViewState extends State<ProfileView> {
                               child: Stack(
                                 children: [
                                   CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 50,
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 100,
-                                      color: AppColors.textColor2,
-                                    ),
-                                  ),
+                                      backgroundColor: Colors.white,
+                                      radius: 65,
+                                      backgroundImage: _imageFile != null
+                                          ? FileImage(_imageFile) : model.profileImagePath != null  ? FileImage(File(model.profileImagePath))
+                                          : AssetImage(
+                                              AppAssets.profile_default_pics)),
+                                  // Change profile picture button
                                   Positioned(
                                       bottom: 5,
                                       right: 0,
                                       child: CircleAvatar(
                                         backgroundColor: AppColors.lightBlue,
-                                        radius: 17.5,
+                                        radius: 20,
                                         child: Center(
                                           child: IconButton(
                                             icon: Icon(
                                               Icons.camera_alt,
-                                              size: 17,
+                                              size: 18,
                                               color: Colors.white,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              _showUploadPictureBottomSheet(
+                                                  context, model);
+                                            },
                                           ),
                                         ),
                                       ))
@@ -194,7 +306,7 @@ class _ProfileViewState extends State<ProfileView> {
                               EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            // shape: BoxShape.rectangle,
+                            shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(10),
                             // boxShadow: [
                             //   BoxShadow(
@@ -220,7 +332,7 @@ class _ProfileViewState extends State<ProfileView> {
                                     ),
                                   ),
                                   Text(
-                                    model.accountName,
+                                    model.accountName ?? "No name",
                                     style: textStyle.copyWith(
                                       fontSize: 20,
                                       color: AppColors.textColor,
@@ -285,7 +397,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ],
               ),
             ),
-          ));
+          );
         });
   }
 }

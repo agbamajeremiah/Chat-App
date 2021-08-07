@@ -1,6 +1,9 @@
+import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MessageBubble extends StatelessWidget {
   final String sender, text;
@@ -14,84 +17,106 @@ class MessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 10.0),
+    return Container(
       child: isMe
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Bubble(
-                  margin: BubbleEdges.only(top: 10),
-                  nip: BubbleNip.rightTop,
-                  color: themeData.primaryColor,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.70),
                   child: Container(
-                    padding: EdgeInsets.all(2),
-                    constraints: BoxConstraints(
-                        minWidth: 75.0,
-                        maxWidth: MediaQuery.of(context).size.width * 0.6),
-                    child: Text(
-                      text,
-                      style: themeData.textTheme.bodyText2
-                          .copyWith(fontSize: 16, color: Colors.white),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        convertToTime(messageTime),
-                        style: themeData.textTheme.bodyText1
-                            .copyWith(fontSize: 13),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          right: 10,
-                        ),
-                        child: status == 'SENT'
-                            ? Row(
+                    child: Bubble(
+                      margin: BubbleEdges.only(top: 5.0),
+                      nip: BubbleNip.rightTop,
+                      color: themeData.primaryColor,
+                      child: Wrap(
+                          runSpacing: 2.0,
+                          alignment: WrapAlignment.end,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          spacing: 10.0,
+                          children: [
+                            SelectableLinkify(
+                              onOpen: (link) async {
+                                if (await canLaunch(link.url)) {
+                                  await launch(link.url);
+                                } else {
+                                  throw 'Could not launch $link';
+                                }
+                              },
+                              text: text,
+                              textAlign: TextAlign.left,
+                              style: themeData.textTheme.bodyText2.copyWith(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                              linkStyle: themeData.textTheme.bodyText2.copyWith(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                                color: Colors.lightBlue,
+                              ),
+                              options: LinkifyOptions(humanize: false),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 7.5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  SizedBox(
-                                    width: 15,
+                                  Text(
+                                    convertToTime(messageTime),
+                                    style: themeData.textTheme.bodyText2
+                                        .copyWith(fontSize: 12.5),
                                   ),
-                                  Icon(
-                                    Icons.check,
-                                    color: themeData.primaryColor,
-                                    size: 15,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 2.0, right: 2.0),
+                                    child: status == 'SENT'
+                                        ? Row(
+                                            children: [
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                Icons.done,
+                                                color:
+                                                    themeData.backgroundColor,
+                                                size: 12,
+                                              ),
+                                            ],
+                                          )
+                                        : status == 'DELIVERED'
+                                            ? Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 2,
+                                                  ),
+                                                  Icon(
+                                                    Icons.done_all,
+                                                    color: themeData
+                                                        .backgroundColor,
+                                                    size: 12,
+                                                  )
+                                                ],
+                                              )
+                                            : Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 3,
+                                                  ),
+                                                  Icon(
+                                                    Icons.sync,
+                                                    color: themeData
+                                                        .backgroundColor,
+                                                    size: 12,
+                                                  ),
+                                                ],
+                                              ),
                                   ),
                                 ],
-                              )
-                            : status == 'READ'
-                                ? Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check,
-                                        color: themeData.primaryColor,
-                                        size: 15,
-                                      ),
-                                      Icon(
-                                        Icons.check,
-                                        color: themeData.primaryColor,
-                                        size: 15,
-                                      )
-                                    ],
-                                  )
-                                : Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      Icon(
-                                        Icons.sync,
-                                        color: themeData.primaryColor,
-                                        size: 15,
-                                      )
-                                    ],
-                                  ),
-                      ),
-                    ],
+                              ),
+                            ),
+                          ]),
+                    ),
                   ),
                 ),
               ],
@@ -99,39 +124,46 @@ class MessageBubble extends StatelessWidget {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Bubble(
-                  elevation: 1.0,
-                  margin: BubbleEdges.only(top: 10),
-                  nip: BubbleNip.leftTop,
-                  color: themeData.backgroundColor,
-                  child: Container(
-                    padding: EdgeInsets.all(2),
-                    constraints: BoxConstraints(
-                        minWidth: 75.0,
-                        maxWidth: MediaQuery.of(context).size.width * 0.6),
-                    child: Text(
-                      text,
-                      style:
-                          themeData.textTheme.bodyText1.copyWith(fontSize: 16),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 35),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 5, right: 5, bottom: 1, top: 2),
-                        child: Text(
-                          convertToTime(messageTime),
-                          style: themeData.textTheme.bodyText1
-                              .copyWith(fontSize: 13),
-                        ),
-                      ),
-                    ],
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.70),
+                  child: Bubble(
+                    elevation: 1.0,
+                    margin: BubbleEdges.only(top: 5),
+                    nip: BubbleNip.leftTop,
+                    color: AppColors.secondaryColor,
+                    child: Wrap(
+                        runSpacing: 2.0,
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.end,
+                        spacing: 10.0,
+                        children: [
+                          SelectableLinkify(
+                            text: text,
+                            onOpen: (link) async {
+                              if (await canLaunch(link.url)) {
+                                await launch(link.url);
+                              } else {
+                                throw 'Could not launch $link';
+                              }
+                            },
+                            style: themeData.textTheme.bodyText1
+                                .copyWith(fontSize: 16),
+                            linkStyle: themeData.textTheme.bodyText2.copyWith(
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                              color: Colors.lightBlue,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 7.5),
+                            child: Text(
+                              convertToTime(messageTime),
+                              style: themeData.textTheme.bodyText1
+                                  .copyWith(fontSize: 12.5),
+                            ),
+                          ),
+                        ]),
                   ),
                 ),
               ],

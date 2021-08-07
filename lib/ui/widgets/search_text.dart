@@ -122,12 +122,12 @@ class HighlightedSearchText extends StatelessWidget {
       }
 
       //Main code
-      List<TextSpan> _spans = List();
+      List<TextSpan> _spans = [];
       int _start = 0;
 
       //For "No Case Sensitive" option
       String _lowerCaseText = text.toLowerCase();
-      List<String> _lowerCaseHighlights = List();
+      List<String> _lowerCaseHighlights = [];
 
       highlights.forEach((element) {
         _lowerCaseHighlights.add(element.toLowerCase());
@@ -155,7 +155,7 @@ class HighlightedSearchText extends StatelessWidget {
         }
 
         if (_highlightsMap.isNotEmpty) {
-          List<int> _indexes = List();
+          List<int> _indexes = [];
           _highlightsMap.forEach((key, value) => _indexes.add(key));
 
           int _currentIndex = _indexes.reduce(min);

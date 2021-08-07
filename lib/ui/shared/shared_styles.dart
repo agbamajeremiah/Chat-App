@@ -55,8 +55,9 @@ final TextStyle menuTextStyle = GoogleFonts.poppins(
 );
 const kMessageTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-  hintText: 'Type your message here...',
+  hintText: 'Type message',
   border: InputBorder.none,
+  hintStyle: TextStyle(fontSize: 17.5)
 );
 
 const kMessageContainerDecoration = BoxDecoration(

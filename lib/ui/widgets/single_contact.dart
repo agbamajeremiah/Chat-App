@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:MSG/constant/assets.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/constant/route_names.dart';
@@ -14,13 +15,21 @@ class SingleContact extends StatelessWidget {
   final bool searching;
   final String matchString;
   final bool registered;
-  //bool registered = false;
-  const SingleContact(
-      {this.number,
-      this.name,
-      this.searching,
-      this.matchString,
-      this.registered});
+  final String chatID;
+  final String pictureUrl;
+  final String picturePath;
+  final int pictureDownloaded;
+  const SingleContact({
+    this.number,
+    this.name,
+    this.searching,
+    this.matchString,
+    this.registered,
+    this.chatID,
+    this.pictureUrl,
+    this.picturePath,
+    this.pictureDownloaded,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +43,15 @@ class SingleContact extends StatelessWidget {
               context,
               ChatViewRoute,
               arguments: {
-                'chat': Chat(id: null, displayName: name, memberPhone: number),
+                'chat': Chat(
+                  id: null,
+                  displayName: name,
+                  memberPhone: number,
+                  contactChatID: chatID,
+                  pictureUrl: pictureUrl,
+                  picturePath: picturePath,
+                  profilePictureDownloaded: pictureDownloaded,
+                ),
                 'fromContact': true
               },
             );
@@ -64,11 +81,14 @@ class SingleContact extends StatelessWidget {
           children: <Widget>[
             CircleAvatar(
               radius: 20,
-              backgroundColor: Colors.grey,
-              child: Icon(
-                Icons.person,
-                color: themeData.accentColor,
-              ),
+              backgroundColor: AppColors.bgGrey,
+              backgroundImage: picturePath != null
+                  ? FileImage(File(picturePath))
+                  : AssetImage(AppAssets.profile_default_pics),
+              // child: Icon(
+              //   Icons.person,
+              //   color: themeData.accentColor,
+              // ),
             ),
             horizontalSpaceSmall,
             Expanded(
@@ -81,28 +101,35 @@ class SingleContact extends StatelessWidget {
                         ? RichText(
                             text: TextSpan(
                               style: themeData.textTheme.bodyText1.copyWith(
-                                fontSize: 16,
-                              ),
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: name.substring(0, matchString.length),
-                                    style: themeData.textTheme.bodyText1
-                                        .copyWith(color: AppColors.unreadText)),
+                                  text: name.substring(0, matchString.length),
+                                  style: themeData.textTheme.bodyText1.copyWith(
+                                      color: AppColors.unreadText,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 TextSpan(
                                     text: name.substring(matchString.length),
-                                    style: themeData.textTheme.bodyText1),
+                                    style: themeData.textTheme.bodyText1
+                                        .copyWith(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold)),
                               ],
                             ),
                           )
                         : RichText(
                             text: TextSpan(
                                 text: name,
-                                style: themeData.textTheme.bodyText1),
+                                style: themeData.textTheme.bodyText1.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
                           ),
                     Text(
                       number,
-                      style: themeData.textTheme.bodyText1
-                          .copyWith(fontSize: 13, fontWeight: FontWeight.w500),
+                      style: themeData.textTheme.bodyText1.copyWith(
+                          fontSize: 12.5, fontWeight: FontWeight.normal),
                     ),
                   ],
                 ),
