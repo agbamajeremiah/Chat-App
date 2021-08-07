@@ -1,4 +1,5 @@
 import 'package:MSG/constant/route_names.dart';
+import 'package:MSG/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MyPopupMenu extends StatefulWidget {
@@ -13,7 +14,7 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
         context: context,
         builder: (context) => AlertDialog(
               content: Container(
-                constraints: BoxConstraints(maxHeight: 100),
+                constraints: BoxConstraints(maxHeight: 85),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -27,26 +28,26 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: Text(
-                        " Version: 1.0",
+                        " Version: 1.1.2",
                         style: themeData.textTheme.subtitle2,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Text(
-                        " Developed by 525System",
-                        style: themeData.textTheme.subtitle2,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 10),
+                    //   child: Text(
+                    //     " Developed by 525System",
+                    //     style: themeData.textTheme.subtitle2,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
               actions: [
                 Align(
                   alignment: Alignment.bottomRight,
-                  child: FlatButton(
+                  child: TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text("Close"),
+                    child: Text("CLOSE",  style: themeData.textTheme.subtitle2.copyWith(fontSize: 16, color: AppColors.primaryColor),)
                   ),
                 )
               ],
@@ -75,9 +76,8 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
 
     return PopupMenuButton<String>(
         color: themeData.backgroundColor,
-
         //padding: EdgeInsets.symmetric(horizontal: 5),
-        icon: Icon(Icons.more_vert),
+        icon: Icon(Icons.more_vert, color: Colors.white,),
         onSelected: (option) {
           _switchMenuScreen(option, context);
         },
@@ -108,4 +108,3 @@ class _MyPopupMenuState extends State<MyPopupMenu> {
         });
   }
 }
-//enum MenuOption { Profile, Settings, Help }

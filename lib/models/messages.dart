@@ -2,7 +2,7 @@ import 'package:MSG/services/database_service.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:flutter/foundation.dart';
 
-class Message {
+class ChatMessage {
   String isQuote;
   String createdAt;
   String id;
@@ -11,8 +11,9 @@ class Message {
   String status;
   String threadId;
   String receiver;
+  String messageServerId;
 
-  Message({
+  ChatMessage({
     @required this.isQuote,
     @required this.createdAt,
     @required this.id,
@@ -20,9 +21,10 @@ class Message {
     @required this.content,
     @required this.status,
     @required this.threadId,
+    @required this.messageServerId
   });
 
-  factory Message.fromMap(Map<String, dynamic> json) => Message(
+  factory ChatMessage.fromMap(Map<String, dynamic> json) => ChatMessage(
         isQuote: json["isQuote"].toString(),
         createdAt: convertToLocalTime(json["createdAt"]),
         id: json["messageId"],
@@ -30,6 +32,7 @@ class Message {
         content: json["content"],
         status: json["status"],
         threadId: json["threadID"],
+        messageServerId: json["_id"]
       );
 
   Map<String, dynamic> toMap() => {
@@ -39,9 +42,10 @@ class Message {
         DatabaseService.COLUMN_SENDER: sender,
         DatabaseService.COLUMN_STATUS: status,
         DatabaseService.COLUMN_CREATED_AT: createdAt,
-        DatabaseService.COLUMN_QUOTE: isQuote
+        DatabaseService.COLUMN_QUOTE: isQuote,
+        DatabaseService.COLUMN_MESSAGE_SERVER_ID : messageServerId
       };
-  Message.fromDBMap(Map<String, dynamic> map) {
+  ChatMessage.fromDBMap(Map<String, dynamic> map) {
     id = map[DatabaseService.COLUMN_MESSAGE_ID];
     content = map[DatabaseService.COLUMN_CONTENT];
     sender = map[DatabaseService.COLUMN_SENDER];
@@ -50,5 +54,6 @@ class Message {
     createdAt = map[DatabaseService.COLUMN_CREATED_AT];
     isQuote = map[DatabaseService.COLUMN_QUOTE];
     receiver = map[DatabaseService.COLUMN_MEMBER];
+    messageServerId = map[DatabaseService.COLUMN_MESSAGE_SERVER_ID];
   }
 }

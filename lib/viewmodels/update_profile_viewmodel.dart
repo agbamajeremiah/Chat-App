@@ -1,13 +1,12 @@
 import 'package:MSG/constant/route_names.dart';
 import 'package:MSG/locator.dart';
-import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/download_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
-import 'package:MSG/utils/api_request.dart';
-
+import 'package:MSG/core/network/api_request.dart';
 import 'package:stacked/stacked.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,11 +17,20 @@ class UpdateProvfileViewModel extends BaseViewModel {
       locator<AuthenticationSerivice>();
   final NavigationService _navigationService = locator<NavigationService>();
   final ContactServices _contactService = locator<ContactServices>();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final DownloadService _downloadService = locator<DownloadService>();
+
+  String oldProfileName;
+  String newProfileName;
+  String profilePicturePath;
 
   Future _getDeviceToken() async {
     String token = await _firebaseMessaging.getToken();
     return token;
+  }
+
+  void initialise() async {
+    await getSavedUserDetails();
   }
 
   Future updateProfile({
@@ -31,13 +39,11 @@ class UpdateProvfileViewModel extends BaseViewModel {
     String token = await _getDeviceToken();
     setBusy(true);
     try {
-      var resposnse = await _authenticationSerivice.updateProfile(
-          name: name, deviceId: token);
-      print(resposnse);
-      await synFirstTime().then((value) =>
-          _navigationService.removeAllAndNavigateTo(MessageViewRoute));
+      await _authenticationSerivice.updateProfile(name: name, deviceId: token);
+      await synFirstTime().then((value) => _navigationService
+          .removeAllAndNavigateTo(MessageViewRoute, arguments: true));
     } catch (e) {
-      print(e.message);
+      debugPrint(e.toString());
     }
     setBusy(false);
   }
@@ -47,44 +53,37 @@ class UpdateProvfileViewModel extends BaseViewModel {
       await _authenticationSerivice.setNumber();
       await _authenticationSerivice.setNewName();
       await _contactService.firstSyncContacts();
-      await _getSyncChats();
+      // await _getSavedChats();
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
-  //Sync chats all threads between
-  Future<void> _getSyncChats() async {
+  //get saved chat from server
+  Future<void> _getSavedChats() async {
     try {
-      var response = await getThreads();
-      // print(response);
+      var response = await getUserThreads();
+      // debugPrint(response);
       List<dynamic> chats = response.data['messages'];
-
-      _authenticationSerivice.userNumber;
       if (_authenticationSerivice.userNumber == null) {
         _authenticationSerivice.setNumber();
       }
       chats.forEach((chat) async {
-        List messages = chat['messages'];
         await DatabaseService.db.insertThread(Thread.fromMap(chat));
-        messages.forEach((message) async {
-          await DatabaseService.db.insertNewMessage(Message.fromMap(message));
-        });
-        messages.add(Message.fromMap(chat));
       });
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
-  Future getThreads() async {
+  Future getUserThreads() async {
     final _userToken = _authenticationSerivice.token;
     try {
       Map<String, String> headers = {
         "Content-Type": "application/x-www-form-urlencoded",
         "authorization": "Bearer $_userToken",
       };
-      var response = await getResquest(
+      var response = await getRequest(
         url: "/getThreads",
         headers: headers,
       );
@@ -95,8 +94,40 @@ class UpdateProvfileViewModel extends BaseViewModel {
           e.response.data,
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
+      throw e;
+    }
+  }
+
+  Future getSavedUserDetails() async {
+    String _chatID = _authenticationSerivice.userID;
+    final _userToken = _authenticationSerivice.token;
+
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_userToken",
+      };
+
+      Map<String, String> params = {
+        'userID': _chatID,
+      };
+      var response = await getRequest(
+          url: "/getuserdetails", headers: headers, queryParam: params);
+      debugPrint(response);
+      if (response?.statusCode == 200) {
+        String profileImageUrl = response.data['user']['displayPicture'];
+        oldProfileName = response.data['user']['name'];
+        notifyListeners();
+        var downloadRes = await _downloadService.downloadUserPicture(
+            pictureUrl: profileImageUrl);
+        if (downloadRes != null) {
+          profileImageUrl = downloadRes;
+          notifyListeners();
+        }
+      }
+      return response;
+    } catch (e) {
       throw e;
     }
   }

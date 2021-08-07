@@ -11,7 +11,7 @@ const Widget verticalSpaceLarge = SizedBox(height: 50.0);
 const Widget verticalSpaceMassive = SizedBox(height: 120.0);
 
 //Auth Screen top margin
-double authTopMargin = 0.12;
+double authTopMargin = 0.10;
 
 //check phone orientation
 bool checkPhonePortrait(BuildContext context) {

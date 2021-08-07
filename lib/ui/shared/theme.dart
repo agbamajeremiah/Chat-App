@@ -12,13 +12,13 @@ ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     color: Colors.white,
     iconTheme: IconThemeData(
-      color: AppColors.textColor,
+      color: AppColors.primaryColor,
     ),
     elevation: 2.0,
   ),
-  iconTheme: IconThemeData(color: AppColors.textColor),
+  iconTheme: IconThemeData(color: AppColors.primaryColor),
   inputDecorationTheme: InputDecorationTheme(
-      hintStyle: TextStyle(fontSize: 15, color: AppColors.textColor)),
+      hintStyle: TextStyle(fontSize: 15, color: Colors.black)),
   buttonTheme:
       ButtonThemeData(buttonColor: Colors.blue, focusColor: Colors.amber),
   floatingActionButtonTheme:

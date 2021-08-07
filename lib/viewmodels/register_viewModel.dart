@@ -15,10 +15,12 @@ class RegisterViewModel extends BaseViewModel {
     @required String phoneNumber,
   }) async {
     setBusy(true);
-    var resposnse =
+    var response =
         await _authenticationSerivice.register(phoneNumber: phoneNumber);
-    print(resposnse);
-    _navigationService.navigateTo(OtpViewRoute, arguments: phoneNumber);
+    if (response?.statusCode == 200) {
+      _navigationService.navigateTo(OtpViewRoute, arguments: phoneNumber);
+    }
     setBusy(false);
+    return response;
   }
 }

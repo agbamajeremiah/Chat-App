@@ -1,13 +1,13 @@
 import 'dart:async';
+import 'package:MSG/core/network/network_info.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/messages.dart';
 import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
+import 'package:MSG/services/download_service.dart';
 import 'package:MSG/services/state_service.dart';
-import 'package:MSG/services/socket_services.dart';
-import 'package:MSG/utils/api_request.dart';
-import 'package:MSG/utils/connectivity.dart';
+import 'package:MSG/core/network/api_request.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,70 +17,82 @@ import 'package:stacked/stacked.dart';
 class ChatViewModel extends ReactiveViewModel {
   String threadId;
   String phoneNumber;
-  String userNumber;
   String displayName;
   bool fromContact;
-  // List<Message> chatMessages = [];
-  final int _chatFetchMax = 15;
-  ChatViewModel(
-      {@required this.threadId,
-      @required this.phoneNumber,
-      @required this.fromContact,
-      @required this.displayName});
+  bool favourite;
+  String contactChatID;
+  String pictureUrl;
+  String picturePath;
+  int profilePictureDownloaded;
 
-  final StateService _stateService = locator<StateService>();
+  ChatViewModel({
+    @required this.threadId,
+    @required this.phoneNumber,
+    @required this.fromContact,
+    @required this.displayName,
+    @required this.favourite,
+    @required this.contactChatID,
+    @required this.pictureUrl,
+    @required this.picturePath,
+    @required this.profilePictureDownloaded,
+  });
+
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
-  final SocketServices _socketService = locator<SocketServices>();
+  final StateService _stateService = locator<StateService>();
+  final DownloadService _downloadService = locator<DownloadService>();
+  final NetworkInfo _networkInfo = locator<NetworkInfo>();
 
-  @override
-  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
 
+  //get userNumber
+  String get accountNumber => _authService.userNumber;
+  final int chatFetchLimit = 30;
+
+  //List a single chat message
+  List get chatMessages => _stateService.singleChatMessage;
   //For Rebuilding screens
   bool get rebuild => _stateService.rebuildPage;
-  void _rebuildScreens() {
+  void rebuildScreens() {
     _stateService.updatePages();
     notifyListeners();
   }
 
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
+
   void initialise() async {
     await thread;
-    updateReadMessages();
-    //Subscribe to new threed two
-    if (!_socketService.subscribedNumbers.contains(phoneNumber)) {
-      final internetStatus = await checkInternetConnection();
-      if (internetStatus == true) {
-        if (_socketService.socketIO != null) {
-          //_socketService.registerSocketId();
-          _socketService.subscribeToThread(
-              threadId, phoneNumber, _rebuildScreens);
-        }
-      }
+    if (threadId != null) {
+      _stateService.setOpenChat(threadId);
     }
+    await fetchFirstChatMessages();
+    _updateReadMessages();
+    _downloadContactImage();
+    // DatabaseService.db.getAllUserThreads();
   }
 
   //set chat threadId
   Future get thread async {
-    print("Thread getter called");
-    if (threadId == null) {
-      String result = await DatabaseService.db.getContactThread(phoneNumber);
-      // print("thread id: " + result);
+    debugPrint("Thread getter called");
+    if (threadId == null ||
+        favourite == null ||
+        profilePictureDownloaded == null) {
+      Map result = await DatabaseService.db.getContactThread(phoneNumber);
       if (result != null) {
-        threadId = result;
+        threadId = result['id'];
+        favourite = result['favourite'] == 0 ? false : true;
       } else {
-        // print(phoneNumber);
-        final internetStatus = await checkInternetConnection();
-        if (internetStatus == true) {
-          var res = await initiateThread(phoneNumber);
+        if (await _networkInfo.isConnected) {
+          var res = await _initiateThread(phoneNumber);
           if (res.statusCode == 200) {
-            print(res.data);
             List threadMembers = res.data['thread']['members'];
             String otherMember = threadMembers[0] == _authService.userNumber &&
                     threadMembers[1] != null
                 ? threadMembers[1]
                 : threadMembers[0];
-            Thread newThread =
-                Thread(id: res.data['thread']['_id'], members: otherMember);
-            print(newThread.toMap());
+            Thread newThread = Thread(
+                id: res.data['thread']['_id'],
+                members: otherMember,
+                favourite: 0);
             await DatabaseService.db.insertThread(newThread);
             threadId = res.data['thread']['_id'];
           }
@@ -91,31 +103,65 @@ class ChatViewModel extends ReactiveViewModel {
       if (contactDetails != null) {
         phoneNumber = contactDetails['phoneNumber'];
         displayName = contactDetails['displayName'];
+        contactChatID = contactDetails['contactChatID'];
+        pictureUrl = contactDetails['pictureUrl'];
+        picturePath = contactDetails['picturePath'];
+        profilePictureDownloaded = contactDetails['pictureDownloaded'];
       }
     }
   }
 
-  Future<List<Message>> getChatMessages() async {
-    List<Message> chatMessages = [];
+  Future fetchFirstChatMessages() async {
     if (threadId == null) {
       await thread;
     }
-    userNumber = _authService.userNumber;
     if (threadId != null) {
-      // int _fetchedChat = chatMessages.length;
-      List<Message> messages =
-          await DatabaseService.db.getSingleChatMessageFromDb(threadId);
-      chatMessages.addAll(messages);
-      return chatMessages;
-    } else {
-      return [];
+      List<ChatMessage> messages = await DatabaseService.db
+          .fetchSingleChatMessageFromDbWithLimit(threadId, 0, chatFetchLimit);
+      _stateService.addNewDBMessage(messages);
+      if (messages.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
+    return false;
   }
 
-  Future<void> updateReadMessages() async {
+  Future fetchLoadChatMessages() async {
+    if (threadId == null) {
+      await thread;
+    }
+    if (threadId != null) {
+      List<ChatMessage> messages = await DatabaseService.db
+          .fetchSingleChatMessageFromDbWithLimit(threadId, 0, chatFetchLimit);
+      if (messages.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  Future<void> fetchMoreChatMessages() async {
+    if (threadId == null) {
+      await thread;
+    }
+    if (threadId != null) {
+      List<ChatMessage> messages = await DatabaseService.db
+          .fetchSingleChatMessageFromDbWithLimit(
+              threadId, chatMessages.length, chatFetchLimit);
+      _stateService.addNewDBMessage(messages);
+      // debugPrint("fetch success");
+      notifyListeners();
+    }
+  }
+  
+  Future<void> _updateReadMessages() async {
     await DatabaseService.db
         .updateReadMessages(threadId, _authService.userNumber);
-    _rebuildScreens();
+    rebuildScreens();
   }
 
   Future<void> updateReadMessageWithoutRebuild() async {
@@ -123,54 +169,58 @@ class ChatViewModel extends ReactiveViewModel {
         .updateReadMessages(threadId, _authService.userNumber);
   }
 
-  Future synChat() async {
-    // try {
-    //   await makeAsRead();
-    // } catch (e) {
-    //   print(e.toString());
-    // }
-  }
-
   //send new new nessage
-  void saveNewMessage(
-      {@required String message,
-      @required String receiver,
-      @required bool isQuote}) async {
-    final now = DateTime.now();
-    final String messageId = generateMessageId();
-    Message newMessage = Message(
-      id: messageId,
-      content: message,
-      sender: userNumber,
-      threadId: threadId,
-      createdAt: now.toIso8601String(),
-      status: "PENDING",
-      isQuote: isQuote.toString(),
-    );
-    await DatabaseService.db.insertNewMessage(newMessage);
-    _rebuildScreens();
-    await _sendNewMessage(
-        messageId: messageId, message: message, isQuote: isQuote);
-  }
-
-  Future _sendNewMessage({
-    @required String messageId,
+  void saveNewMessage({
     @required String message,
+    @required String receiver,
     @required bool isQuote,
   }) async {
-    setBusy(true);
-    var response = await _sendMsg(messageId, message, isQuote, "");
-    if (response.statusCode == 200) {
-      await DatabaseService.db.updateMessageStatus(messageId, "SENT").then(
-          (_) =>
-              FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_SIGNAL_OFF));
+    final msgTime = DateTime.now().toIso8601String();
+    final String messageId = generateMessageId();
+    ChatMessage newMessage = ChatMessage(
+        id: messageId,
+        content: message,
+        sender: _authService.userNumber,
+        threadId: threadId,
+        createdAt: msgTime,
+        status: "PENDING",
+        isQuote: isQuote.toString(),
+        messageServerId: '');
+    await DatabaseService.db.insertNewMessage(newMessage);
+    _stateService.addNewSentMessage(newMessage);
+    rebuildScreens();
+    await _sendNewMessage(newMessage);
+  }
 
+  void toggleChatFavavourite(int fav) async {
+    // debugPrint(fav);
+    if (threadId != null) {
+      if (fav == 0) {
+        await DatabaseService.db.removeChatFromFav(threadId);
+      } else if (fav == 1) {
+        await DatabaseService.db.addChatAsFav(threadId);
+      }
+      favourite = !favourite;
+      rebuildScreens();
+    }
+  }
+
+  Future _sendNewMessage(ChatMessage newMessage) async {
+    var response = await _sendMsg(newMessage.id, newMessage.content, false, "");
+    if (response.statusCode == 200) {
+      _stateService.updateSentMessage(newMessage);
+      await DatabaseService.db.updateSentMsgStatus(newMessage.id).then((_) =>
+          FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_SIGNAL_OFF));
       notifyListeners();
     }
   }
 
   Future _sendMsg(
-      String messageId, String message, bool isQuote, String replyTo) async {
+    String messageId,
+    String message,
+    bool isQuote,
+    String replyTo,
+  ) async {
     final _userToken = _authService.token;
     try {
       Map<String, dynamic> body = {
@@ -198,14 +248,13 @@ class ChatViewModel extends ReactiveViewModel {
           e.response.statusCode.toString(),
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
       throw e;
     }
   }
 
   //initiate thread
-  Future initiateThread(String contact) async {
+  Future _initiateThread(String contact) async {
     final _userToken = _authService.token;
     try {
       Map<String, dynamic> body = {"receiver": contact};
@@ -226,39 +275,85 @@ class ChatViewModel extends ReactiveViewModel {
           e.response.data,
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
       throw e;
     }
   }
 
-  Future makeAsRead() async {
+  Future<void> _downloadContactImage() async {
     final _userToken = _authService.token;
-    try {
-      Map<String, String> body = {
-        "threadID": threadId,
-      };
-      Map<String, String> headers = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "authorization": "Bearer $_userToken",
-      };
+    if (contactChatID != null) {
+      try {
+        if (pictureUrl != null && profilePictureDownloaded != 1) {
+          final res = await _downloadService.downloadContactPicture(
+              pictureUrl: pictureUrl,
+              contactName: displayName,
+              contactNumber: phoneNumber);
+          if (res != null) {
+            picturePath = res;
+            profilePictureDownloaded = 1;
+            rebuildScreens();
+          }
+        } else {
+          Map<String, String> headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "authorization": "Bearer $_userToken",
+          };
 
-      var response = await patchResquest(
-        url: "/markasread",
-        body: body,
-        headers: headers,
-      );
-      // print(response);
-      return response;
-    } catch (e) {
-      if (e is DioError) {
-        debugPrint(
-          e.response.data,
-        );
+          Map<String, String> params = {
+            'userID': contactChatID,
+          };
+          var response = await getRequest(
+              url: "/getuserdetails", headers: headers, queryParam: params);
+          if (response?.statusCode == 200) {
+            String profileImageUrl = response.data['user']['displayPicture'];
+            if (profileImageUrl != null &&
+                profileImageUrl != '' &&
+                profileImageUrl != pictureUrl) {
+              final res = await _downloadService.downloadContactPicture(
+                  pictureUrl: profileImageUrl,
+                  contactName: displayName,
+                  contactNumber: phoneNumber);
+              if (res != null) {
+                picturePath = res;
+                profilePictureDownloaded = 1;
+                rebuildScreens();
+              }
+            }
+          }
+        }
+      } catch (e) {
+        throw e;
       }
-      print(e.runtimeType);
-      print(e.toString());
-      throw e;
     }
   }
+  // Future _makeAsRead() async {
+  //   final _userToken = _authService.token;
+  //   try {
+  //     Map<String, String> body = {
+  //       "threadID": threadId,
+  //     };
+  //     Map<String, String> headers = {
+  //       "Content-Type": "application/x-www-form-urlencoded",
+  //       "authorization": "Bearer $_userToken",
+  //     };
+
+  //     var response = await patchResquest(
+  //       url: "/markasread",
+  //       body: body,
+  //       headers: headers,
+  //     );
+  //     // debugPrint(response);
+  //     return response;
+  //   } catch (e) {
+  //     if (e is DioError) {
+  //       debugPrint(
+  //         e.response.data,
+  //       );
+  //     }
+  //     debugPrint(e.runtimeType);
+  //     debugPrint(e.toString());
+  //     throw e;
+  //   }
+  // }
 }

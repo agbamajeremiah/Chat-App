@@ -1,13 +1,18 @@
-import 'package:MSG/utils/api_request.dart';
+import 'dart:io';
+import 'package:MSG/constant/base_url.dart';
+import 'package:MSG/core/network/api_request.dart';
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationSerivice {
-  String _token, _userNumber, _profileName;
+  String _token, _userNumber, _userID, _profileName, _profileImagePath;
   String get token => _token;
   String get userNumber => _userNumber;
+  String get userID => _userID;
   String get profileName => _profileName;
+  String get profileImagePath => _profileImagePath;
+
   Future<bool> isUserLoggedIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String data = prefs.getString("token");
@@ -15,22 +20,29 @@ class AuthenticationSerivice {
       _token = data;
       _userNumber = prefs.getString("number");
       _profileName = prefs.getString("name");
-      print(_userNumber);
-      print(_profileName);
+      _userID = prefs.getString("userID");
+      _profileImagePath = prefs.getString('profileImagePath');
     }
     return data != null;
+  }
+
+  Future setToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String data = prefs.getString("token");
+    if (data != null) {
+      _token = data;
+    }
   }
 
   Future setNumber() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _userNumber = prefs.getString("number");
-    print(_userNumber);
+    _userID = prefs.getString("userID");
   }
 
   Future setNewName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _profileName = prefs.getString("name");
-    print(_profileName);
   }
 
   Future register({
@@ -45,16 +57,13 @@ class AuthenticationSerivice {
         url: "/register",
         body: body,
       );
-      if (response.statusCode == 200) {}
       return response;
     } catch (e) {
       if (e is DioError) {
-        debugPrint(
-          e.response.data,
-        );
+        debugPrint(e.response.data.toString());
+        return null;
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
       throw e;
     }
   }
@@ -73,15 +82,15 @@ class AuthenticationSerivice {
         body: body,
       );
       if (response.statusCode == 200) {
-        print(response.data);
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        // var res = jsonDecode(response);
-        _token = response.data["token"];
-        print(_token);
         prefs.setString("token", response.data["token"]);
         prefs.setString("number", response.data["phoneNumber"]);
+        prefs.setString("userID", response.data["userID"]);
+        _token = response.data["token"];
+        _userID = response.data["userID"];
+        _userNumber = response.data["phoneNumber"];
+        debugPrint(_userID);
       }
-      // return jsonDecode(response);
       return response.statusCode;
     } catch (e) {
       if (e is DioError) {
@@ -115,8 +124,7 @@ class AuthenticationSerivice {
           e.response.data,
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
       throw e;
     }
   }
@@ -142,7 +150,6 @@ class AuthenticationSerivice {
         //Set new in sharedPreference
         SharedPreferences pref = await SharedPreferences.getInstance();
         pref.setString("name", name);
-        print("New name set");
       }
       return response;
     } catch (e) {
@@ -151,8 +158,46 @@ class AuthenticationSerivice {
           e.response.data,
         );
       }
-      print(e.runtimeType);
-      print(e.toString());
+      debugPrint(e.toString());
+      throw e;
+    }
+  }
+
+//upload profile picture
+  Future sendPictureToServer({@required File picture}) async {
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "authorization": "Bearer $_token",
+      };
+      Dio dio = Dio();
+      String route = BasedUrl + '/updatepicture';
+      if (picture == null || picture.path == null) {
+        return;
+      }
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(picture.path),
+      });
+      Response response = await dio.patch(
+        route,
+        data: formData,
+        options: Options(
+          headers: headers,
+        ),
+      );
+      if (response?.statusCode == 200) {
+        SharedPreferences pref = await SharedPreferences.getInstance();
+        pref.setString("profileImagePath", picture.path);
+        _profileImagePath = picture.path;
+        return true;
+      }
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint(
+          e.response.toString(),
+        );
+      }
+      debugPrint(e.toString());
       throw e;
     }
   }

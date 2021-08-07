@@ -1,18 +1,19 @@
+import 'package:MSG/core/network/network_info.dart';
 import 'package:MSG/locator.dart';
 import 'package:MSG/models/contacts.dart';
 import 'package:MSG/services/contact_services.dart';
 import 'package:MSG/services/database_service.dart';
-import 'package:MSG/utils/connectivity.dart';
 import 'package:stacked/stacked.dart';
 
 class ContactViewModel extends BaseViewModel {
   final ContactServices _contactService = locator<ContactServices>();
+  final NetworkInfo _networkInfo = locator<NetworkInfo>();
+
   bool refreshingContacts = false;
   //Fetch all registered contacts from database
   Future<Map<String, List<MyContact>>> getContactsFromDb() async {
     List<MyContact> regContacts =
         await DatabaseService.db.getRegContactsFromDb();
-    print("registered Contact:");
     List<MyContact> unRegContacts =
         await DatabaseService.db.getUnRegContactsFromDb();
     Map<String, List<MyContact>> contacts = {
@@ -25,8 +26,7 @@ class ContactViewModel extends BaseViewModel {
   Future synContacts() async {
     refreshingContacts = true;
     setBusy(true);
-    final internetStatus = await checkInternetConnection();
-    if (internetStatus == true) {
+    if (await _networkInfo.isConnected) {
       try {
         await _contactService.syncContacts();
       } catch (e) {
@@ -36,4 +36,15 @@ class ContactViewModel extends BaseViewModel {
     refreshingContacts = false;
     setBusy(false);
   }
+  
+  // Future backgroundSyncContacts() async {
+  //   final internetStatus = await checkInternetConnection();
+  //   if (internetStatus == true) {
+  //     try {
+  //       await _contactService.syncContacts();
+  //     } catch (e) {
+  //       print(e.toString());
+  //     }
+  //   }
+  // }
 }

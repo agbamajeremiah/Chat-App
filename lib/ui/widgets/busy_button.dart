@@ -31,10 +31,10 @@ class _BusyButtonState extends State<BusyButton> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           alignment: Alignment.center,
-          padding: EdgeInsets.symmetric(horizontal: 13, vertical: 13),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             color: widget.color,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: !widget.busy
               ? Text(widget.title,
