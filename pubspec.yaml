@@ -49,7 +49,7 @@ dependencies:
   firebase_messaging: ^10.0.1
 
   #notifications
-  awesome_notifications: ^0.0.6+9
+  awesome_notifications: ^0.0.6+10
   flutter_beep: ^0.2.0
   flutter_local_notifications: ^5.0.0+4
 
