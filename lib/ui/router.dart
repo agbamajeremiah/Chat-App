@@ -15,59 +15,59 @@ import 'package:MSG/ui/shared/custom_page_route.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case SplashViewRoute:
+    case Routes.splashViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SplashView(),
       );
-    case MessageViewRoute:
+    case Routes.messageViewRoute:
       return _noTransitionPageRoute(
         routeName: settings.name,
         viewToShow: MessagesView(
           firstTime: settings.arguments,
         ),
       );
-    case ChatViewRoute:
+    case Routes.chatViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: ChatView(
           argument: settings.arguments,
         ),
       );
-    case LoginViewRoute:
+    case Routes.loginViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: LoginView(),
       );
-    case OtpViewRoute:
+    case Routes.otpViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: OtpView(
           phoneNumber: settings.arguments,
         ),
       );
-    case ContactViewRoute:
+    case Routes.contactViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: AllContacts(),
       );
-    case SettingsViewRoute:
+    case Routes.settingsViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: SettingScreen(),
       );
-    case ProfileViewRoute:
+    case Routes.profileViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: ProfileView(),
       );
-    case UpdateProfileRoute:
+    case Routes.updateProfileRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: UpdateProfileView(),
       );
-   
-    case WelcomeViewRoute:
+
+    case Routes.welcomeViewRoute:
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: WelcomeView(),

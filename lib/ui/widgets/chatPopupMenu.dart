@@ -27,7 +27,7 @@ class _ChatPopupMenuState extends State<ChatPopupMenu> {
         break;
       case "settings":
         print("Switch to Settings");
-        Navigator.pushNamed(context, SettingsViewRoute);
+        Navigator.pushNamed(context, Routes.settingsViewRoute);
         break;
       default:
     }

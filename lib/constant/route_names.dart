@@ -1,11 +1,12 @@
-const String SplashViewRoute = "SplashView";
-const String MessageViewRoute = "MessageView";
-const String ChatViewRoute = "ChatView";
-const String LoginViewRoute = "LoginView";
-const String OtpViewRoute = "OtpView";
-const String ContactViewRoute = "ContactView";
-const String SettingsViewRoute = "SettingsView";
-const String UpdateProfileRoute = "UpdateProfileView";
-const String WelcomeViewRoute = "WelcomeView";
-const String ProfileViewRoute = "ProfileView";
-
+class Routes {
+  static const String splashViewRoute = "SplashView";
+  static const String messageViewRoute = "MessageView";
+  static const String chatViewRoute = "ChatView";
+  static const String loginViewRoute = "LoginView";
+  static const String otpViewRoute = "OtpView";
+  static const String contactViewRoute = "ContactView";
+  static const String settingsViewRoute = "SettingsView";
+  static const String updateProfileRoute = "UpdateProfileView";
+  static const String welcomeViewRoute = "WelcomeView";
+  static const String profileViewRoute = "ProfileView";
+}

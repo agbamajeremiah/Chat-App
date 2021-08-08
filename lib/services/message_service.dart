@@ -2,8 +2,8 @@ import 'package:MSG/models/messages.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 
-class StateService with ReactiveServiceMixin {
-  StateService() {
+class MessageService with ReactiveServiceMixin {
+  MessageService() {
     listenToReactiveValues([_rebuildPage, _singleChatMessage, _openChat]);
   }
   //Single chat list

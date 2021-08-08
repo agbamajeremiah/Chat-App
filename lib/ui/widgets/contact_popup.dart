@@ -26,7 +26,7 @@ class _ContactPopupMenuState extends State<ContactPopupMenu> {
               break;
             case "settings":
               print("Switch to Settings");
-              Navigator.pushNamed(context, SettingsViewRoute);
+              Navigator.pushNamed(context, Routes.settingsViewRoute);
               break;
             case "help":
               print("Switch to Help Screen");
