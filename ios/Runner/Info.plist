@@ -61,5 +61,7 @@
 	<string>photos</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>reminders</string>
+	<key>NSContactsUsageDescription</key>  
+	<string>This app requires contacts access to function properly.</string>
 	</dict>
 </plist>

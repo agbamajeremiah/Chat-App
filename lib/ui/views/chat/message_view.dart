@@ -171,7 +171,7 @@ class _MessagesViewState extends State<MessagesView>
 
                                 //                           },
                                 onPressed: (() => Navigator.pushNamed(
-                                    context, ContactViewRoute)),
+                                    context, Routes.contactViewRoute)),
                                 child: Icon(
                                   Icons.message,
                                 ),
@@ -340,7 +340,7 @@ class _MessagesViewState extends State<MessagesView>
                                                                 onTap: () {
                                                                   Navigator.pushNamed(
                                                                       context,
-                                                                      ChatViewRoute,
+                                                                      Routes.chatViewRoute,
                                                                       arguments: {
                                                                         'chat':
                                                                             Chat(
@@ -441,7 +441,7 @@ class _MessagesViewState extends State<MessagesView>
                                                                       Navigator
                                                                           .pushNamed(
                                                                         context,
-                                                                        ChatViewRoute,
+                                                                        Routes.chatViewRoute,
                                                                         arguments: {
                                                                           'chat':
                                                                               Chat(
@@ -565,7 +565,7 @@ class _MessagesViewState extends State<MessagesView>
                                                                 onTap: () {
                                                                   Navigator.pushNamed(
                                                                       context,
-                                                                      ChatViewRoute,
+                                                                      Routes.chatViewRoute,
                                                                       arguments: {
                                                                         'chat':
                                                                             Chat(
@@ -654,7 +654,7 @@ class _MessagesViewState extends State<MessagesView>
                                                                           false;
                                                                       Navigator.pushNamed(
                                                                           context,
-                                                                          ChatViewRoute,
+                                                                          Routes.chatViewRoute,
                                                                           arguments: {
                                                                             'chat':
                                                                                 Chat(

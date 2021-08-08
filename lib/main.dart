@@ -152,7 +152,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           navigatorKey: locator<NavigationService>().navigationKey,
           theme: notifier.darkTheme == true ? darkTheme : lightTheme,
-          initialRoute: SplashViewRoute,
+          initialRoute: Routes.splashViewRoute,
           onGenerateRoute: generateRoute,
         );
       }),

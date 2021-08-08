@@ -41,7 +41,7 @@ class UpdateProvfileViewModel extends BaseViewModel {
     try {
       await _authenticationSerivice.updateProfile(name: name, deviceId: token);
       await synFirstTime().then((value) => _navigationService
-          .removeAllAndNavigateTo(MessageViewRoute, arguments: true));
+          .removeAllAndNavigateTo(Routes.messageViewRoute, arguments: true));
     } catch (e) {
       debugPrint(e.toString());
     }

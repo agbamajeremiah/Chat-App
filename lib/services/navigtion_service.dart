@@ -31,7 +31,7 @@ class NavigationService {
   Future<dynamic> clearAllExceptHomeAndNavigateTo(String routeName,
       {dynamic arguments}) {
     return _navigationKey.currentState.pushNamedAndRemoveUntil(
-        routeName, ModalRoute.withName(MessageViewRoute),
+        routeName, ModalRoute.withName(Routes.messageViewRoute),
         arguments: arguments);
   }
 }

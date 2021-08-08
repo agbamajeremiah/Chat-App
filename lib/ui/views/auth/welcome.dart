@@ -53,7 +53,7 @@ class WelcomeView extends StatelessWidget {
               child: BusyButton(
                   title: 'Continue',
                   onPressed: () =>
-                      Navigator.pushNamed(context, MessageViewRoute),
+                      Navigator.pushNamed(context, Routes.messageViewRoute),
                   color: Colors.blue),
             ),
           )

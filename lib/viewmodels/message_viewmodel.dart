@@ -11,7 +11,7 @@ import 'package:MSG/services/download_service.dart';
 import 'package:MSG/services/navigtion_service.dart';
 import 'package:MSG/services/socket_services.dart';
 import 'package:MSG/models/messages.dart';
-import 'package:MSG/services/state_service.dart';
+import 'package:MSG/services/message_service.dart';
 import 'package:MSG/core/network/api_request.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -30,33 +30,32 @@ class MessageViewModel extends ReactiveViewModel {
   final SocketServices _socketService = locator<SocketServices>();
   final AuthenticationSerivice _authSerivice =
       locator<AuthenticationSerivice>();
-  final StateService _stateService = locator<StateService>();
+  final MessageService _messageService = locator<MessageService>();
   final DownloadService _downloadService = locator<DownloadService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final NetworkInfo _networkInfo = locator<NetworkInfo>();
 
-
   //For Rebuilding screens
-  bool get rebuild => _stateService.rebuildPage;
+  bool get rebuild => _messageService.rebuildPage;
   void rebuildScreens() {
-    _stateService.updatePages();
+    _messageService.updatePages();
     notifyListeners();
   }
 
   // add new socket message to active chat list
   void updateOpenChatList(ChatMessage message) {
-    _stateService.addNewSocketMessage(message);
+    _messageService.addNewSocketMessage(message);
     // notifyListeners();
   }
 
   // update delivered socket message to active chat list
   void updateDeliveredChat(ChatMessage message) {
-    _stateService.updateDeliveredMessage(message);
+    _messageService.updateDeliveredMessage(message);
     // notifyListeners();
   }
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
+  List<ReactiveServiceMixin> get reactiveServices => [_messageService];
 
   void initialise() async {
     //For notification click
@@ -75,7 +74,7 @@ class MessageViewModel extends ReactiveViewModel {
         AwesomeNotifications().dismiss(notificationId);
       } else {
         _navigationService.clearAllExceptHomeAndNavigateTo(
-          ChatViewRoute,
+          Routes.chatViewRoute,
           arguments: {
             'chat': Chat(
               id: receivedNotification.payload['threadID'],
@@ -130,7 +129,7 @@ class MessageViewModel extends ReactiveViewModel {
         isQuote: isQuote.toString(),
         messageServerId: '');
     await DatabaseService.db.insertNewMessage(newMessage);
-    _stateService.addNewSentMessage(newMessage);
+    _messageService.addNewSentMessage(newMessage);
     rebuildScreens();
     await _sendMsg(
       messageId: messageId,

@@ -41,7 +41,7 @@ class SingleContact extends StatelessWidget {
           if (registered == true) {
             Navigator.pushNamed(
               context,
-              ChatViewRoute,
+              Routes.chatViewRoute,
               arguments: {
                 'chat': Chat(
                   id: null,
