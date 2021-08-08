@@ -18,7 +18,7 @@ class RegisterViewModel extends BaseViewModel {
     var response =
         await _authenticationSerivice.register(phoneNumber: phoneNumber);
     if (response?.statusCode == 200) {
-      _navigationService.navigateTo(OtpViewRoute, arguments: phoneNumber);
+      _navigationService.navigateTo(Routes.otpViewRoute, arguments: phoneNumber);
     }
     setBusy(false);
     return response;

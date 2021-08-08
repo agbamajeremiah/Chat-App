@@ -35,7 +35,6 @@ class MessageViewModel extends ReactiveViewModel {
   final NavigationService _navigationService = locator<NavigationService>();
   final NetworkInfo _networkInfo = locator<NetworkInfo>();
 
-
   //For Rebuilding screens
   bool get rebuild => _stateService.rebuildPage;
   void rebuildScreens() {
@@ -75,7 +74,7 @@ class MessageViewModel extends ReactiveViewModel {
         AwesomeNotifications().dismiss(notificationId);
       } else {
         _navigationService.clearAllExceptHomeAndNavigateTo(
-          ChatViewRoute,
+          Routes.chatViewRoute,
           arguments: {
             'chat': Chat(
               id: receivedNotification.payload['threadID'],

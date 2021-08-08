@@ -18,12 +18,12 @@ class StartUpViewModel extends BaseViewModel {
     var hasLoggedInUser = await _authenticationService.isUserLoggedIn();
     if (hasLoggedInUser) {
       await Future.delayed(Duration(milliseconds: 200)).whenComplete(() =>
-          _navigationService.clearLastAndNavigateTo(MessageViewRoute,
+          _navigationService.clearLastAndNavigateTo(Routes.messageViewRoute,
               arguments: false));
     } else {
       await Future.delayed(Duration(milliseconds: 300))
           .whenComplete(() => _contactService.fetchContactFromDevice());
-      _navigationService.clearLastAndNavigateTo(LoginViewRoute);
+      _navigationService.clearLastAndNavigateTo(Routes.loginViewRoute);
     }
   }
 }
