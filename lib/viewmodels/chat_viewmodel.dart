@@ -6,7 +6,7 @@ import 'package:MSG/models/thread.dart';
 import 'package:MSG/services/authentication_service.dart';
 import 'package:MSG/services/database_service.dart';
 import 'package:MSG/services/download_service.dart';
-import 'package:MSG/services/state_service.dart';
+import 'package:MSG/services/message_service.dart';
 import 'package:MSG/core/network/api_request.dart';
 import 'package:MSG/utils/util_functions.dart';
 import 'package:dio/dio.dart';
@@ -38,7 +38,7 @@ class ChatViewModel extends ReactiveViewModel {
   });
 
   final AuthenticationSerivice _authService = locator<AuthenticationSerivice>();
-  final StateService _stateService = locator<StateService>();
+  final MessageService _messageService = locator<MessageService>();
   final DownloadService _downloadService = locator<DownloadService>();
   final NetworkInfo _networkInfo = locator<NetworkInfo>();
 
@@ -48,21 +48,21 @@ class ChatViewModel extends ReactiveViewModel {
   final int chatFetchLimit = 30;
 
   //List a single chat message
-  List get chatMessages => _stateService.singleChatMessage;
+  List get chatMessages => _messageService.singleChatMessage;
   //For Rebuilding screens
-  bool get rebuild => _stateService.rebuildPage;
+  bool get rebuild => _messageService.rebuildPage;
   void rebuildScreens() {
-    _stateService.updatePages();
+    _messageService.updatePages();
     notifyListeners();
   }
 
   @override
-  List<ReactiveServiceMixin> get reactiveServices => [_stateService];
+  List<ReactiveServiceMixin> get reactiveServices => [_messageService];
 
   void initialise() async {
     await thread;
     if (threadId != null) {
-      _stateService.setOpenChat(threadId);
+      _messageService.setOpenChat(threadId);
     }
     await fetchFirstChatMessages();
     _updateReadMessages();
@@ -118,7 +118,7 @@ class ChatViewModel extends ReactiveViewModel {
     if (threadId != null) {
       List<ChatMessage> messages = await DatabaseService.db
           .fetchSingleChatMessageFromDbWithLimit(threadId, 0, chatFetchLimit);
-      _stateService.addNewDBMessage(messages);
+      _messageService.addNewDBMessage(messages);
       if (messages.length > 0) {
         return true;
       } else {
@@ -152,7 +152,7 @@ class ChatViewModel extends ReactiveViewModel {
       List<ChatMessage> messages = await DatabaseService.db
           .fetchSingleChatMessageFromDbWithLimit(
               threadId, chatMessages.length, chatFetchLimit);
-      _stateService.addNewDBMessage(messages);
+      _messageService.addNewDBMessage(messages);
       // debugPrint("fetch success");
       notifyListeners();
     }
@@ -187,7 +187,7 @@ class ChatViewModel extends ReactiveViewModel {
         isQuote: isQuote.toString(),
         messageServerId: '');
     await DatabaseService.db.insertNewMessage(newMessage);
-    _stateService.addNewSentMessage(newMessage);
+    _messageService.addNewSentMessage(newMessage);
     rebuildScreens();
     await _sendNewMessage(newMessage);
   }
@@ -208,7 +208,7 @@ class ChatViewModel extends ReactiveViewModel {
   Future _sendNewMessage(ChatMessage newMessage) async {
     var response = await _sendMsg(newMessage.id, newMessage.content, false, "");
     if (response.statusCode == 200) {
-      _stateService.updateSentMessage(newMessage);
+      _messageService.updateSentMessage(newMessage);
       await DatabaseService.db.updateSentMsgStatus(newMessage.id).then((_) =>
           FlutterBeep.playSysSound(AndroidSoundIDs.TONE_CDMA_SIGNAL_OFF));
       notifyListeners();
