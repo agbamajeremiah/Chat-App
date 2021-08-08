@@ -5,7 +5,7 @@ import 'package:MSG/ui/views/chat/message_view.dart';
 import 'package:MSG/ui/views/auth/otp.dart';
 import 'package:MSG/ui/views/profile/profile_view.dart';
 import 'package:MSG/ui/views/settings/settings.dart';
-import 'package:MSG/ui/views/splash_view.dart';
+import 'package:MSG/ui/views/splash/splash_view.dart';
 import 'package:MSG/ui/views/auth/update_profile.dart';
 import 'package:MSG/ui/views/auth/welcome.dart';
 import 'package:flutter/cupertino.dart';

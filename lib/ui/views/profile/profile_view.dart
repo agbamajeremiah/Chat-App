@@ -48,6 +48,7 @@ class _ProfileViewState extends State<ProfileView> {
               top: 20,
               left: 20,
               right: 20,
+              bottom: MediaQuery.of(context).viewInsets.bottom
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -217,6 +218,7 @@ class _ProfileViewState extends State<ProfileView> {
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
+              brightness: Brightness.dark,
               iconTheme: IconThemeData(
                 color: Colors.white,
               ),
@@ -261,7 +263,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 children: [
                                   CircleAvatar(
                                       backgroundColor: Colors.white,
-                                      radius: 65,
+                                      radius: 50,
                                       backgroundImage: _imageFile != null
                                           ? FileImage(_imageFile) : model.profileImagePath != null  ? FileImage(File(model.profileImagePath))
                                           : AssetImage(
